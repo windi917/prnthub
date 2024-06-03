@@ -1,0 +1,230 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* :root {
+} */
+
+.html {
+  font-family: "Work Sans", sans-serif;
+}
+
+.collapse-title,
+.collapse-content {
+  transition: all 300ms ease !important;
+}
+
+* {
+  @apply transition-colors duration-300;
+}
+
+@layer utilities {
+  .bg-radial-gradient {
+    background-image: radial-gradient(
+      circle,
+      #111112,
+      #131311,
+      #191c12,
+      #445028,
+      #4e5b2e
+    );
+    background-size: 200% 200%;
+    background-position: left;
+  }
+}
+
+/* Connect Wallet Button */
+.wallet-adapter-button {
+  background-color: #ccf869;
+  border: 4px solid #5a6836;
+  font-family: Regular;
+  line-height: normal;
+  padding: 0.5em 1.5em;
+  border-radius: 3rem;
+  font-size: 0.9em;
+  transition: all 0.3s ease;
+  color: #445028;
+  display: inline-flex;
+}
+
+.wallet-adapter-dropdown-list {
+  background: #bae75992;
+}
+
+.wallet-adapter-dropdown-list-item {
+  color: whitesmoke;
+}
+
+.wallet-adapter-button:hover:not([disabled]) {
+  background-color: #bbe759;
+  border-color: #445028;
+  color: #000;
+  border: 2px solid whitesmoke;
+}
+
+.wallet-adapter-modal-title {
+  font-family: Regular;
+  color: #222321;
+  border: 2px solid #445028;
+  border-radius: 3rem;
+  margin: 20px;
+}
+
+.wallet-adapter-modal-wrapper {
+  background-color: #bae759a0;
+  padding: 1em;
+  position: relative;
+  font-family: Regular;
+  border-radius: 3rem;
+  transition: all 0.3s ease;
+}
+
+/* Mobile Styles */
+@media (max-width: 640px) {
+  .wallet-adapter-modal-wrapper {
+    padding: 1.5em;
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .wallet-adapter-modal-wrapper {
+    padding: 1em;
+    max-width: 100%;
+  }
+}
+
+.wallet-adapter-button:active {
+  transform: scale(0.98);
+}
+
+/* Responsive Styling */
+@media (max-width: 640px) {
+  .wallet-adapter-button {
+    padding: 0.4em 1.2em;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .wallet-adapter-button {
+    padding: 0.3em 1em;
+    font-size: 0.8em;
+  }
+}
+
+::-webkit-input-placeholder {
+  font-family: "Regular";
+  src: url("../src/fonts/Fontfabric - UniNeueRegular.otf") format("opentype");
+}
+::-moz-placeholder {
+  font-family: "Regular";
+  src: url("../src/fonts/Fontfabric - UniNeueRegular.otf") format("opentype");
+}
+:-ms-input-placeholder {
+  font-family: "Regular";
+  src: url("../src/fonts/Fontfabric - UniNeueRegular.otf") format("opentype");
+}
+:-moz-placeholder {
+  font-family: "Regular";
+  src: url("../src/fonts/Fontfabric - UniNeueRegular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Regular";
+  src: url("../src/fonts/Fontfabric - UniNeueRegular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Light";
+  src: url("../src/fonts/Fontfabric - UniNeueLight.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Bold";
+  src: url("../src/fonts/Fontfabric - UniNeueBold.otf") format("opentype");
+}
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin in favour of better control in authored CSS */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin-block-end: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* Set shorter line heights on headings and interactive elements */
+h1,
+h2,
+h3,
+h4,
+button,
+input,
+label {
+  line-height: 1.1;
+}
+
+/* Balance text wrapping on headings */
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+  color: currentColor;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Make sure textareas without a rows attribute are not tiny */
+textarea:not([rows]) {
+  min-height: 10em;
+}
+
+/* Anything that has been anchored to should have extra scroll margin */
+:target {
+  scroll-margin-block: 5ex;
+}
