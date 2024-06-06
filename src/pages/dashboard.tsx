@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import * as React from "react";
 import { motion } from "framer-motion";
 import Modal from "../components/Modal";
@@ -10,6 +10,11 @@ import BallotIcon from "@mui/icons-material/Ballot";
 import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import Box from "@mui/material/Box";
+
+import { toast } from "react-toastify";
+import { checkMintAddress, getDecimals } from "../utils/WebIntegration";
+import { createVToken  } from "../api/apis";
+import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 
 interface Token {
   name: string;
@@ -23,23 +28,51 @@ const Dashboard = () => {
   const [passScore, setPassScore] = useState<number>(0);
   const [tokens, setTokens] = useState<Token[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const [vTokenMintAddress, setVTokenMintAddress] = useState<string>("");
+  const [vTokenName, setVTokenName] = useState<string>("");
+
+  const { jwtToken } = useContext(JwtTokenContext);
+
   const [isEditTokenModalOpen, setIsEditTokenModalOpen] =
     useState<boolean>(false);
 
   // Example fetch function for API
-  const fetchData = async () => {
-    const response = await fetch("https://api.example.com/tokens"); // API endpoint
-    const data = await response.json();
-    setTokens(data);
-  };
-  fetchData();
+  // const fetchData = async () => {
+    // const response = await fetch("https://api.example.com/tokens"); // API endpoint
+    // const data = await response.json();
+    // setTokens(data);
+  // };
+  // fetchData();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Logic to handle form submission
-    console.log("Form Submitted", { fromDate, toDate, passScore, tokens });
-    //
+    
   };
+
+  const handleTokenRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const mintValid = await checkMintAddress(vTokenMintAddress);
+    if ( mintValid.success === false ) { // valid mint
+      toast.error("Mint Address is invalid!");
+      return;
+    }
+
+    const res = await getDecimals(vTokenMintAddress);
+    if ( res.success == false ) {
+      toast.error("Get Decimals error!");
+      return;
+    }
+
+    const response = await createVToken(jwtToken, vTokenName, vTokenMintAddress, res.decimals);
+    if ( response.success == false ) {
+      toast.error("Create Vote Token error!");
+      return;
+    }
+  };
+
   const addToken = (token: Token) => {
     setTokens([...tokens, token]);
   };
@@ -339,6 +372,8 @@ const Dashboard = () => {
             <input
               type="text"
               placeholder="Enter Wallet Address"
+              value={vTokenMintAddress}
+              onChange={(e) => setVTokenMintAddress(e.target.value)}
               className="block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-textclr2 bg-white px-5 py-2.5 text-gray-700 focus:border-textclr2 focus:outline-none focus:ring focus:ring-textclr2 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-textclr2"
             />
             <h2 className="my-4 mb-4 text-2xl text-left font-primaryRegular text-textclr2">
@@ -347,11 +382,13 @@ const Dashboard = () => {
             <input
               type="text"
               placeholder="Enter Token Name"
+              value={vTokenName}
+              onChange={(e) => setVTokenName(e.target.value)}
               className="block w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-textclr2 bg-white px-5 py-2.5 text-gray-700 focus:border-textclr2 focus:outline-none focus:ring focus:ring-textclr2 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-textclr2"
             />
             <button
               type="submit"
-              onClick={handleSubmit}
+              onClick={handleTokenRegister}
               className="block w-3/6 px-4 py-2 mx-auto mt-4 rounded-md shadow-sm text-slate-700/75 bg-textclr2 font-primaryRegular hover:bg-textclr2/70"
             >
               Add

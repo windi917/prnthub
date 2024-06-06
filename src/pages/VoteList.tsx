@@ -143,7 +143,6 @@ const VoteList = () => {
               transition={{ duration: 1.5 }}
             >
               {filteredProjects.map((project, index) => {
-                console.log("##########------#", project)
                 if ( project.proposalStatus == "LAUNCHED" )
                   return null;
                 return <TokenCard
