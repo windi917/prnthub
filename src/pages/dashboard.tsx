@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import * as React from "react";
 import { motion } from "framer-motion";
 import Modal from "../components/Modal";
@@ -13,14 +13,25 @@ import Box from "@mui/material/Box";
 
 import { toast } from "react-toastify";
 import { checkMintAddress, getDecimals } from "../utils/WebIntegration";
-import { createVToken  } from "../api/apis";
+import { createVToken } from "../api/apis";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
+import { getProjects } from "../api/apis";
 
 interface Token {
   name: string;
   weight: number;
   minVoteAmount: string;
 }
+
+interface Project {
+  id: number,
+  periodId: number,
+  logoURL: string,
+  name: string,
+  proposalDesc: string,
+  socials: ["https://twitter.com/", "https://google.com/"],
+  proposalStatus: string,
+};
 
 const Dashboard = () => {
   const [fromDate, setFromDate] = useState<string>("");
@@ -37,37 +48,58 @@ const Dashboard = () => {
   const [isEditTokenModalOpen, setIsEditTokenModalOpen] =
     useState<boolean>(false);
 
-  // Example fetch function for API
-  // const fetchData = async () => {
-    // const response = await fetch("https://api.example.com/tokens"); // API endpoint
-    // const data = await response.json();
-    // setTokens(data);
-  // };
-  // fetchData();
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const pros = await getProjects();
+      if (pros.success === true) {
+        setProjects(pros.projects.map((e: Project) => (
+          {
+            id: e.id,
+            logoURL: e.logoURL,
+            name: e.name,
+            proposalDesc: e.proposalDesc,
+            proposalStatus: e.proposalStatus,
+            socials: ["https://twitter.com/", "https://google.com/"]
+          }
+        )))
+      }
+    }
+
+    fetchProjects();
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Logic to handle form submission
-    
+
   };
+
+  const handleProjectSelect = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    console.log("##############", projects)
+    console.log("@@@@@@@@@@@@", e.target);
+  }
 
   const handleTokenRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const mintValid = await checkMintAddress(vTokenMintAddress);
-    if ( mintValid.success === false ) { // valid mint
+    if (mintValid.success === false) { // valid mint
       toast.error("Mint Address is invalid!");
       return;
     }
 
     const res = await getDecimals(vTokenMintAddress);
-    if ( res.success == false ) {
+    if (res.success == false) {
       toast.error("Get Decimals error!");
       return;
     }
 
     const response = await createVToken(jwtToken, vTokenName, vTokenMintAddress, res.decimals);
-    if ( response.success == false ) {
+    if (response.success == false) {
       toast.error("Create Vote Token error!");
       return;
     }
@@ -144,15 +176,15 @@ const Dashboard = () => {
             <h2 className="mb-4 text-2xl text-left font-primaryBold text-textclr2">
               Project Name
             </h2>
-            <select className="w-full max-w-2xl select-md select select-ghost !bg-slate-500/60 !border !border-textclr2">
-              <option disabled selected>
-                Select Project
-              </option>
-              <option>PRNT</option> {/* Hardcodes values */}
-              <option>SLERF</option>
-              <option>SOL</option>
-              <option>WIF</option>
-              <option>JUP</option>
+            <select
+              className="w-full max-w-2xl select-md select select-ghost !bg-slate-500/60 !border !border-textclr2"
+              onChange={handleProjectSelect}
+              defaultValue="Select Project"
+            >
+              <option disabled>Select Project</option>
+              {projects.map((e) => (
+                <option key={e.id} value={e.name}>{e.name}</option>
+              ))}
             </select>
             <h2 className="my-4 mb-4 text-2xl text-left font-primaryBold text-textclr2">
               Period

@@ -37,6 +37,24 @@ export const getPeriods = async () => {
     }
 };
 
+export const getVTokens = async () => {
+    const config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: "https://api.prnthub.com/vtoken",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    };
+
+    try {
+      const response = await axios.request(config);
+      return { success: true, vtokens: response.data };
+    } catch (error) {
+      return { success: false };
+    }
+};
+
 export const createVToken = async (jwtToken: string | null, name: string, mint: string , decimals: number) => {
     const data = {
         'name': name,
