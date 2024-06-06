@@ -8,25 +8,28 @@ import WalletsContextProvider from "./contexts/ClientWalletProvider.tsx";
 import VoteList from "./pages/VoteList.tsx";
 import NFTSubmit from "./pages/NFTSubmit.tsx";
 import PrivacyPolicy from "./pages/privacyPolicy";
+import { JwtTokenProvider } from "./contexts/JWTTokenProvider.tsx";
 
 function App() {
   return (
     <div className="App">
-      <WalletsContextProvider>
-        <Browser>
-          <Routes>
-            <Route element={<Content />}>
-              <Route path="/" element={<Homepage />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/submitToken" element={<TokenSubmit />} />
-              <Route path="/NFTSubmit" element={<NFTSubmit />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
-              <Route path="/voteList" element={<VoteList />} />
-            </Route>
-          </Routes>
-        </Browser>
-      </WalletsContextProvider>
+      <JwtTokenProvider>
+        <WalletsContextProvider>
+          <Browser>
+            <Routes>
+              <Route element={<Content />}>
+                <Route path="/" element={<Homepage />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/submitToken" element={<TokenSubmit />} />
+                <Route path="/NFTSubmit" element={<NFTSubmit />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
+                <Route path="/voteList" element={<VoteList />} />
+              </Route>
+            </Routes>
+          </Browser>
+        </WalletsContextProvider>
+      </JwtTokenProvider>
     </div>
   );
 }

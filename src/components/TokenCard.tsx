@@ -8,6 +8,8 @@ interface TokenCardProps {
   projectDesc: string;
   socials: string[];
   status: "Active" | "Completed";
+  startAt: string;
+  endAt: string;
 }
 
 const TokenCard: React.FC<TokenCardProps> = ({
@@ -16,6 +18,8 @@ const TokenCard: React.FC<TokenCardProps> = ({
   projectDesc,
   socials,
   status,
+  startAt,
+  endAt
 }) => {
   const [showModal, setShowModal] = useState(false);
 
@@ -52,10 +56,10 @@ const TokenCard: React.FC<TokenCardProps> = ({
         <PollIcon className="inline mr-4 text-textclr2" />
         <div className="flex flex-col">
           <span className="text-textclr font-primaryRegular">
-            Voting Period:
+            {startAt}
           </span>
           <span className="text-textclr2 font-primaryRegular">
-            12th June - 20th June
+            {endAt}
           </span>
         </div>
       </div>

@@ -1,8 +1,10 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent, useContext } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { FaFileAlt, FaDownload } from "react-icons/fa";
 import { Oval } from "react-loader-spinner";
+import { JwtTokenContext } from "../contexts/JWTTokenProvider";
+
 interface FormData {
   name: string;
   symbol: string;
@@ -29,6 +31,8 @@ const TokenSubmit: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
 
+  const { jwtToken } = useContext(JwtTokenContext);
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -53,22 +57,25 @@ const TokenSubmit: React.FC = () => {
     const data = new FormData();
     data.append("name", formData.name);
     data.append("symbol", formData.symbol);
-    data.append("supply", formData.supply);
+    data.append("totalSupply", formData.supply);
     data.append("decimals", formData.decimals.toString());
-    data.append("description", formData.description);
+    data.append("proposalTitle", "");
+    data.append("proposalStatus", "LAUNCHED")
+    data.append("proposalDesc", formData.description);
+    data.append("periodId", "1");
     if (formData.tokenomics) {
-      data.append("tokenomics", formData.tokenomics);
+      data.append("tokenomicsURL", formData.tokenomics);
     }
     if (formData.logo) {
-      data.append("logo", formData.logo);
+      data.append("logoURL", formData.logo);
     }
 
     const config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://api.prnthub.com/user/signup",
+      url: "https://api.prnthub.com/token",
       headers: {
-        "Authorization": "Bearer " + access_token,
+        "Authorization": "Bearer " + jwtToken,
         "Content-Type": "multipart/form-data"
       },
       data: data,
@@ -77,7 +84,7 @@ const TokenSubmit: React.FC = () => {
     await axios.request(config);
 
     try {
-      const response = await axios.post("https://api.prnthub.com/token/", data);
+      const response = await axios.request(config);
       console.log("Success:", response.data);
       setSuccess(true);
     } catch (error) {

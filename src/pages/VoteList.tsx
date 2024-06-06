@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaSort } from "react-icons/fa";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
@@ -6,55 +6,49 @@ import EventIcon from "@mui/icons-material/Event";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import TokenCard from "../components/TokenCard";
 import { Drawer } from "vaul";
+import { getPeriods, getProjects } from "../api/apis";
 
-const projectsData = [
-  {
-    projectLogo:
-      "https://shdw-drive.genesysgo.net/6ckeAEwCjs6qjCTv5mghBfdwHkB5aCfTes9mqxbxb5EE/hubx.png",
-    projectName: "PRIME",
-    projectDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    socials: ["https://twitter.com/", "https://google.com/"],
-    status: "Active",
-  },
-  {
-    projectLogo:
-      "https://shdw-drive.genesysgo.net/6ckeAEwCjs6qjCTv5mghBfdwHkB5aCfTes9mqxbxb5EE/hubx.png",
-    projectName: "SLERF",
-    projectDesc:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dapibus leo eget volutpat imperdiet. Nam placerat, massa a facilisis vestibulum, velit mauris convallis mi, a tempus dui nulla eget purus. Fusce laoreet quis justo et elementum. In dapibus est vehicula magna efficitur sollicitudin. Praesent mollis mi non convallis dictum.",
-    socials: ["https://twitter.com/", "https://google.com/"],
-    status: "Active",
-  },
-  {
-    projectLogo:
-      "https://shdw-drive.genesysgo.net/6ckeAEwCjs6qjCTv5mghBfdwHkB5aCfTes9mqxbxb5EE/hubx.png",
-    projectName: "TEST",
-    projectDesc: "Lorem ipsum dolor sit amet. katej ",
-    socials: ["https://twitter.com/", "https://google.com/"],
-    status: "Completed",
-  },
-  {
-    projectLogo:
-      "https://shdw-drive.genesysgo.net/6ckeAEwCjs6qjCTv5mghBfdwHkB5aCfTes9mqxbxb5EE/hubx.png",
-    projectName: "TEST",
-    projectDesc:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dapibus leo eget volutpat imperdiet. Nam placerat, massa a facilisis vestibulum, velit mauris convallis mi, a tempus dui nulla eget purus. Fusce laoreet quis justo et elementum. In dapibus est vehicula magna efficitur sollicitudin. Praesent mollis mi non convallis dictum. loerm sd tibulum, velit mauris convallis mi, a tempus dui nulla eget purus. Fusce laoreet quis justo et elementum. In dapibus est vehicula magna efficitur sollicitudin. Praesent mollis mi non convallis dictum. adipiscing elit. ",
-    socials: ["https://twitter.com/", "https://google.com/"],
-    status: "Active",
-  },
-  {
-    projectLogo:
-      "https://shdw-drive.genesysgo.net/6ckeAEwCjs6qjCTv5mghBfdwHkB5aCfTes9mqxbxb5EE/hubx.png",
-    projectName: "TEST",
-    projectDesc: "Lorem ipsum dolor si. snroket tjdfk sd ggjjs 4343gd.",
-    socials: ["https://twitter.com/", "https://google.com/"],
-    status: "Completed",
-  },
-];
+interface Project {
+  periodId: number,
+  logoURL: string,
+  name: string,
+  proposalDesc: string,
+  socials: ["https://twitter.com/", "https://google.com/"],
+  proposalStatus: string,
+  startAt: string,
+  endAt: string
+};
 
 const VoteList = () => {
-  const [projects] = useState(projectsData);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [sortOrder, setSortOrder] = useState("all");
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const pros = await getProjects();
+      const periods = await getPeriods();
+  
+      if ( pros.success === true && periods.success === true ) {
+        setProjects(pros.projects.map((e: Project) => {
+          const period = periods.periods.filter((item: any) => (item.id === e.periodId))
+
+          if ( !period )
+            return null;
+          return {
+            logoURL: e.logoURL,
+            name: e.name,
+            proposalDesc: e.proposalDesc,
+            proposalStatus: e.proposalStatus,
+            socials: ["https://twitter.com/", "https://google.com/"],
+            startAt: period[0].startAt,
+            endAt: period[0].endAt
+          }
+        }))
+      }
+    }
+  
+    fetchProjects();
+  }, [])
 
   const handleSort = (order: string) => {
     setSortOrder(order);
@@ -63,9 +57,9 @@ const VoteList = () => {
   // Sort projects based on status
   const filteredProjects = projects.filter((project) => {
     if (sortOrder === "active") {
-      return project.status === "Active";
+      return project.proposalStatus === "Active";
     } else if (sortOrder === "completed") {
-      return project.status === "Completed";
+      return project.proposalStatus === "Completed";
     } else {
       return true; // Default to show all projects
     }
@@ -88,15 +82,6 @@ const VoteList = () => {
             <p className="mb-4 text-center">
               Vote for your favourite projects.
               <br />
-              <span className="font-primaryRegular">
-                Start:
-                <span className="text-textclr"> 25 May 2024, 22:33 PM</span>
-              </span>
-              <br />
-              <span className="font-primaryRegular">
-                End:
-                <span className="text-textclr"> 5 June 2024, 22:33 PM</span>
-              </span>
             </p>
 
             {/* // Sort Dropdown  */}
@@ -157,16 +142,21 @@ const VoteList = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.5 }}
             >
-              {filteredProjects.map((project, index) => (
-                <TokenCard
+              {filteredProjects.map((project, index) => {
+                console.log("##########------#", project)
+                if ( project.proposalStatus == "LAUNCHED" )
+                  return null;
+                return <TokenCard
                   key={index}
-                  projectName={project.projectName}
-                  projectLogo={project.projectLogo}
-                  projectDesc={project.projectDesc}
+                  projectName={project.name}
+                  projectLogo={project.logoURL}
+                  projectDesc={project.proposalDesc}
                   socials={project.socials}
-                  status={project.status as "Active" | "Completed"}
+                  status={project.proposalStatus as "Active" | "Completed"}
+                  startAt={project.startAt}
+                  endAt={project.endAt}
                 />
-              ))}
+              })}
             </motion.div>
           </div>
         </div>

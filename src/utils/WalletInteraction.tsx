@@ -1,4 +1,4 @@
-import { FC, useCallback, useState, useEffect } from "react";
+import { FC, useCallback, useState, useEffect, useContext } from "react";
 import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import axios from "axios";
@@ -6,11 +6,14 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Buffer } from "buffer";
 
+import { JwtTokenContext } from "../contexts/JWTTokenProvider";
+
 const WalletInteraction: FC = () => {
   const { publicKey, signMessage } = useWallet() as WalletContextState & {
     signMessage: (message: Uint8Array) => Promise<Uint8Array>;
   };
-  const [jwtToken, setJwtToken] = useState<string | null>(null);
+
+  const { jwtToken, setJwtToken } = useContext(JwtTokenContext);
   const [isRegistered, setIsRegistered] = useState<boolean | null>(null);
 
   const handleLogin = useCallback(async () => {
