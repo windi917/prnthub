@@ -39,7 +39,7 @@ const WalletInteraction: FC = () => {
 
       const response = await axios.request(config);
 
-      if (response.data.token) {
+      if ( response.data.success == true ) {
         setJwtToken(response.data.token);
         setIsRegistered(true);
         toast.success("Login successful!");
@@ -74,6 +74,7 @@ const WalletInteraction: FC = () => {
       const signedMessage = await signMessage(message);
       const data = JSON.stringify({
         address: publicKey.toBase58(), // Convert public key to base58 string
+        msg: "Sign this message for signup",
         signature: Buffer.from(signedMessage).toString("base64"),
       });
 

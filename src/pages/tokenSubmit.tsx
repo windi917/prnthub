@@ -63,6 +63,19 @@ const TokenSubmit: React.FC = () => {
       data.append("logo", formData.logo);
     }
 
+    const config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://api.prnthub.com/user/signup",
+      headers: {
+        "Authorization": "Bearer " + access_token,
+        "Content-Type": "multipart/form-data"
+      },
+      data: data,
+    };
+
+    await axios.request(config);
+
     try {
       const response = await axios.post("https://api.prnthub.com/token/", data);
       console.log("Success:", response.data);
@@ -73,7 +86,6 @@ const TokenSubmit: React.FC = () => {
       setLoading(false);
     }
   };
-  console.log(loading);
   return (
     <section className="bg-radial-gradient dark:bg-bg">
       <div className="flex justify-center min-h-screen">

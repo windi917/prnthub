@@ -53,10 +53,10 @@ const projectsData = [
 ];
 
 const VoteList = () => {
-  const [projects, setProjects] = useState(projectsData);
+  const [projects] = useState(projectsData);
   const [sortOrder, setSortOrder] = useState("all");
 
-  const handleSort = (order) => {
+  const handleSort = (order: string) => {
     setSortOrder(order);
   };
 
