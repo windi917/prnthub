@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PollIcon from "@mui/icons-material/Poll";
 import Modal from "./ModalVote";
 
 interface TokenCardProps {
@@ -19,35 +20,51 @@ const TokenCard: React.FC<TokenCardProps> = ({
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="flex flex-col justify-between p-4 mx-4 border rounded-lg shadow-2xl border-textclr2 card bg-white/10">
-      <div className="flex items-center justify-between cursor-pointer">
+    <div className="relative flex flex-col justify-between p-4 mx-4 border rounded-lg shadow-2xl min-h-[20rem] border-textclr2 card bg-white/10">
+      <div className="flex items-center mb-4 cursor-pointer">
         <div className="flex items-center">
           <img
             src={projectLogo}
             alt={projectName}
-            className="w-12 h-12 rounded-full ring-2 ring-textclr2/70"
+            className="w-12 h-12 mr-4 rounded-full ring-2 ring-textclr2/70"
           />
-          <h3 className="ml-3 text-textclr2 font-primaryBold">{projectName}</h3>
+          <h3 className="text-textclr2 font-primaryBold">{projectName}</h3>{" "}
         </div>
-        <span
-          className={`text-sm px-2 py-1 border-textclr2 border-2 rounded-full ${
+        <div className="flex-1" />
+        <div
+          className={`text-sm px-2 py-1 ml-[130px] border-textclr2 border-2 rounded-full ${
             status === "Active"
-              ? // ? "bg-green-300/90 hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
-                "bg-[#34D399] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
+              ? "bg-[#34D399] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
               : " bg-[#1E40AF] hover:bg-indigo-300 cursor-progress text-textclr font-primaryRegular"
-            // : " bg-teal-400/30 hover:bg-teal-300/80 cursor-progress text-textclr font-primaryRegular"
           }`}
         >
           {status}
+        </div>
+      </div>
+      <div className="flex-1">
+        <span className="min-h-0 mt-2 overflow-auto text-sm text-balance text-textclr">
+          {projectDesc}
         </span>
       </div>
 
-      <p className="mt-2 text-balance text-textclr">{projectDesc}</p>
-      <div className="flex mt-2 space-x-2">
+      {/* //Voting Period from date to date */}
+      <div className="flex items-center px-2 py-2 my-2 text-sm rounded-md shadow-sm cursor-pointer bg-textclr2/30 hover:bg-textclr2/40 hover:text-textclr font-primaryRegular">
+        <PollIcon className="inline mr-4 text-textclr2" />
+        <div className="flex flex-col">
+          <span className="text-textclr font-primaryRegular">
+            Voting Period:
+          </span>
+          <span className="text-textclr2 font-primaryRegular">
+            12th June - 20th June
+          </span>
+        </div>
+      </div>
+
+      {/* Socials */}
+      <div className="flex pt-2 mt-auto space-x-2 hover:text-textclr">
         {socials.map((social, index) => (
-          <a key={index} href={social} className="text-textclr2">
+          <a key={index} href={social} className="text-textclr2 ">
             {social.includes("twitter") ? (
-              // Twitter Icon
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="1.2em"
@@ -60,7 +77,6 @@ const TokenCard: React.FC<TokenCardProps> = ({
                 />
               </svg>
             ) : (
-              // Website Icon
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="1.2em"

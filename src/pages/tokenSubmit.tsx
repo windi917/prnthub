@@ -1,7 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-
+import { FaFileAlt, FaDownload } from "react-icons/fa";
+import { Oval } from "react-loader-spinner";
 interface FormData {
   name: string;
   symbol: string;
@@ -23,18 +24,31 @@ const TokenSubmit: React.FC = () => {
     logo: null,
   });
 
+  const [tokenomicsFileName, setTokenomicsFileName] = useState<string>("");
+  const [logoFileName, setLogoFileName] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value, files } = e.target as HTMLInputElement;
-    setFormData({
-      ...formData,
-      [name]: files ? files[0] : value,
-    });
+    if (files && files.length > 0) {
+      if (name === "tokenomics") {
+        setFormData({ ...formData, tokenomics: files[0] });
+        setTokenomicsFileName(files[0].name);
+      } else if (name === "logo") {
+        setFormData({ ...formData, logo: files[0] });
+        setLogoFileName(files[0].name);
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    setLoading(true);
 
     const data = new FormData();
     data.append("name", formData.name);
@@ -52,13 +66,16 @@ const TokenSubmit: React.FC = () => {
     try {
       const response = await axios.post("https://api.prnthub.com/token/", data);
       console.log("Success:", response.data);
+      setSuccess(true);
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
-
+  console.log(loading);
   return (
-    <section className="bg-radial-gradient dark:bg-bg ">
+    <section className="bg-radial-gradient dark:bg-bg">
       <div className="flex justify-center min-h-screen">
         <motion.div
           className="flex items-center max-w-3xl p-8 mx-auto my-16 shadow-lg backdrop-blur-3xl rounded-box bg-white/10 lg:px-12 lg:w-3/5 md:w-1/2 md:px-8"
@@ -89,7 +106,6 @@ const TokenSubmit: React.FC = () => {
                   className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
                 />
               </div>
-
               <div>
                 <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
                   Symbol
@@ -103,7 +119,6 @@ const TokenSubmit: React.FC = () => {
                   className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
                 />
               </div>
-
               <div>
                 <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
                   Supply
@@ -117,7 +132,6 @@ const TokenSubmit: React.FC = () => {
                   className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
                 />
               </div>
-
               <div>
                 <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
                   Decimals
@@ -134,7 +148,6 @@ const TokenSubmit: React.FC = () => {
                   title="Numbers only"
                 />
               </div>
-
               <div>
                 <label
                   htmlFor="Description"
@@ -150,6 +163,7 @@ const TokenSubmit: React.FC = () => {
                   className="block mt-2 w-full rounded-lg border border-gray-200 bg-white px-4 h-32 py-2.5 text-slate-700 focus:border-textclr2 focus:outline-none focus:ring focus:ring-textclr2 focus:ring-opacity-40 dark:border-white dark:bg-gray-900 dark:text-white dark:focus:border-textclr2"
                 ></textarea>
               </div>
+              {/* Tokenomics Upload */}
               <div>
                 <label
                   htmlFor="tokenomics"
@@ -179,7 +193,7 @@ const TokenSubmit: React.FC = () => {
                     Upload Tokenomics
                   </h2>
                   <p className="mt-2 text-xs tracking-wide text-slate-500 dark:text-slate-400">
-                    Upload your file txt, pdf or excel.
+                    Upload your file PDF, PNG, JPG or GIF.
                   </p>
                   <input
                     id="tokenomics"
@@ -188,9 +202,20 @@ const TokenSubmit: React.FC = () => {
                     onChange={handleChange}
                     className="hidden"
                   />
+                  {tokenomicsFileName && (
+                    <div className="flex items-center mt-2 text-xs text-slate-700 dark:text-slate-400">
+                      <div className="flex items-center">
+                        <FaFileAlt className="mr-2 text-slate-500 dark:text-slate-400" />
+                        <span>{tokenomicsFileName}</span>
+                      </div>
+                      <div className="ml-4">
+                        <FaDownload className="cursor-pointer text-slate-500 dark:text-slate-400" />
+                      </div>
+                    </div>
+                  )}
                 </label>
               </div>
-
+              {/* Logo Upload */}
               <div>
                 <label
                   htmlFor="logo"
@@ -229,9 +254,19 @@ const TokenSubmit: React.FC = () => {
                     onChange={handleChange}
                     className="hidden"
                   />
+                  {logoFileName && (
+                    <div className="flex items-center mt-2 text-xs text-slate-700 dark:text-slate-400">
+                      <div className="flex items-center">
+                        <FaFileAlt className="mr-2 text-slate-500 dark:text-slate-400" />
+                        <span>{logoFileName}</span>
+                      </div>
+                      <div className="ml-4">
+                        <FaDownload className="cursor-pointer text-slate-500 dark:text-slate-400" />
+                      </div>
+                    </div>
+                  )}
                 </label>
               </div>
-
               {/* -- Submit Button -- */}
               <div className="flex items-center justify-center">
                 <button
@@ -241,6 +276,29 @@ const TokenSubmit: React.FC = () => {
                   Submit
                 </button>
               </div>
+              {/* Loading Spinner */}
+              {loading && (
+                <>
+                  <Oval
+                    height="80"
+                    visible={true}
+                    width="80"
+                    color="#CCF869"
+                    ariaLabel="oval-loading"
+                    wrapperStyle={{
+                      position: "fixed",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                    }}
+                  />
+                  {success && (
+                    <div className="fixed inset-0 z-10 flex justify-center pt-20 pb-4 font-semibold text-center bg-opacity-50 text-textclr2 bg-bg">
+                      Submitted successfully!
+                    </div>
+                  )}
+                </>
+              )}
             </form>
           </div>
         </motion.div>

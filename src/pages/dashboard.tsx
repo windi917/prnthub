@@ -2,6 +2,7 @@ import { useState } from "react";
 import * as React from "react";
 import { motion } from "framer-motion";
 import Modal from "../components/Modal";
+import EditModal from "../components/TokenRegisterModal";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import PollIcon from "@mui/icons-material/Poll";
@@ -22,6 +23,8 @@ const Dashboard = () => {
   const [passScore, setPassScore] = useState<number>(0);
   const [tokens, setTokens] = useState<Token[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isEditTokenModalOpen, setIsEditTokenModalOpen] =
+    useState<boolean>(false);
 
   // Example fetch function for API
   const fetchData = async () => {
@@ -50,6 +53,14 @@ const Dashboard = () => {
   const handleDeleteToken = (index: number) => {
     const newTokens = tokens.filter((_, i) => i !== index);
     setTokens(newTokens);
+  };
+
+  const openEditTokenModal = () => {
+    setIsEditTokenModalOpen(true);
+  };
+
+  const closeEditTokenModal = () => {
+    setIsEditTokenModalOpen(false);
   };
 
   return (
@@ -287,11 +298,20 @@ const Dashboard = () => {
                         <td>{index + 1}</td>
                         <td>{token.name}</td>
                         <td>{token.name}</td>{" "}
-                        {/* Description chnage as needed */}
+                        {/* Description change as needed */}
                         <td>
-                          <button className="text-white rounded-md shadow-sm btn bg-textclr2/70 font-primaryRegular hover:bg-textclr2/30 btn-sm ">
-                            Cancel
+                          <button
+                            onClick={() => openEditTokenModal()}
+                            className="text-white rounded-md shadow-sm btn bg-textclr2/70 font-primaryRegular hover:bg-textclr2/30 btn-sm"
+                          >
+                            Edit
                           </button>
+                          {isEditTokenModalOpen && (
+                            <EditModal
+                              isOpen={isEditTokenModalOpen}
+                              onClose={closeEditTokenModal}
+                            />
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -319,8 +339,6 @@ const Dashboard = () => {
             <input
               type="text"
               placeholder="Enter Wallet Address"
-              // value={WalletAddress}
-              // onChange={(e) => setPassScore(parseInt(e.target.value))}
               className="block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-textclr2 bg-white px-5 py-2.5 text-gray-700 focus:border-textclr2 focus:outline-none focus:ring focus:ring-textclr2 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-textclr2"
             />
             <h2 className="my-4 mb-4 text-2xl text-left font-primaryRegular text-textclr2">
@@ -329,8 +347,6 @@ const Dashboard = () => {
             <input
               type="text"
               placeholder="Enter Token Name"
-              // value={tokens}
-              // onChange={(e) => setPassScore(parseInt(e.target.value))}
               className="block w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-textclr2 bg-white px-5 py-2.5 text-gray-700 focus:border-textclr2 focus:outline-none focus:ring focus:ring-textclr2 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-textclr2"
             />
             <button
