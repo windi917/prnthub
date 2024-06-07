@@ -109,18 +109,11 @@ const WalletInteraction: FC = () => {
     <div>
       <ToastContainer />
       <WalletMultiButton />
-      {publicKey && isRegistered === true && (
-        <div>
-          <p>Connected: {publicKey.toBase58()}</p>
-        </div>
-      )}
       {publicKey && isRegistered === false && (
         <div>
-          <p>User not registered. Please sign up.</p>
           <button onClick={handleSignup}>Sign Up</button>
         </div>
       )}
-      {jwtToken && <div>JWT Token: {jwtToken}</div>}
     </div>
   );
 };

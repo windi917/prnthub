@@ -11,6 +11,7 @@ import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutl
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import ApprovalIcon from "@mui/icons-material/Approval";
 import Box from "@mui/material/Box";
+import { Oval } from "react-loader-spinner";
 
 import { toast } from "react-toastify";
 import { checkMintAddress, getDecimals } from "../utils/WebIntegration";
@@ -52,21 +53,28 @@ const Dashboard = () => {
 
   const { jwtToken } = useContext(JwtTokenContext);
 
+  const [loading, setLoading] = useState<boolean>(false);
+  // const [success, setSuccess] = useState<boolean>(false);
+
   // const [isEditTokenModalOpen, setIsEditTokenModalOpen] =
   //   useState<boolean>(false);
 
   const [projects, setProjects] = useState<Project[]>([]);
 
   const fetchProjects = useCallback(async () => {
+    setLoading(true);
     const pros = await getProjects();
     const periods = await getPeriods();
 
-    if (pros.success === true && periods.success === true ) {
+    if (pros.success === true && periods.success === true) {
       setProjects(pros.projects.map((e: Project) => {
         const period = periods.periods.filter((item: any) => (item.id === e.periodId));
-        if ( !period )
-          return null;
+        if (!period) {
+          setLoading(false);
+          return null
+        }
 
+        setLoading(false);
         return {
           id: e.id,
           logoURL: e.logoURL,
@@ -91,16 +99,25 @@ const Dashboard = () => {
     e.preventDefault();
     // Logic to handle form submission
 
-    console.log("@@@@@@@@@@@@@@@", projectId, fromDate, toDate, tokens, passScore)
+    setLoading(true);
+
+    if ( !fromDate || projectId == 0 || !toDate || passScore < 0 ) {
+      toast.error("Input values correctly!")
+      setLoading(false);
+      return;
+    }
 
     const response = await createVotePeriod(jwtToken, projectId, fromDate, toDate, "", passScore);
     if (response.success == false) {
       toast.error("Create Vote Period error!");
+      setLoading(false);
       return;
     }
 
-    if ( !response.period )
+    if (!response.period) {
+      setLoading(false);
       return;
+    }
 
     const period = response.period;
     for (let i = 0; i < tokens.length; i++) {
@@ -108,31 +125,42 @@ const Dashboard = () => {
       const res = await createTokenPair(jwtToken, period.id, tokens[i].id, tokens[i].weight, tokens[i].minVoteAmount);
       if (res.success == false) {
         toast.error("Create TokenPair error!");
+        setLoading(false);
         return;
       }
     }
 
+    setLoading(false);
     toast.success("Create Vote Period success!");
     fetchProjects();
   };
 
   const handleApprove = async (tokenId: number) => {
+    setLoading(true);
+
     const res = await setTokenStatus(jwtToken, tokenId, "APPROVED");
-    if ( res.success == false) {
+    if (res.success == false) {
+      setLoading(false);
       toast.error("Approve token failed!");
       return;
     }
 
+    setLoading(false);
     toast.success("Approve token Success!");
     fetchProjects();
   };
 
   const handleReject = async (tokenId: number) => {
+    setLoading(true);
+
     const res = await setTokenStatus(jwtToken, tokenId, "DECLINED");
-    if ( res.success == false) {
+    if (res.success == false) {
+      setLoading(false);
       toast.error("Reject token failed!");
+      return;
     }
 
+    setLoading(false);
     toast.success("Reject token Success!");
     fetchProjects();
   };
@@ -145,23 +173,30 @@ const Dashboard = () => {
   const handleTokenRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setLoading(true);
+
     const mintValid = await checkMintAddress(vTokenMintAddress);
     if (mintValid.success === false) { // valid mint
+      setLoading(false);
       toast.error("Mint Address is invalid!");
       return;
     }
 
     const res = await getDecimals(vTokenMintAddress);
     if (res.success == false) {
+      setLoading(false);
       toast.error("Get Decimals error!");
       return;
     }
 
     const response = await createVToken(jwtToken, vTokenName, vTokenMintAddress, res.decimals);
     if (response.success == false) {
+      setLoading(false);
       toast.error("Create Vote Token error!");
       return;
     }
+
+    setLoading(false);
   };
 
   const addToken = (token: Token) => {
@@ -245,6 +280,7 @@ const Dashboard = () => {
                   <th className="px-4 py-2">No</th>
                   <th className="px-4 py-2">Project Name</th>
                   <th className="px-4 py-2">Description</th>
+                  <th className="px-4 py-2">Status</th>
                   <th className="px-4 py-2">Vote Create</th>
                 </tr>
               </thead>
@@ -257,10 +293,14 @@ const Dashboard = () => {
                     <td className="px-4 py-2 break-words">
                       {project.proposalDesc}
                     </td>
+                    <td className="px-4 py-2 break-words">
+                      {project.proposalStatus}
+                    </td>
                     <td className="px-4 py-2">
                       <button
                         onClick={() => setValue(1)}
                         className="text-white rounded-md shadow-sm btn bg-textclr2/70 font-primaryRegular hover:bg-textclr2/30 btn-sm"
+                        disabled={project.proposalStatus === "PENDING" ? false : true}
                       >
                         Create Vote
                       </button>
@@ -294,7 +334,7 @@ const Dashboard = () => {
             >
               <option disabled>Select Project</option>
               {projects.map((e) => {
-                if ( e.proposalStatus === "PENDING" )
+                if (e.proposalStatus === "PENDING")
                   return <option value={e.id}>{e.name}</option>;
                 return null;
               })}
@@ -426,7 +466,7 @@ const Dashboard = () => {
               Applications
             </h2>
             {/* <h2 className="mb-4 text-2xl text-left font-primaryBold text-textclr2"> */}
-              {/* Vote 1 */}
+            {/* Vote 1 */}
             {/* </h2> */}
             {/* Table Component */}
             <div className="overflow-x-auto">
@@ -444,7 +484,7 @@ const Dashboard = () => {
                 </thead>
                 <tbody className="font-primaryRegular">
                   {projects.filter((e) => {
-                    if ( new Date(e.endAt) < new Date() )
+                    if (new Date(e.endAt) < new Date())
                       return true;
                     return false;
                   }).map((project, index) => (
@@ -457,15 +497,15 @@ const Dashboard = () => {
                       <td>{project.currentVotePower}</td>
                       <td>{project.proposalStatus}</td>
                       <td className="px-4 py-2 space-x-2 space-y-2">
-                        <button 
-                          className="text-white rounded-md shadow-sm bg-green-500/40 btn font-primaryRegular hover:bg-green-400/20 btn-sm" 
+                        <button
+                          className="text-white rounded-md shadow-sm bg-green-500/40 btn font-primaryRegular hover:bg-green-400/20 btn-sm"
                           onClick={() => handleApprove(project.id)}
                           disabled={project.proposalStatus === "APPROVED" ? true : false}
                         >
                           Approve
                         </button>
-                        <button 
-                          className="text-white rounded-md shadow-sm btn bg-red-500/40 font-primaryRegular hover:bg-red-500/20 btn-sm" 
+                        <button
+                          className="text-white rounded-md shadow-sm btn bg-red-500/40 font-primaryRegular hover:bg-red-500/20 btn-sm"
                           onClick={() => handleReject(project.id)}
                           disabled={project.proposalStatus === "DECLINED" ? true : false}
                         >
@@ -521,6 +561,23 @@ const Dashboard = () => {
           </motion.div>
         )}
       </Box>
+      {loading && (
+        <>
+          <Oval
+            height="80"
+            visible={true}
+            width="80"
+            color="#CCF869"
+            ariaLabel="oval-loading"
+            wrapperStyle={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+        </>
+      )}
     </motion.div>
   );
 };

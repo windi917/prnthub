@@ -3,6 +3,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getVTokens } from "../api/apis";
 
+import { Oval } from "react-loader-spinner";
+
 import { useWallet } from "@solana/wallet-adapter-react";
 import { createVote } from "../utils/WebIntegration";
 import { createVoteApi } from "../api/apis";
@@ -19,6 +21,8 @@ interface ModalProps {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   projectId: number;
   voteTokens: TokenPair[];
+  currentVotePower: number;
+  setVotePower: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface VoteToken {
@@ -28,13 +32,15 @@ interface VoteToken {
   decimals: number
 };
 
-const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens }) => {
+const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, currentVotePower, setVotePower }) => {
   const [voteAmount, setVoteAmount] = useState("");
   const [tokenMint, setTokenMint] = useState<string>("");
   const [decimals, setDecimals] = useState<number>(0);
 
   const [vTokens, setVTokens] = useState<VoteToken[]>([]);
   const wallet = useWallet();
+
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { jwtToken } = useContext(JwtTokenContext);
 
@@ -86,16 +92,21 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens }
         pauseOnHover: true,
         theme: "dark",
       });
+      return;
     }
+
+    setLoading(true);
 
     const txHash = await createVote(tokenMint, wallet, 'HRD7gyMZwkQ65uFgvYmoxrmxdW1KjRCa9g9uRiw5RBoj', parseInt(voteAmount) * Math.pow(10, decimals))
     if (!txHash) {
+      setLoading(false);
       toast.error("Vote failed(transaction)!");
       return;
     }
 
     const response = await createVoteApi(jwtToken, txHash, projectId, parseInt(voteAmount));
     if (response.success == false) {
+      setLoading(false);
       toast.error("Create Vote error!");
       return;
     }
@@ -109,6 +120,9 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens }
       theme: "dark",
     });
 
+    setVotePower(currentVotePower + parseInt(voteAmount));
+
+    setLoading(false);
     setShowModal(false);
   };
 
@@ -121,6 +135,24 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens }
     <>
       <ToastContainer />
       <div className="fixed inset-0 z-10 flex items-center justify-center bg-opacity-50 bg-bg ">
+        {/* Loading Spinner */}
+        {loading ? (
+          <>
+            <Oval
+              height="80"
+              visible={true}
+              width="80"
+              color="#CCF869"
+              ariaLabel="oval-loading"
+              wrapperStyle={{
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            />
+          </>
+        ) : (
         <div className="p-8 mx-3 border rounded-lg bg-slate-800/90 border-textclr2">
           <h2 className="mb-4 text-xl text-textclr2">Vote </h2>
           <select
@@ -154,7 +186,7 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens }
           >
             Close
           </button>
-        </div>
+        </div>)}
       </div>
     </>
   );

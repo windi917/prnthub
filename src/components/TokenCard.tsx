@@ -36,6 +36,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
   vTokens
 }) => {
   const [showModal, setShowModal] = useState(false);
+  const [votePower, setVotePower] = useState(currentVotePower);
 
   let bgStyle = "bg-[#AAAAAA] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
   if ( status === "VOTING" )
@@ -94,7 +95,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
           <span className=" text-textclr font-primaryRegular">
             Votes Received:
           </span>
-          <span className="text-textclr2 font-primaryRegular">{currentVotePower}</span>
+          <span className="text-textclr2 font-primaryRegular">{votePower}</span>
           {/* Hard coded for now */}
         </div>
       </div>
@@ -140,7 +141,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
       >
         Vote
       </button>
-      {showModal && <Modal setShowModal={setShowModal} projectId={projectId} voteTokens={vTokens} />}
+      {showModal && <Modal setShowModal={setShowModal} projectId={projectId} voteTokens={vTokens} currentVotePower={votePower} setVotePower={setVotePower}/>}
     </div>
   );
 };
