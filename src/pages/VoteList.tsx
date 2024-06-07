@@ -79,13 +79,25 @@ const VoteList = () => {
             >
               Vote List
             </motion.h1>
-            <p className="mb-4 text-center">
+            <motion.p
+              className="mb-4 text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+              layout
+            >
               Vote for your favourite projects.
               <br />
-            </p>
+            </motion.p>
 
-            {/* // Sort Dropdown  */}
-            <div className="my-2 dropdown">
+            {/*  -- Sort Dropdown --  */}
+            <motion.div
+              className="my-2 dropdown"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              layout
+            >
               <div
                 tabIndex={0}
                 role="button"
@@ -95,9 +107,9 @@ const VoteList = () => {
               </div>
               <div
                 tabIndex={0}
-                className="dropdown-content z-[1] card card-compact w-64 p-2 shadow bg-primary text-primary-content"
+                className="dropdown-content z-[1] card card-compact w-64 p-1 shadow bg-primary/60 text-primary-content"
               >
-                <ul className="rounded-lg shadow-lg menu bg-base-300 shadow-slate-800">
+                <ul className="rounded-lg shadow-lg menu bg-base-300 shadow-slate-800 text-textclr2">
                   <li>
                     <button
                       className={`w-full text-left ${
@@ -134,7 +146,7 @@ const VoteList = () => {
                   </li>
                 </ul>
               </div>
-            </div>
+            </motion.div>
 
             <motion.div
               className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
@@ -158,6 +170,15 @@ const VoteList = () => {
               })}
             </motion.div>
           </div>
+        </div>
+      </div>
+      {/* // Pagination  */}
+      <div className="flex justify-center p-2">
+        <div className="join ">
+          <button className="join-item btn btn-active text-textclr2">1</button>
+          <button className="join-item btn bg-btnbg/30 text-textclr2">2</button>
+          <button className="join-item btn bg-btnbg/30 text-textclr2">3</button>
+          <button className="join-item btn bg-btnbg/30 text-textclr2">4</button>
         </div>
       </div>
       <Drawer.Root>

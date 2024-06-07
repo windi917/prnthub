@@ -9,6 +9,7 @@ import PollIcon from "@mui/icons-material/Poll";
 import BallotIcon from "@mui/icons-material/Ballot";
 import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
+import ApprovalIcon from "@mui/icons-material/Approval";
 import Box from "@mui/material/Box";
 
 import { toast } from "react-toastify";
@@ -145,6 +146,11 @@ const Dashboard = () => {
           }}
         >
           <Tab
+            icon={<ApprovalIcon />}
+            label="Approvals"
+            aria-label="Approvals List"
+          />
+          <Tab
             icon={<PollIcon />}
             label="Create Vote"
             aria-label="Create Vote"
@@ -154,15 +160,62 @@ const Dashboard = () => {
             label="Applications"
             aria-label="Applications"
           />
-          <Tab
+          {/* <Tab
             icon={<AppRegistrationIcon />}
             label="Register"
             aria-label="Token Register"
-          />
+          /> */}
         </Tabs>
 
-        {/* --- Vote Config Container --- */}
+        {/* --- Approvals Container --- */}
         {value === 0 && (
+          <motion.div
+            className="flex flex-col justify-center w-full max-w-6xl p-8 mx-auto mt-1 overflow-x-auto shadow-md rounded-box bg-white/10 backdrop-blur-3xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            layout
+          >
+            <h2 className="mb-4 text-4xl text-center font-primaryBold text-textclr2">
+              Approvals
+            </h2>
+
+            {/* Table Component */}
+            <table className="table w-full text-textclr2">
+              <thead>
+                <tr className="text-2xl font-primaryRegular text-textclr2">
+                  <th className="px-4 py-2">No</th>
+                  <th className="px-4 py-2">Project Name</th>
+                  <th className="px-4 py-2">Description</th>
+                  <th className="px-4 py-2">Vote Create</th>
+                </tr>
+              </thead>
+              <tbody className="font-primaryRegular">
+                {projects.map((project, index) => (
+                  <tr key={index} className="border-b">
+                    <td className="px-4 py-2">{index + 1}</td>
+                    <td className="px-4 py-2">{project.name}</td>
+
+                    <td className="px-4 py-2 break-words">
+                      {project.description}
+                    </td>
+                    <td className="px-4 py-2">
+                      <button
+                        onClick={() => setValue(1)}
+                        className="text-white rounded-md shadow-sm btn bg-textclr2/70 font-primaryRegular hover:bg-textclr2/30 btn-sm"
+                      >
+                        Create Vote
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </motion.div>
+        )}
+
+        {/* --- Vote Config Container --- */}
+        {value === 1 && (
           <motion.div
             className="flex flex-col justify-center w-full max-w-2xl p-8 mx-auto mt-1 overflow-x-auto shadow-md rounded-box bg-white/10 backdrop-blur-3xl"
             initial={{ opacity: 0, y: 20 }}
@@ -301,9 +354,9 @@ const Dashboard = () => {
         )}
 
         {/* --- Applications Container --- */}
-        {value === 1 && (
+        {value === 2 && (
           <motion.div
-            className="flex flex-col justify-center w-full max-w-3xl p-8 pt-8 mx-auto shadow-md max-h-2xl rounded-box bg-white/10 backdrop-blur-3xl"
+            className="flex flex-col justify-center w-full max-w-6xl p-8 pt-8 mx-auto shadow-md max-h-2xl rounded-box bg-white/10 backdrop-blur-3xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
@@ -319,10 +372,11 @@ const Dashboard = () => {
             <div className="overflow-x-auto">
               <table className="table text-textclr2">
                 <thead>
-                  <tr className="text-2xl font-primaryBold text-textclr2">
+                  <tr className="text-2xl font-primaryRegular text-textclr2">
                     <th>No</th>
                     <th>Token Name</th>
                     <th>Description</th>
+                    <th>Update</th>
                     <th>Status</th>
                   </tr>
                 </thead>
@@ -334,8 +388,25 @@ const Dashboard = () => {
                       <td>{token.name}</td>
                       <td>{token.name}</td> {/* Description change as needed */}
                       <td>
-                        <button className="text-white rounded-md shadow-sm btn bg-textclr2/70 font-primaryRegular hover:bg-textclr2/30 btn-sm ">
-                          Cancel
+                        <button
+                          onClick={() => openEditTokenModal()}
+                          className="text-white rounded-md shadow-sm btn bg-textclr2/70 font-primaryRegular hover:bg-textclr2/30 btn-sm"
+                        >
+                          Edit
+                        </button>
+                        {isEditTokenModalOpen && (
+                          <EditModal
+                            isOpen={isEditTokenModalOpen}
+                            onClose={closeEditTokenModal}
+                          />
+                        )}
+                      </td>
+                      <td className="px-4 py-2 space-x-2 space-y-2">
+                        <button className="text-white rounded-md shadow-sm bg-green-500/40 btn font-primaryRegular hover:bg-green-400/20 btn-sm">
+                          Approve
+                        </button>
+                        <button className="text-white rounded-md shadow-sm btn bg-red-500/40 font-primaryRegular hover:bg-red-500/20 btn-sm">
+                          Reject
                         </button>
                       </td>
                     </tr>
@@ -353,6 +424,7 @@ const Dashboard = () => {
                       <th>No</th>
                       <th>Token Name</th>
                       <th>Description</th>
+                      <th>Update</th>
                       <th>Status</th>
                     </tr>
                   </thead>
@@ -378,6 +450,14 @@ const Dashboard = () => {
                             />
                           )}
                         </td>
+                        <td className="px-4 py-2 space-x-2 space-y-2">
+                          <button className="text-white rounded-md shadow-sm bg-green-500/40 btn font-primaryRegular hover:bg-green-400/20 btn-sm">
+                            Approve
+                          </button>
+                          <button className="text-white rounded-md shadow-sm btn bg-red-500/40 font-primaryRegular hover:bg-red-500/20 btn-sm">
+                            Reject
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -387,7 +467,7 @@ const Dashboard = () => {
           </motion.div>
         )}
         {/* --- Token Reg Container --- */}
-        {value === 2 && (
+        {/* {value === 3 && (
           <motion.div
             className="flex flex-col justify-center w-full max-w-xl p-8 mx-auto mt-4 shadow-md rounded-box bg-white/10 backdrop-blur-3xl"
             initial={{ opacity: 0, y: 20 }}

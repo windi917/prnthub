@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PollIcon from "@mui/icons-material/Poll";
+import BallotTwoToneIcon from "@mui/icons-material/BallotTwoTone";
 import Modal from "./ModalVote";
 
 interface TokenCardProps {
@@ -24,7 +25,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
   const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="relative flex flex-col justify-between p-4 mx-4 border rounded-lg shadow-2xl min-h-[20rem] border-textclr2 card bg-white/10">
+    <div className="relative flex flex-col justify-between p-4 mx-4 border rounded-lg shadow-2xl min-w-[10rem] min-h-[20rem] border-textclr2 card bg-white/10">
       <div className="flex items-center mb-4 cursor-pointer">
         <div className="flex items-center">
           <img
@@ -32,7 +33,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
             alt={projectName}
             className="w-12 h-12 mr-4 rounded-full ring-2 ring-textclr2/70"
           />
-          <h3 className="text-textclr2 font-primaryBold">{projectName}</h3>{" "}
+          <h3 className="text-textclr2 font-primaryBold">{projectName}</h3>
         </div>
         <div className="flex-1" />
         <div
@@ -51,16 +52,27 @@ const TokenCard: React.FC<TokenCardProps> = ({
         </span>
       </div>
 
-      {/* //Voting Period from date to date */}
+      {/* Voting Period  */}
       <div className="flex items-center px-2 py-2 my-2 text-sm rounded-md shadow-sm cursor-pointer bg-textclr2/30 hover:bg-textclr2/40 hover:text-textclr font-primaryRegular">
         <PollIcon className="inline mr-4 text-textclr2" />
         <div className="flex flex-col">
+	  <span className="text-textclr font-primaryRegular">
+            Voting Period:
+          </span>
           <span className="text-textclr font-primaryRegular">
             {startAt}
           </span>
           <span className="text-textclr2 font-primaryRegular">
             {endAt}
+      {/* Votes Calculation */}
+      <div className="flex items-center px-2 py-2 my-2 text-sm text-center rounded-md shadow-sm cursor-pointer bg-textclr2/50 hover:bg-textclr2/60 hover:text-textclr font-primaryRegular">
+        <BallotTwoToneIcon className="inline mr-4 text-textclr2" />
+        <div className="flex flex-row gap-1">
+          <span className=" text-textclr font-primaryRegular">
+            Votes Received:
           </span>
+          <span className="text-textclr2 font-primaryRegular">1500</span>
+          {/* Hard coded for now */}
         </div>
       </div>
 
@@ -98,7 +110,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
       </div>
       <button
         onClick={() => setShowModal(true)}
-        className="py-2 mt-4 tracking-wider rounded-md btn text-slate-700/90 font-primaryBold bg-textclr2/60 hover:bg-textclr2/90 focus:outline-none focus:bg-textclr2"
+        className="py-2 mt-4 tracking-wider rounded-md btn text-bg font-primaryRegular bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
       >
         Vote
       </button>

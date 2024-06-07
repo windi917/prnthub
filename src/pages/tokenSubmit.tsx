@@ -10,6 +10,8 @@ interface FormData {
   symbol: string;
   supply: string;
   decimals: number | "";
+  websitename: string;
+  twitterURL: string;
   description: string;
   tokenomics: File | null;
   logo: File | null;
@@ -21,6 +23,8 @@ const TokenSubmit: React.FC = () => {
     symbol: "",
     supply: "",
     decimals: "",
+    websitename: "",
+    twitterURL: "",
     description: "",
     tokenomics: null,
     logo: null,
@@ -58,6 +62,8 @@ const TokenSubmit: React.FC = () => {
     data.append("name", formData.name);
     data.append("symbol", formData.symbol);
     data.append("totalSupply", formData.supply);
+    data.append("website", formData.websitename);
+    data.append("twitter", formData.twitterURL);
     data.append("decimals", formData.decimals.toString());
     data.append("proposalTitle", "");
     data.append("proposalStatus", "LAUNCHED")
@@ -97,7 +103,7 @@ const TokenSubmit: React.FC = () => {
     <section className="bg-radial-gradient dark:bg-bg">
       <div className="flex justify-center min-h-screen">
         <motion.div
-          className="flex items-center max-w-3xl p-8 mx-auto my-16 shadow-lg backdrop-blur-3xl rounded-box bg-white/10 lg:px-12 lg:w-3/5 md:w-1/2 md:px-8"
+          className="flex items-center max-w-3xl p-8 mx-auto my-16 border shadow-lg border-textclr2 backdrop-blur-3xl rounded-box bg-white/10 lg:px-12 lg:w-3/5 md:w-1/2 md:px-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
@@ -168,9 +174,35 @@ const TokenSubmit: React.FC = () => {
                 />
               </div>
               <div>
+                <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
+                  Project Website
+                </label>
+                <input
+                  type="text"
+                  name="websitename"
+                  value={formData.websitename}
+                  onChange={handleChange}
+                  placeholder="Website"
+                  className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
+                />
+              </div>
+              <div>
+                <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
+                  Project Twitter
+                </label>
+                <input
+                  type="text"
+                  name="twitterURL"
+                  value={formData.twitterURL}
+                  onChange={handleChange}
+                  placeholder="Twitter"
+                  className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
+                />
+              </div>
+              <div className="md:col-span-2">
                 <label
                   htmlFor="Description"
-                  className="block text-md text-textclr2 dark:text-white"
+                  className="block w-full text-md text-textclr2 dark:text-white"
                 >
                   Description
                 </label>
@@ -287,7 +319,7 @@ const TokenSubmit: React.FC = () => {
                 </label>
               </div>
               {/* -- Submit Button -- */}
-              <div className="flex items-center justify-center">
+              <div className="flex-col items-center justify-center md:flex-row md:justify-between">
                 <button
                   type="submit"
                   className="px-4 py-2 rounded-md btn text-slate-500 bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
