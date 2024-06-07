@@ -1,24 +1,62 @@
 // src/components/Modal.tsx
 import React, { useState, useEffect } from "react";
+import { getVTokens } from "../api/apis";
 
 interface ModalProps {
   closeModal: () => void;
   addToken: (token: {
+    id: number;
     name: string;
     weight: number;
-    minVoteAmount: string;
+    minVoteAmount: number;
   }) => void;
 }
 
+interface VoteToken {
+  id: number,
+  name: string
+};
+
 const Modal: React.FC<ModalProps> = ({ closeModal, addToken }) => {
+  const [id, setId] = useState<number>(0);
   const [name, setName] = useState<string>("");
   const [weight, setWeight] = useState<number>(0);
-  const [minVoteAmount, setMinVoteAmount] = useState("");
+  const [minVoteAmount, setMinVoteAmount] = useState(0);
   const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  const [vTokens, setVTokens] = useState<VoteToken[]>([]);
+
+  useEffect(() => {
+    const fetchVTokens = async () => {
+      const pros = await getVTokens();
+      if (pros.success === true) {
+        setVTokens(pros.vtokens.map((e: VoteToken) => (
+          {
+            id: e.id,
+            name: e.name
+          }
+        )))
+      }
+    }
+
+    fetchVTokens();
+  }, [])
+
+  const handleVTokenSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+
+    const pid = e.target.value;
+    setId(parseInt(pid));
+    const project = vTokens.filter((e) => (e.id === parseInt(pid)));
+
+    if ( project ) {
+      setName(project[0].name)
+    }
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addToken({ name, weight, minVoteAmount });
+    addToken({ id, name, weight, minVoteAmount });
     handleClose();
   };
 
@@ -48,12 +86,16 @@ const Modal: React.FC<ModalProps> = ({ closeModal, addToken }) => {
             <label className="block mb-1 text-textclr2 font-primaryRegular">
               Token Name
             </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-textclr2 focus:border-textclr2 sm:text-sm"
-            />
+            <select
+              className="w-full max-w-2xl select-md select select-ghost !bg-slate-500/60 !border !border-textclr2"
+              onChange={handleVTokenSelect}
+              defaultValue="Select Vote Token"
+            >
+              <option disabled>Select Vote Token</option>
+              {vTokens.map((e) => (
+                <option value={e.id}>{e.name}</option>
+              ))}
+            </select>
           </div>
           <div className="mb-4">
             <label className="block mb-1 text-textclr2 font-primaryRegular">
@@ -73,7 +115,7 @@ const Modal: React.FC<ModalProps> = ({ closeModal, addToken }) => {
             <input
               type="number"
               value={minVoteAmount}
-              onChange={(e) => setMinVoteAmount(e.target.value)}
+              onChange={(e) => setMinVoteAmount(parseInt(e.target.value))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-textclr2 focus:border-textclr2 sm:text-sm"
             />
           </div>

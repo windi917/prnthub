@@ -1,14 +1,24 @@
-import { clusterApiUrl, Connection, PublicKey } from '@solana/web3.js';
+import { clusterApiUrl, Connection, PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js';
+import {
+  WalletNotConnectedError
+} from '@solana/wallet-adapter-base';
+import { WalletContextState } from '@solana/wallet-adapter-react';
+import {
+  createTransferInstruction,
+  createAssociatedTokenAccountInstruction,
+  getAssociatedTokenAddress,
+  getAccount
+} from '@solana/spl-token';
 
-export const solConnection = new Connection(clusterApiUrl("devnet"), 'confirmed');
+export const solConnection = new Connection(clusterApiUrl("devnet"), 'finalized');
 
 export async function checkMintAddress(mintAddress: string) {
   const TOKEN_MINT_ADDRESS = mintAddress; // replace with your token mint address
-  
+
   try {
     const tokenMintAddress = new PublicKey(mintAddress);
     const accountInfo = await solConnection.getAccountInfo(tokenMintAddress);
-    
+
     if (accountInfo === null) {
       console.log(`Token mint address ${TOKEN_MINT_ADDRESS} does not exist`);
       return { success: false };
@@ -23,20 +33,77 @@ export async function checkMintAddress(mintAddress: string) {
 }
 
 export async function getDecimals(mintAddress: string) {
-    try {
-        const tokenMintAddress = new PublicKey(mintAddress);
-        const account = await solConnection.getParsedAccountInfo(tokenMintAddress);
-        const parsedInfo = (account.value?.data as any)?.parsed?.info;
+  try {
+    const tokenMintAddress = new PublicKey(mintAddress);
+    const account = await solConnection.getParsedAccountInfo(tokenMintAddress);
+    const parsedInfo = (account.value?.data as any)?.parsed?.info;
 
-        if (parsedInfo) {
-            console.log(`Decimals: ${parsedInfo.decimals}`);
-            return { success: true, decimals: parsedInfo.decimals };
-        } else {
-            console.log('Not a valid SPL token mint');
-            return { success: false };
-        }
-    } catch (err) {
-        console.log('Not a valid SPL token mint', err);
-        return { success: false };
+    if (parsedInfo) {
+      console.log(`Decimals: ${parsedInfo.decimals}`);
+      return { success: true, decimals: parsedInfo.decimals };
+    } else {
+      console.log('Not a valid SPL token mint');
+      return { success: false };
     }
+  } catch (err) {
+    console.log('Not a valid SPL token mint', err);
+    return { success: false };
+  }
+}
+
+export async function createVote(tokenMintAddress: string, wallet: WalletContextState, to: string, amount: number) {
+
+  const publicKey = wallet.publicKey;
+  if (!publicKey || !wallet.signTransaction) {
+    throw new WalletNotConnectedError();
+  }
+
+  console.log("##############222###", wallet.publicKey?.toBase58(), tokenMintAddress)
+
+  const mintToken = new PublicKey(tokenMintAddress);
+  const recipientAddress = new PublicKey(to);
+
+  const transactionInstructions: TransactionInstruction[] = [];
+  const associatedTokenFrom = await getAssociatedTokenAddress(mintToken, publicKey);
+  const fromAccount = await getAccount(solConnection, associatedTokenFrom);
+  const associatedTokenTo = await getAssociatedTokenAddress(
+    mintToken,
+    recipientAddress
+  );
+  if (!(await solConnection.getAccountInfo(associatedTokenTo))) {
+    transactionInstructions.push(
+      createAssociatedTokenAccountInstruction(
+        publicKey,
+        associatedTokenTo,
+        recipientAddress,
+        mintToken
+      )
+    );
+  }
+  transactionInstructions.push(
+    createTransferInstruction(
+      fromAccount.address, // source
+      associatedTokenTo, // dest
+      publicKey,
+      amount // transfer 1 USDC, USDC on solana devnet has 6 decimal
+    )
+  );
+  const transaction = new Transaction().add(...transactionInstructions);
+
+  const blockHash = await solConnection.getLatestBlockhash();
+  transaction.feePayer = publicKey;
+  transaction.recentBlockhash = blockHash.blockhash;
+  const signed = await wallet.signTransaction(transaction);
+  const signature = await solConnection.sendRawTransaction(signed.serialize());
+
+  await solConnection.confirmTransaction({
+    blockhash: blockHash.blockhash,
+    lastValidBlockHeight: blockHash.lastValidBlockHeight,
+    signature: signature,
+  }, 'finalized');
+
+  const txHash = (await signature).toString();
+  console.log("signamture@@@@@@@@@@@@", txHash);
+
+  return txHash;
 }

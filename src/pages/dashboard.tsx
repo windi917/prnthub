@@ -1,8 +1,8 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useCallback, useEffect } from "react";
 import * as React from "react";
 import { motion } from "framer-motion";
 import Modal from "../components/Modal";
-import EditModal from "../components/TokenRegisterModal";
+// import EditModal from "../components/TokenRegisterModal";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import PollIcon from "@mui/icons-material/Poll";
@@ -14,14 +14,15 @@ import Box from "@mui/material/Box";
 
 import { toast } from "react-toastify";
 import { checkMintAddress, getDecimals } from "../utils/WebIntegration";
-import { createVToken } from "../api/apis";
+import { createTokenPair, createVToken, createVotePeriod } from "../api/apis";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
-import { getProjects } from "../api/apis";
+import { getProjects, getPeriods, setTokenStatus } from "../api/apis";
 
 interface Token {
+  id: number;
   name: string;
   weight: number;
-  minVoteAmount: string;
+  minVoteAmount: number;
 }
 
 interface Project {
@@ -32,9 +33,14 @@ interface Project {
   proposalDesc: string,
   socials: ["https://twitter.com/", "https://google.com/"],
   proposalStatus: string,
+  startAt: string,
+  endAt: string,
+  currentVotePower: number,
+  threshold: number
 };
 
 const Dashboard = () => {
+  const [projectId, setProjectId] = useState<number>(0);
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
   const [passScore, setPassScore] = useState<number>(0);
@@ -46,42 +52,94 @@ const Dashboard = () => {
 
   const { jwtToken } = useContext(JwtTokenContext);
 
-  const [isEditTokenModalOpen, setIsEditTokenModalOpen] =
-    useState<boolean>(false);
+  // const [isEditTokenModalOpen, setIsEditTokenModalOpen] =
+  //   useState<boolean>(false);
 
   const [projects, setProjects] = useState<Project[]>([]);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      const pros = await getProjects();
-      if (pros.success === true) {
-        setProjects(pros.projects.map((e: Project) => (
-          {
-            id: e.id,
-            logoURL: e.logoURL,
-            name: e.name,
-            proposalDesc: e.proposalDesc,
-            proposalStatus: e.proposalStatus,
-            socials: ["https://twitter.com/", "https://google.com/"]
-          }
-        )))
-      }
-    }
+  const fetchProjects = useCallback(async () => {
+    const pros = await getProjects();
+    const periods = await getPeriods();
 
+    if (pros.success === true && periods.success === true ) {
+      setProjects(pros.projects.map((e: Project) => {
+        const period = periods.periods.filter((item: any) => (item.id === e.periodId));
+        if ( !period )
+          return null;
+
+        return {
+          id: e.id,
+          logoURL: e.logoURL,
+          name: e.name,
+          proposalDesc: e.proposalDesc,
+          proposalStatus: e.proposalStatus,
+          socials: ["https://twitter.com/", "https://google.com/"],
+          startAt: period[0].startAt,
+          endAt: period[0].endAt,
+          currentVotePower: e.currentVotePower,
+          threshold: period[0].votePowerLimit
+        }
+      }))
+    }
+  }, []);
+
+  useEffect(() => {
     fetchProjects();
-  }, [])
+  }, [fetchProjects]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Logic to handle form submission
 
+    console.log("@@@@@@@@@@@@@@@", projectId, fromDate, toDate, tokens, passScore)
+
+    const response = await createVotePeriod(jwtToken, projectId, fromDate, toDate, "", passScore);
+    if (response.success == false) {
+      toast.error("Create Vote Period error!");
+      return;
+    }
+
+    if ( !response.period )
+      return;
+
+    const period = response.period;
+    for (let i = 0; i < tokens.length; i++) {
+
+      const res = await createTokenPair(jwtToken, period.id, tokens[i].id, tokens[i].weight, tokens[i].minVoteAmount);
+      if (res.success == false) {
+        toast.error("Create TokenPair error!");
+        return;
+      }
+    }
+
+    toast.success("Create Vote Period success!");
+    fetchProjects();
   };
 
-  const handleProjectSelect = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleApprove = async (tokenId: number) => {
+    const res = await setTokenStatus(jwtToken, tokenId, "APPROVED");
+    if ( res.success == false) {
+      toast.error("Approve token failed!");
+      return;
+    }
 
-    console.log("##############", projects)
-    console.log("@@@@@@@@@@@@", e.target);
+    toast.success("Approve token Success!");
+    fetchProjects();
+  };
+
+  const handleReject = async (tokenId: number) => {
+    const res = await setTokenStatus(jwtToken, tokenId, "DECLINED");
+    if ( res.success == false) {
+      toast.error("Reject token failed!");
+    }
+
+    toast.success("Reject token Success!");
+    fetchProjects();
+  };
+
+  const handleProjectSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+    setProjectId(parseInt(e.target.value));
   }
 
   const handleTokenRegister = async (e: React.FormEvent) => {
@@ -121,13 +179,13 @@ const Dashboard = () => {
     setTokens(newTokens);
   };
 
-  const openEditTokenModal = () => {
-    setIsEditTokenModalOpen(true);
-  };
+  // const openEditTokenModal = () => {
+  //   setIsEditTokenModalOpen(true);
+  // };
 
-  const closeEditTokenModal = () => {
-    setIsEditTokenModalOpen(false);
-  };
+  // const closeEditTokenModal = () => {
+  //   setIsEditTokenModalOpen(false);
+  // };
 
   return (
     <motion.div className="flex min-h-screen p-4 bg-radial-gradient">
@@ -160,11 +218,11 @@ const Dashboard = () => {
             label="Applications"
             aria-label="Applications"
           />
-          {/* <Tab
+          <Tab
             icon={<AppRegistrationIcon />}
             label="Register"
             aria-label="Token Register"
-          /> */}
+          />
         </Tabs>
 
         {/* --- Approvals Container --- */}
@@ -197,7 +255,7 @@ const Dashboard = () => {
                     <td className="px-4 py-2">{project.name}</td>
 
                     <td className="px-4 py-2 break-words">
-                      {project.description}
+                      {project.proposalDesc}
                     </td>
                     <td className="px-4 py-2">
                       <button
@@ -235,9 +293,11 @@ const Dashboard = () => {
               defaultValue="Select Project"
             >
               <option disabled>Select Project</option>
-              {projects.map((e) => (
-                <option key={e.id} value={e.name}>{e.name}</option>
-              ))}
+              {projects.map((e) => {
+                if ( e.proposalStatus === "PENDING" )
+                  return <option value={e.id}>{e.name}</option>;
+                return null;
+              })}
             </select>
             <h2 className="my-4 mb-4 text-2xl text-left font-primaryBold text-textclr2">
               Period
@@ -365,9 +425,9 @@ const Dashboard = () => {
             <h2 className="mb-4 text-4xl text-center font-primaryBold text-textclr2">
               Applications
             </h2>
-            <h2 className="mb-4 text-2xl text-left font-primaryBold text-textclr2">
-              Vote 1
-            </h2>
+            {/* <h2 className="mb-4 text-2xl text-left font-primaryBold text-textclr2"> */}
+              {/* Vote 1 */}
+            {/* </h2> */}
             {/* Table Component */}
             <div className="overflow-x-auto">
               <table className="table text-textclr2">
@@ -376,36 +436,39 @@ const Dashboard = () => {
                     <th>No</th>
                     <th>Token Name</th>
                     <th>Description</th>
-                    <th>Update</th>
+                    <th>Threshold</th>
+                    <th>Vote Power</th>
                     <th>Status</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody className="font-primaryRegular">
-                  {tokens.map((token, index) => (
+                  {projects.filter((e) => {
+                    if ( new Date(e.endAt) < new Date() )
+                      return true;
+                    return false;
+                  }).map((project, index) => (
                     <tr>
                       {/* id change as needed */}
                       <td>{index + 1}</td>
-                      <td>{token.name}</td>
-                      <td>{token.name}</td> {/* Description change as needed */}
-                      <td>
-                        <button
-                          onClick={() => openEditTokenModal()}
-                          className="text-white rounded-md shadow-sm btn bg-textclr2/70 font-primaryRegular hover:bg-textclr2/30 btn-sm"
-                        >
-                          Edit
-                        </button>
-                        {isEditTokenModalOpen && (
-                          <EditModal
-                            isOpen={isEditTokenModalOpen}
-                            onClose={closeEditTokenModal}
-                          />
-                        )}
-                      </td>
+                      <td>{project.name}</td>
+                      <td>{project.proposalDesc}</td> {/* Description change as needed */}
+                      <td>{project.threshold}</td>
+                      <td>{project.currentVotePower}</td>
+                      <td>{project.proposalStatus}</td>
                       <td className="px-4 py-2 space-x-2 space-y-2">
-                        <button className="text-white rounded-md shadow-sm bg-green-500/40 btn font-primaryRegular hover:bg-green-400/20 btn-sm">
+                        <button 
+                          className="text-white rounded-md shadow-sm bg-green-500/40 btn font-primaryRegular hover:bg-green-400/20 btn-sm" 
+                          onClick={() => handleApprove(project.id)}
+                          disabled={project.proposalStatus === "APPROVED" ? true : false}
+                        >
                           Approve
                         </button>
-                        <button className="text-white rounded-md shadow-sm btn bg-red-500/40 font-primaryRegular hover:bg-red-500/20 btn-sm">
+                        <button 
+                          className="text-white rounded-md shadow-sm btn bg-red-500/40 font-primaryRegular hover:bg-red-500/20 btn-sm" 
+                          onClick={() => handleReject(project.id)}
+                          disabled={project.proposalStatus === "DECLINED" ? true : false}
+                        >
                           Reject
                         </button>
                       </td>
@@ -413,61 +476,11 @@ const Dashboard = () => {
                   ))}
                 </tbody>
               </table>
-              <h2 className="pt-12 mb-4 text-2xl text-left font-primaryBold text-textclr2">
-                Vote 2
-              </h2>
-              {/* Table Component */}
-              <div className="overflow-x-auto">
-                <table className="table text-textclr2">
-                  <thead>
-                    <tr className="text-2xl font-primaryBold text-textclr2">
-                      <th>No</th>
-                      <th>Token Name</th>
-                      <th>Description</th>
-                      <th>Update</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="font-primaryRegular">
-                    {tokens.map((token, index) => (
-                      <tr>
-                        {/* id change as needed */}
-                        <td>{index + 1}</td>
-                        <td>{token.name}</td>
-                        <td>{token.name}</td>{" "}
-                        {/* Description change as needed */}
-                        <td>
-                          <button
-                            onClick={() => openEditTokenModal()}
-                            className="text-white rounded-md shadow-sm btn bg-textclr2/70 font-primaryRegular hover:bg-textclr2/30 btn-sm"
-                          >
-                            Edit
-                          </button>
-                          {isEditTokenModalOpen && (
-                            <EditModal
-                              isOpen={isEditTokenModalOpen}
-                              onClose={closeEditTokenModal}
-                            />
-                          )}
-                        </td>
-                        <td className="px-4 py-2 space-x-2 space-y-2">
-                          <button className="text-white rounded-md shadow-sm bg-green-500/40 btn font-primaryRegular hover:bg-green-400/20 btn-sm">
-                            Approve
-                          </button>
-                          <button className="text-white rounded-md shadow-sm btn bg-red-500/40 font-primaryRegular hover:bg-red-500/20 btn-sm">
-                            Reject
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
             </div>
           </motion.div>
         )}
         {/* --- Token Reg Container --- */}
-        {/* {value === 3 && (
+        {value === 3 && (
           <motion.div
             className="flex flex-col justify-center w-full max-w-xl p-8 mx-auto mt-4 shadow-md rounded-box bg-white/10 backdrop-blur-3xl"
             initial={{ opacity: 0, y: 20 }}
