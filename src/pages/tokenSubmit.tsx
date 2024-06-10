@@ -6,6 +6,8 @@ import { Oval } from "react-loader-spinner";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 import { ToastContainer } from "react-toastify";
 
+import { API_URL } from "../config";
+
 interface FormData {
   name: string;
   symbol: string;
@@ -84,7 +86,7 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
     const config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://api.prnthub.com/token",
+      url: API_URL + "/token",
       headers: {
         "Authorization": "Bearer " + jwtToken,
         "Content-Type": "multipart/form-data"

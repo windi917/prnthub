@@ -9,8 +9,9 @@ import {
   getAssociatedTokenAddress,
   getAccount
 } from '@solana/spl-token';
+import { CLUSTER_API_URL } from '../config';
 
-export const solConnection = new Connection(clusterApiUrl("devnet"), 'finalized');
+export const solConnection = new Connection(clusterApiUrl(CLUSTER_API_URL), 'finalized');
 
 export async function getBalance(wallet: WalletContextState, tokenMint: string) {
   const publicKey = wallet.publicKey;

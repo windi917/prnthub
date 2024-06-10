@@ -5,6 +5,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Buffer } from "buffer";
+import { API_URL } from "../config";
 
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 
@@ -36,7 +37,7 @@ const WalletInteraction: FC = () => {
       const config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: "https://api.prnthub.com/user/login",
+        url: API_URL + "/user/login",
         headers: {
           "Content-Type": "application/json",
         },
@@ -90,7 +91,7 @@ const WalletInteraction: FC = () => {
       const config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: "https://api.prnthub.com/user/signup",
+        url: API_URL + "/user/signup",
         headers: {
           "Content-Type": "application/json",
         },

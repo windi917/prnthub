@@ -10,6 +10,8 @@ import { getBalance, createVote } from "../utils/WebIntegration";
 import { createVoteApi, createNoneVoteApi } from "../api/apis";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 
+import { VOTE_WALLET_ADDRESS } from "../config";
+
 interface TokenPair {
   id: number,
   periodId: number,
@@ -141,7 +143,7 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
 
     setLoading(true);
 
-    const txHash = await createVote(tokenMint, wallet, 'HRD7gyMZwkQ65uFgvYmoxrmxdW1KjRCa9g9uRiw5RBoj', parseInt(voteAmount) * Math.pow(10, decimals))
+    const txHash = await createVote(tokenMint, wallet, VOTE_WALLET_ADDRESS, parseInt(voteAmount) * Math.pow(10, decimals))
     if (!txHash) {
       setLoading(false);
       toast.error("Vote failed(transaction)!");

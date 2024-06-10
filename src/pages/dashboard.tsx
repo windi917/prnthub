@@ -19,6 +19,8 @@ import { createTokenPair, createVToken, createVotePeriod } from "../api/apis";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 import { getProjects, getPeriods, setTokenStatus } from "../api/apis";
 
+import { useNavigate } from "react-router-dom"; // <-- Import useNavigate
+
 interface Token {
   id: number;
   name: string;
@@ -41,6 +43,7 @@ interface Project {
 };
 
 const Dashboard = () => {
+  const navigate = useNavigate(); // <-- Initialize useNavigate
   const [projectId, setProjectId] = useState<number>(0);
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
@@ -51,7 +54,7 @@ const Dashboard = () => {
   const [vTokenMintAddress, setVTokenMintAddress] = useState<string>("");
   const [vTokenName, setVTokenName] = useState<string>("");
 
-  const { jwtToken } = useContext(JwtTokenContext);
+  const { jwtToken, userRole } = useContext(JwtTokenContext);
 
   const [loading, setLoading] = useState<boolean>(false);
   // const [success, setSuccess] = useState<boolean>(false);
@@ -93,7 +96,11 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    fetchProjects();
+    if ( userRole === "ADMIN") {
+      fetchProjects();
+    } else {
+      navigate('/'); // <-- Redirect to another page if not admin
+    }
   }, [fetchProjects]);
 
   const handleSubmit = async (e: React.FormEvent) => {

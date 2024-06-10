@@ -1,11 +1,12 @@
 
 import axios from "axios";
+import { API_URL } from "../config";
 
 export const getProjects = async () => {
     const config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "https://api.prnthub.com/token",
+      url: API_URL + "/token",
       headers: {
         "Content-Type": "application/json"
       }
@@ -23,7 +24,7 @@ export const getPeriods = async () => {
     const config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "https://api.prnthub.com/period",
+      url: API_URL + "/period",
       headers: {
         "Content-Type": "application/json"
       }
@@ -41,7 +42,7 @@ export const getTokenPairs = async () => {
   const config = {
     method: "get",
     maxBodyLength: Infinity,
-    url: "https://api.prnthub.com/tokenpair",
+    url: API_URL + "/tokenpair",
     headers: {
       "Content-Type": "application/json"
     }
@@ -59,7 +60,7 @@ export const getVTokens = async () => {
     const config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: "https://api.prnthub.com/vtoken",
+      url: API_URL + "/vtoken",
       headers: {
         "Content-Type": "application/json"
       }
@@ -83,7 +84,7 @@ export const createVToken = async (jwtToken: string | null, name: string, mint: 
     const config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://api.prnthub.com/vtoken",
+      url: API_URL + "/vtoken",
       headers: {
         "Authorization": "Bearer " + jwtToken,
         "Content-Type": "application/json"
@@ -111,7 +112,7 @@ export const createVotePeriod = async (jwtToken: string | null, projectId: numbe
   const config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "https://api.prnthub.com/period",
+    url: API_URL + "/period",
     headers: {
       "Authorization": "Bearer " + jwtToken,
       "Content-Type": "application/json"
@@ -138,7 +139,7 @@ export const createTokenPair = async (jwtToken: string | null, periodId: number,
   const config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "https://api.prnthub.com/tokenpair",
+    url: API_URL + "/tokenpair",
     headers: {
       "Authorization": "Bearer " + jwtToken,
       "Content-Type": "application/json"
@@ -164,7 +165,7 @@ export const createVoteApi = async (jwtToken: string | null, txHash: string, tok
   const config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "https://api.prnthub.com/vote",
+    url: API_URL + "/vote",
     headers: {
       "Authorization": "Bearer " + jwtToken,
       "Content-Type": "application/json"
@@ -190,7 +191,7 @@ export const createNoneVoteApi = async (jwtToken: string | null, txHash: string,
   const config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "https://api.prnthub.com/vote/none",
+    url: API_URL + "/vote/none",
     headers: {
       "Authorization": "Bearer " + jwtToken,
       "Content-Type": "application/json"
@@ -215,7 +216,7 @@ export const setTokenStatus = async (jwtToken: string | null, tokenId: number, s
   const config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: "https://api.prnthub.com/token/status",
+    url: API_URL + "/token/status",
     headers: {
       "Authorization": "Bearer " + jwtToken,
       "Content-Type": "application/json"
