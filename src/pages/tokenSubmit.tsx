@@ -4,7 +4,6 @@ import axios from "axios";
 import { FaFileAlt, FaDownload } from "react-icons/fa";
 import { Oval } from "react-loader-spinner";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
-import { ToastContainer } from "react-toastify";
 
 import { API_URL } from "../config";
 
@@ -105,7 +104,6 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
   };
   return (
     <>
-      <ToastContainer />
       <div className="flex fixed inset-0 z-10 items-center justify-center bg-opacity-50 bg-bg ">
         <motion.div
           className="flex flex flex-col items-center max-w-3xl p-8 mx-auto my-16 border shadow-lg border-textclr2 backdrop-blur-3xl rounded-box bg-white/10 lg:px-12 lg:w-3/5 md:w-1/2 md:px-8 modal-container"

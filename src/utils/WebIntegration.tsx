@@ -132,7 +132,6 @@ export async function createVote(tokenMintAddress: string, wallet: WalletContext
 
     const txHash = (await signature).toString();
     console.log("signamture@@@@@@@@@@@@", txHash);
-
     return txHash;
   }
 }

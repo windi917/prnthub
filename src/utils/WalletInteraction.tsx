@@ -31,6 +31,7 @@ const WalletInteraction: FC = () => {
       const signedMessage = await signMessage(message);
       const data = JSON.stringify({
         address: publicKey.toBase58(), // Convert public key to base58 string
+        message: "Sign this message for login",
         signature: Buffer.from(signedMessage).toString("base64"),
       });
 
@@ -50,7 +51,6 @@ const WalletInteraction: FC = () => {
         setJwtToken(response.data.token);
         setUserRole(response.data.role);
         setUserId(response.data.userId);
-        console.log("@@@@@@@@@@@@@", response.data)
         setIsRegistered(true);
         toast.success("Login successful!");
       } else {

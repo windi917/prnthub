@@ -3,7 +3,7 @@ import PollIcon from "@mui/icons-material/Poll";
 import BallotTwoToneIcon from "@mui/icons-material/BallotTwoTone";
 import Modal from "./ModalVote";
 import LaunchModal from "./LaunchModal";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 interface TokenPair {
   id: number,
@@ -44,10 +44,6 @@ const TokenCard: React.FC<TokenCardProps> = ({
   const [approveShowModal, setApproveShowModal] = useState(false);
   const [votePower, setVotePower] = useState(currentVotePower);
 
-  const endTime = new Date(endAt);
-  console.log("###########", endAt, endTime, endTime.toString(), endTime.toLocaleString())
-
-
   let bgStyle = "bg-[#AAAAAA] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
   if (status === "VOTING") {
     const curTime = new Date();
@@ -68,7 +64,6 @@ const TokenCard: React.FC<TokenCardProps> = ({
 
   return (
     <div className="relative flex flex-col justify-between p-4 mx-4 border rounded-lg shadow-2xl min-w-[10rem] min-h-[20rem] border-textclr2 card bg-white/10">
-      <ToastContainer />
       <div className="flex items-center mb-4 cursor-pointer">
         <div className="flex items-center">
           <img
@@ -162,6 +157,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
             const curTime = new Date();
             const startTime = new Date(startAt);
             const endTime = new Date(endAt);
+
             if (curTime < startTime) {
               toast.error("Vote is not started yet!");
               return;
@@ -170,7 +166,6 @@ const TokenCard: React.FC<TokenCardProps> = ({
               toast.error("Voting ended!");
               return;
             }
-
             if (status === "VOTING")
               setShowModal(true)
           }}

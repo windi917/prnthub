@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getVTokens, getProjects } from "../api/apis";
 
@@ -118,9 +118,8 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
       });
       return;
     }
-
     if ( tokenMint !== "NoneToken" ) {
-      if ( !voteAmount || (parseInt(voteAmount) < minimumCount ) )
+      if ( !voteAmount || (parseInt(voteAmount) < minimumCount ) ) {
         toast.error(`Please enter a vote amount. (Minimum = ${minimumCount})`, {
           position: "bottom-center",
           autoClose: 5000,
@@ -128,8 +127,9 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
           closeOnClick: true,
           pauseOnHover: true,
           theme: "dark",
-        });
-      if ( parseInt(voteAmount) > tokenBalance )
+        }); 
+      }
+      if ( parseInt(voteAmount) > tokenBalance ) {
         toast.error("Token balance is not enough", {
           position: "bottom-center",
           autoClose: 5000,
@@ -138,29 +138,26 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
           pauseOnHover: true,
           theme: "dark",
         });
-      return;
+        return;
+      }
     }
-
     setLoading(true);
-
     const txHash = await createVote(tokenMint, wallet, VOTE_WALLET_ADDRESS, parseInt(voteAmount) * Math.pow(10, decimals))
     if (!txHash) {
       setLoading(false);
       toast.error("Vote failed(transaction)!");
       return;
     }
-
     if ( tokenMint === "NoneToken" ) {
       const response = await createNoneVoteApi(jwtToken, txHash, projectId, 1);
       if (response.success == false) {
         setLoading(false);
-        toast.error("Create Vote error!");
+        toast.error(`Create Vote error! (${response.error})`);
         return;
       }
       
       setVotePower(currentVotePower + 1);
     } else {
-      
       const response = await createVoteApi(jwtToken, txHash, projectId, parseInt(voteAmount));
       if (response.success == false) {
         setLoading(false);
@@ -170,7 +167,6 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
       
       setVotePower(currentVotePower + parseInt(voteAmount) * weight);
     }
-    
     toast.success("Vote submitted successfully!", {
       position: "bottom-center",
       autoClose: 5000,
@@ -191,7 +187,6 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
 
   return (
     <>
-      <ToastContainer />
       <div className="fixed inset-0 z-10 flex items-center justify-center bg-opacity-50 bg-bg ">
         {/* Loading Spinner */}
         {loading ? (
