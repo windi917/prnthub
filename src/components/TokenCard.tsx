@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import PollIcon from "@mui/icons-material/Poll";
 import BallotTwoToneIcon from "@mui/icons-material/BallotTwoTone";
 import Modal from "./ModalVote";
+import LaunchModal from "./LaunchModal";
+import { ToastContainer, toast } from "react-toastify";
 
 interface TokenPair {
   id: number,
   periodId: number,
   voteTokenId: number,
-  weight: number
+  weight: number,
+  minimumCount: number
 };
 
 interface TokenCardProps {
@@ -16,11 +19,12 @@ interface TokenCardProps {
   projectName: string;
   projectDesc: string;
   socials: string[];
-  status: "PENDING" | "VOTING" | "APPROVED" | "LAUNCHED" | "DECLINED" ;
+  status: "PENDING" | "VOTING" | "APPROVED" | "LAUNCHED" | "DECLINED" | "PREPENDING" | "ENDED";
   startAt: string;
   endAt: string;
   currentVotePower: number;
   vTokens: TokenPair[];
+  isVote: boolean;
 }
 
 const TokenCard: React.FC<TokenCardProps> = ({
@@ -33,24 +37,38 @@ const TokenCard: React.FC<TokenCardProps> = ({
   startAt,
   endAt,
   currentVotePower,
-  vTokens
+  vTokens,
+  isVote
 }) => {
   const [showModal, setShowModal] = useState(false);
+  const [approveShowModal, setApproveShowModal] = useState(false);
   const [votePower, setVotePower] = useState(currentVotePower);
 
+  const endTime = new Date(endAt);
+  console.log("###########", endAt, endTime, endTime.toString(), endTime.toLocaleString())
+
+
   let bgStyle = "bg-[#AAAAAA] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
-  if ( status === "VOTING" )
-    bgStyle = "bg-[#34D399] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
-  else if ( status === "APPROVED" )
+  if (status === "VOTING") {
+    const curTime = new Date();
+    const endTime = new Date(endAt);
+
+    if (curTime > endTime) {
+      status = "ENDED"
+      bgStyle = "bg-[#F2844E] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
+    } else bgStyle = "bg-[#34D399] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
+  }
+  else if (status === "APPROVED")
     bgStyle = "bg-[#3333FF] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
-  else if ( status === "LAUNCHED" )
+  else if (status === "LAUNCHED")
     bgStyle = "bg-[#33FFFF] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
-  else if ( status === "DECLINED" )
+  else if (status === "DECLINED")
     bgStyle = "bg-[#FF3333] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
 
 
   return (
     <div className="relative flex flex-col justify-between p-4 mx-4 border rounded-lg shadow-2xl min-w-[10rem] min-h-[20rem] border-textclr2 card bg-white/10">
+      <ToastContainer />
       <div className="flex items-center mb-4 cursor-pointer">
         <div className="flex items-center">
           <img
@@ -76,17 +94,22 @@ const TokenCard: React.FC<TokenCardProps> = ({
       {/* //Voting Period from date to date */}
       <div className="flex items-center px-2 py-2 my-2 text-sm rounded-md shadow-sm cursor-pointer bg-textclr2/30 hover:bg-textclr2/40 hover:text-textclr font-primaryRegular">
         <PollIcon className="inline mr-4 text-textclr2" />
-        <div className="flex flex-col">
-          <span className="text-textclr font-primaryRegular">
-            Voting Period:
-          </span>
-          <span className="text-textclr font-primaryRegular">
-            {startAt}
-          </span>
-          <span className="text-textclr2 font-primaryRegular">
-            {endAt}
-          </span>
-        </div>
+        {status === "PENDING" ? (
+          <>
+          </>
+        ) : (
+          <div className="flex flex-col">
+            <span className="text-textclr font-primaryRegular">
+              Voting Period:
+            </span>
+            <span className="text-textclr font-primaryRegular">
+              {new Date(startAt).toLocaleString()}
+            </span>
+            <span className="text-textclr2 font-primaryRegular">
+              {new Date(endAt).toLocaleString()}
+            </span>
+          </div>
+        )}
       </div>
       {/* Votes Calculation */}
       <div className="flex items-center px-2 py-2 my-2 text-sm text-center rounded-md shadow-sm cursor-pointer bg-textclr2/50 hover:bg-textclr2/60 hover:text-textclr font-primaryRegular">
@@ -132,16 +155,47 @@ const TokenCard: React.FC<TokenCardProps> = ({
           </a>
         ))}
       </div>
-      <button
-        onClick={() => { 
-          if ( status === "VOTING" )
-            setShowModal(true)
-        }}
-        className="py-2 mt-4 tracking-wider rounded-md btn text-bg font-primaryRegular bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
-      >
-        Vote
-      </button>
-      {showModal && <Modal setShowModal={setShowModal} projectId={projectId} voteTokens={vTokens} currentVotePower={votePower} setVotePower={setVotePower}/>}
+
+      {isVote === true ? (
+        <button
+          onClick={() => {
+            const curTime = new Date();
+            const startTime = new Date(startAt);
+            const endTime = new Date(endAt);
+            if (curTime < startTime) {
+              toast.error("Vote is not started yet!");
+              return;
+            }
+            if (curTime > endTime) {
+              toast.error("Voting ended!");
+              return;
+            }
+
+            if (status === "VOTING")
+              setShowModal(true)
+          }}
+          className="py-2 mt-4 tracking-wider rounded-md btn text-bg font-primaryRegular bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
+        >
+          Vote
+        </button>
+      ) : (
+        <>
+          {status === "APPROVED" ? (
+            <button
+              onClick={() => {
+                setApproveShowModal(true)
+              }}
+              className="py-2 mt-4 tracking-wider rounded-md btn text-bg font-primaryRegular bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
+            >
+              LAUNCH
+            </button>
+          ) : (
+            null
+          )}
+        </>
+      )}
+      {showModal && <Modal setShowModal={setShowModal} projectId={projectId} voteTokens={vTokens} currentVotePower={votePower} setVotePower={setVotePower} />}
+      {approveShowModal && <LaunchModal setApproveShowModal={setApproveShowModal} projectId={projectId} />}
     </div>
   );
 };

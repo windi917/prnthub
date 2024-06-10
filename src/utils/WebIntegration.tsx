@@ -12,6 +12,20 @@ import {
 
 export const solConnection = new Connection(clusterApiUrl("devnet"), 'finalized');
 
+export async function getBalance(wallet: WalletContextState, tokenMint: string) {
+  const publicKey = wallet.publicKey;
+  if (!publicKey || !wallet.signTransaction) {
+    throw new WalletNotConnectedError();
+  }
+
+  const mintToken = new PublicKey(tokenMint);
+  const tokenAccount = await getAssociatedTokenAddress(mintToken, publicKey)
+  const info = await solConnection.getTokenAccountBalance(tokenAccount);
+  if (info.value.uiAmount == null) throw new Error('No balance found');
+  console.log('Balance (using Solana-Web3.js): ', info.value.uiAmount);
+  return info.value.uiAmount;
+};
+
 export async function checkMintAddress(mintAddress: string) {
   const TOKEN_MINT_ADDRESS = mintAddress; // replace with your token mint address
 
@@ -58,52 +72,66 @@ export async function createVote(tokenMintAddress: string, wallet: WalletContext
     throw new WalletNotConnectedError();
   }
 
-  console.log("##############222###", wallet.publicKey?.toBase58(), tokenMintAddress)
+  const { signMessage } = wallet as WalletContextState & {
+    signMessage: (message: Uint8Array) => Promise<Uint8Array>;
+  };
 
-  const mintToken = new PublicKey(tokenMintAddress);
-  const recipientAddress = new PublicKey(to);
+  if (tokenMintAddress === "NoneToken") {
+    try {
+      const message = new TextEncoder().encode("Sign this message for signup");
+      const signedMessage = await signMessage(message);
 
-  const transactionInstructions: TransactionInstruction[] = [];
-  const associatedTokenFrom = await getAssociatedTokenAddress(mintToken, publicKey);
-  const fromAccount = await getAccount(solConnection, associatedTokenFrom);
-  const associatedTokenTo = await getAssociatedTokenAddress(
-    mintToken,
-    recipientAddress
-  );
-  if (!(await solConnection.getAccountInfo(associatedTokenTo))) {
+      return Buffer.from(signedMessage).toString("base64");
+    } catch (error) {
+      console.log("Sign message error! ", error)
+    }
+  }
+  else {
+    const mintToken = new PublicKey(tokenMintAddress);
+    const recipientAddress = new PublicKey(to);
+
+    const transactionInstructions: TransactionInstruction[] = [];
+    const associatedTokenFrom = await getAssociatedTokenAddress(mintToken, publicKey);
+    const fromAccount = await getAccount(solConnection, associatedTokenFrom);
+    const associatedTokenTo = await getAssociatedTokenAddress(
+      mintToken,
+      recipientAddress
+    );
+    if (!(await solConnection.getAccountInfo(associatedTokenTo))) {
+      transactionInstructions.push(
+        createAssociatedTokenAccountInstruction(
+          publicKey,
+          associatedTokenTo,
+          recipientAddress,
+          mintToken
+        )
+      );
+    }
     transactionInstructions.push(
-      createAssociatedTokenAccountInstruction(
+      createTransferInstruction(
+        fromAccount.address, // source
+        associatedTokenTo, // dest
         publicKey,
-        associatedTokenTo,
-        recipientAddress,
-        mintToken
+        amount // transfer 1 USDC, USDC on solana devnet has 6 decimal
       )
     );
+    const transaction = new Transaction().add(...transactionInstructions);
+
+    const blockHash = await solConnection.getLatestBlockhash();
+    transaction.feePayer = publicKey;
+    transaction.recentBlockhash = blockHash.blockhash;
+    const signed = await wallet.signTransaction(transaction);
+    const signature = await solConnection.sendRawTransaction(signed.serialize());
+
+    await solConnection.confirmTransaction({
+      blockhash: blockHash.blockhash,
+      lastValidBlockHeight: blockHash.lastValidBlockHeight,
+      signature: signature,
+    }, 'finalized');
+
+    const txHash = (await signature).toString();
+    console.log("signamture@@@@@@@@@@@@", txHash);
+
+    return txHash;
   }
-  transactionInstructions.push(
-    createTransferInstruction(
-      fromAccount.address, // source
-      associatedTokenTo, // dest
-      publicKey,
-      amount // transfer 1 USDC, USDC on solana devnet has 6 decimal
-    )
-  );
-  const transaction = new Transaction().add(...transactionInstructions);
-
-  const blockHash = await solConnection.getLatestBlockhash();
-  transaction.feePayer = publicKey;
-  transaction.recentBlockhash = blockHash.blockhash;
-  const signed = await wallet.signTransaction(transaction);
-  const signature = await solConnection.sendRawTransaction(signed.serialize());
-
-  await solConnection.confirmTransaction({
-    blockhash: blockHash.blockhash,
-    lastValidBlockHeight: blockHash.lastValidBlockHeight,
-    signature: signature,
-  }, 'finalized');
-
-  const txHash = (await signature).toString();
-  console.log("signamture@@@@@@@@@@@@", txHash);
-
-  return txHash;
 }

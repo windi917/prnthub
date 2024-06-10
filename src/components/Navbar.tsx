@@ -1,13 +1,18 @@
 // import ThemeToggle from "./ThemeToggle";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 // import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import WalletInteraction from "../utils/WalletInteraction";
+import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 
 const logo =
   "https://shdw-drive.genesysgo.net/6ckeAEwCjs6qjCTv5mghBfdwHkB5aCfTes9mqxbxb5EE/logo_prntHub.png";
 
 const Navbar = () => {
+
+  const { userRole } = useContext(JwtTokenContext);
+
   return (
     <>
       <nav className="navbar bg-bg">
@@ -40,7 +45,7 @@ const Navbar = () => {
                 <Link to="/VoteList">Vote List</Link>
               </li>
               <li>
-                <Link to="/submitToken">Submit Token</Link>
+                <Link to="/myvote">My Votes</Link>
               </li>
               <li>
                 <Link
@@ -54,9 +59,14 @@ const Navbar = () => {
               <li>
                 <Link to="/NFTSubmit">NFT Application</Link>
               </li>
-              <li>
-                <Link to="/dashboard">Admin Dashboard</Link>
-              </li>
+              {userRole === "ADMIN" ? (
+                <li>
+                  <Link to="/dashboard">Admin Dashboard</Link>
+                </li>
+              ) : (
+                null
+              )}
+
             </ul>
           </div>
         </div>

@@ -67,27 +67,28 @@ const Dashboard = () => {
     const periods = await getPeriods();
 
     if (pros.success === true && periods.success === true) {
-      setProjects(pros.projects.map((e: Project) => {
-        const period = periods.periods.filter((item: any) => (item.id === e.periodId));
-        if (!period) {
-          setLoading(false);
-          return null
-        }
+      setProjects(pros.projects.filter((e: any) => (e.proposalStatus !== "DECLINED"))
+        .map((e: Project) => {
+          const period = periods.periods.filter((item: any) => (item.id === e.periodId));
+          if (!period) {
+            setLoading(false);
+            return null
+          }
 
-        setLoading(false);
-        return {
-          id: e.id,
-          logoURL: e.logoURL,
-          name: e.name,
-          proposalDesc: e.proposalDesc,
-          proposalStatus: e.proposalStatus,
-          socials: ["https://twitter.com/", "https://google.com/"],
-          startAt: period[0].startAt,
-          endAt: period[0].endAt,
-          currentVotePower: e.currentVotePower,
-          threshold: period[0].votePowerLimit
-        }
-      }))
+          setLoading(false);
+          return {
+            id: e.id,
+            logoURL: e.logoURL,
+            name: e.name,
+            proposalDesc: e.proposalDesc,
+            proposalStatus: e.proposalStatus,
+            socials: ["https://twitter.com/", "https://google.com/"],
+            startAt: period[0].startAt,
+            endAt: period[0].endAt,
+            currentVotePower: e.currentVotePower,
+            threshold: period[0].votePowerLimit
+          }
+        }))
     }
   }, []);
 
@@ -98,10 +99,9 @@ const Dashboard = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Logic to handle form submission
-
     setLoading(true);
 
-    if ( !fromDate || projectId == 0 || !toDate || passScore < 0 ) {
+    if (!fromDate || projectId == 0 || !toDate || passScore < 0) {
       toast.error("Input values correctly!")
       setLoading(false);
       return;
@@ -285,8 +285,17 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody className="font-primaryRegular">
-                {projects.map((project, index) => (
-                  <tr key={index} className="border-b">
+                {projects.map((project, index) => {
+                  let status = project.proposalStatus;
+
+                  const curTime = new Date();
+                  const endTime = new Date(project.startAt)
+
+                  if ( curTime > endTime ) {
+                    status = "ENDED";
+                  }
+
+                  return <tr key={index} className="border-b">
                     <td className="px-4 py-2">{index + 1}</td>
                     <td className="px-4 py-2">{project.name}</td>
 
@@ -294,7 +303,7 @@ const Dashboard = () => {
                       {project.proposalDesc}
                     </td>
                     <td className="px-4 py-2 break-words">
-                      {project.proposalStatus}
+                      {status}
                     </td>
                     <td className="px-4 py-2">
                       <button
@@ -306,7 +315,7 @@ const Dashboard = () => {
                       </button>
                     </td>
                   </tr>
-                ))}
+                })}
               </tbody>
             </table>
           </motion.div>
@@ -478,13 +487,12 @@ const Dashboard = () => {
                     <th>Description</th>
                     <th>Threshold</th>
                     <th>Vote Power</th>
-                    <th>Status</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody className="font-primaryRegular">
                   {projects.filter((e) => {
-                    if (new Date(e.endAt) < new Date())
+                    if (new Date(e.endAt) < new Date() && e.proposalStatus === "VOTING")
                       return true;
                     return false;
                   }).map((project, index) => (
@@ -495,7 +503,6 @@ const Dashboard = () => {
                       <td>{project.proposalDesc}</td> {/* Description change as needed */}
                       <td>{project.threshold}</td>
                       <td>{project.currentVotePower}</td>
-                      <td>{project.proposalStatus}</td>
                       <td className="px-4 py-2 space-x-2 space-y-2">
                         <button
                           className="text-white rounded-md shadow-sm bg-green-500/40 btn font-primaryRegular hover:bg-green-400/20 btn-sm"

@@ -108,7 +108,6 @@ export const createVotePeriod = async (jwtToken: string | null, projectId: numbe
       'votePowerLimit': votePowerLimit
   };
 
-  console.log("data = ", data);
   const config = {
     method: "post",
     maxBodyLength: Infinity,
@@ -178,6 +177,32 @@ export const createVoteApi = async (jwtToken: string | null, txHash: string, tok
       return { success: true }
   } catch (error) {
       return { success: false };
+  }
+};
+
+export const createNoneVoteApi = async (jwtToken: string | null, txHash: string, tokenId: number, votePower: number) => {
+  const data = {
+      'txHash': txHash,
+      'tokenId': tokenId,
+      'votePower': votePower
+  };
+
+  const config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.prnthub.com/vote/none",
+    headers: {
+      "Authorization": "Bearer " + jwtToken,
+      "Content-Type": "application/json"
+    },
+    data: data,
+  };
+
+  try {
+      await axios.request(config);
+      return { success: true }
+  } catch (error) {
+      return { success: false};
   }
 };
 

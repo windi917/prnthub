@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { motion } from "framer-motion";
 import { FaSort } from "react-icons/fa";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
@@ -7,6 +7,8 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import TokenCard from "../components/TokenCard";
 import { Drawer } from "vaul";
 import { getPeriods, getProjects, getTokenPairs } from "../api/apis";
+import TokenSubmit from "./tokenSubmit";
+import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 
 interface TokenPair {
   id: number,
@@ -30,22 +32,24 @@ interface Project {
   vTokens: TokenPair[]
 };
 
-const VoteList = () => {
+const MyVote = () => {
+  
   const [projects, setProjects] = useState<Project[]>([]);
   const [sortOrder, setSortOrder] = useState("all");
+  const { userId } = useContext(JwtTokenContext);
+  const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      const pros = await getProjects();
-      const periods = await getPeriods();
-      const tokenPairs = await getTokenPairs();
-  
-      if ( pros.success === true && periods.success === true && tokenPairs.success === true ) {
-        setProjects(pros.projects.filter((e: any) => (e.proposalStatus !== "DECLINED"))
+  const fetchProjects = useCallback(async () => {
+    const pros = await getProjects();
+    const periods = await getPeriods();
+    const tokenPairs = await getTokenPairs();
+
+    if (pros.success === true && periods.success === true && tokenPairs.success === true) {
+      setProjects(pros.projects.filter((e: any) => (e.owner === userId && e.proposalStatus !== "DECLINED"))
         .map((e: Project) => {
           const period = periods.periods.filter((item: any) => (item.id === e.periodId))
 
-          if ( !period )
+          if (!period)
             return null;
           return {
             id: e.id,
@@ -60,11 +64,12 @@ const VoteList = () => {
             vTokens: tokenPairs.tokenPairs.filter((item: any) => (item.periodId === e.periodId))
           }
         }))
-      }
     }
-  
+  }, []);
+
+  useEffect(() => {
     fetchProjects();
-  }, [])
+  }, [fetchProjects, showModal])
 
   const handleSort = (order: string) => {
     setSortOrder(order);
@@ -79,7 +84,7 @@ const VoteList = () => {
     } else if (sortOrder === "LAUNCHED") {
       return project.proposalStatus === "LAUNCHED";
     } else {
-      if ( project.proposalStatus === "PENDING" )
+      if (project.proposalStatus === "PENDING")
         false
       return true; // Default to show all projects
     }
@@ -89,6 +94,13 @@ const VoteList = () => {
     <section className="bg-radial-gradient dark:bg-bg">
       <div className="flex justify-center min-h-screen">
         <div className="min-h-screen p-2 text-textclr2">
+          <button
+            type="submit"
+            className="px-4 py-2 rounded-md btn text-slate-500 bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
+            onClick={() => setShowModal(true)}
+          >
+            Submit Token
+          </button>
           <div className="max-w-6xl mx-auto">
             <motion.h1
               className="my-4 mb-4 text-4xl text-center font-primaryBold"
@@ -132,11 +144,10 @@ const VoteList = () => {
                 <ul className="rounded-lg shadow-lg menu bg-base-300 shadow-slate-800 text-textclr2">
                   <li>
                     <button
-                      className={`w-full text-left ${
-                        sortOrder === "VOTING"
+                      className={`w-full text-left ${sortOrder === "VOTING"
                           ? "text-textclr"
                           : "text-textclr2"
-                      }`}
+                        }`}
                       onClick={() => handleSort("VOTING")}
                     >
                       <EventIcon className="inline mr-2" /> VOTING
@@ -144,11 +155,10 @@ const VoteList = () => {
                   </li>
                   <li>
                     <button
-                      className={`w-full text-left ${
-                        sortOrder === "APPROVED"
+                      className={`w-full text-left ${sortOrder === "APPROVED"
                           ? "text-textclr"
                           : "text-textclr2"
-                      }`}
+                        }`}
                       onClick={() => handleSort("APPROVED")}
                     >
                       <EventAvailableIcon className="inline mr-2" /> APPROVED
@@ -156,11 +166,10 @@ const VoteList = () => {
                   </li>
                   <li>
                     <button
-                      className={`w-full text-left ${
-                        sortOrder === "LAUNCHED"
+                      className={`w-full text-left ${sortOrder === "LAUNCHED"
                           ? "text-textclr"
                           : "text-textclr2"
-                      }`}
+                        }`}
                       onClick={() => handleSort("LAUNCHED")}
                     >
                       <EventAvailableIcon className="inline mr-2" /> LAUNCHED
@@ -168,9 +177,8 @@ const VoteList = () => {
                   </li>
                   <li>
                     <button
-                      className={`w-full text-left ${
-                        sortOrder === "all" ? "text-textclr" : "text-textclr2"
-                      }`}
+                      className={`w-full text-left ${sortOrder === "all" ? "text-textclr" : "text-textclr2"
+                        }`}
                       onClick={() => handleSort("all")}
                     >
                       <CalendarMonthIcon className="inline mr-2" /> All
@@ -187,7 +195,7 @@ const VoteList = () => {
               transition={{ duration: 1.5 }}
             >
               {filteredProjects.map((project, index) => {
-                if ( project.proposalStatus == "LAUNCHED" )
+                if (project.proposalStatus == "LAUNCHED")
                   return null;
                 return <TokenCard
                   key={index}
@@ -201,7 +209,7 @@ const VoteList = () => {
                   endAt={project.endAt}
                   currentVotePower={project.currentVotePower}
                   vTokens={project.vTokens}
-                  isVote={true}
+                  isVote={false}
                 />
               })}
             </motion.div>
@@ -253,12 +261,14 @@ const VoteList = () => {
                   </i>
                 </p>
               </div>
+              
             </div>
           </Drawer.Content>
         </Drawer.Portal>
       </Drawer.Root>
+      {showModal && <TokenSubmit setShowModal = {setShowModal}/>}
     </section>
   );
 };
 
-export default VoteList;
+export default MyVote;

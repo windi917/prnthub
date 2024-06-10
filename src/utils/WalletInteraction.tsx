@@ -13,7 +13,10 @@ const WalletInteraction: FC = () => {
     signMessage: (message: Uint8Array) => Promise<Uint8Array>;
   };
 
-  const { jwtToken, setJwtToken } = useContext(JwtTokenContext);
+  const { setJwtToken } = useContext(JwtTokenContext);
+  const { setUserRole } = useContext(JwtTokenContext);
+  const { setUserId } = useContext(JwtTokenContext);
+
   const [isRegistered, setIsRegistered] = useState<boolean | null>(null);
 
   const handleLogin = useCallback(async () => {
@@ -44,6 +47,9 @@ const WalletInteraction: FC = () => {
 
       if ( response.data.success == true ) {
         setJwtToken(response.data.token);
+        setUserRole(response.data.role);
+        setUserId(response.data.userId);
+        console.log("@@@@@@@@@@@@@", response.data)
         setIsRegistered(true);
         toast.success("Login successful!");
       } else {
