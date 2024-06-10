@@ -248,7 +248,7 @@ const Homepage: React.FC = () => {
     <section className="relative w-full h-full min-h-screen bg-bg">
       {/* -- Hero Section --  */}
       <Hero />
-      {/* -- Launhes Main Section --  */}
+      {/* -- Launches Main Section --  */}
       <div className="container px-4 py-4 mx-auto">
         <motion.div
           className="mt-10 text-textclr2 text-[30px] font-primaryBold text-center lg:text-left"

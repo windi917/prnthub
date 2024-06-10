@@ -33,6 +33,17 @@
   }
 }
 
+/* Heading Text Gradient */
+.text-gradient {
+  display: inline-block;
+  font-size: 48px;
+  line-height: 1;
+  font-weight: black;
+  background: linear-gradient(to top left, #fdfc47, #24fe41);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 /* Connect Wallet Button */
 .wallet-adapter-button {
   background-color: #ccf869;
@@ -227,4 +238,9 @@ textarea:not([rows]) {
 /* Anything that has been anchored to should have extra scroll margin */
 :target {
   scroll-margin-block: 5ex;
+}
+
+.modal-container {
+  max-height: 95vh;
+  overflow-y: auto;
 }

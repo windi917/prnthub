@@ -5,15 +5,35 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "true",
   theme: {
-    backdropFilter: {
-      none: "none",
-      blur: "blur(20px)",
-    },
     extend: {
       fontFamily: {
         primaryRegular: ["Regular"],
         primaryLight: ["Light"],
         primaryBold: ["Bold"],
+      },
+      keyframes: {
+        "logo-cloud": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(calc(-100% - 4rem))" },
+        },
+        buttonheartbeat: {
+          "0%": {
+            "box-shadow": '0 0 0 0 theme("colors.lime.300")',
+            transform: "scale(1)",
+          },
+          "50%": {
+            "box-shadow": '0 0 0 7px theme("colors.lime.300/0")',
+            transform: "scale(1.05)",
+          },
+          "100%": {
+            "box-shadow": '0 0 0 0 theme("colors.lime.300/0")',
+            transform: "scale(1)",
+          },
+        },
+      },
+      animation: {
+        "logo-cloud": "logo-cloud 30s linear infinite",
+        buttonheartbeat: "buttonheartbeat 2s infinite ease-in-out",
       },
       colors: {
         textclr: "#F2F2F2",
@@ -23,6 +43,7 @@ export default {
         bg: "#0D0D0D",
         primary: "#CCF869",
         secondary: "#CCF869",
+        // Uncomment and adjust as needed
         // accent: "#32e9d4",
         // text: "#071307",
         // background: "#effaf0",
@@ -33,5 +54,4 @@ export default {
     },
   },
   plugins: [daisyui],
-  animation: [],
 };

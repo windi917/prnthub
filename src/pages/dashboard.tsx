@@ -314,7 +314,10 @@ const Dashboard = () => {
                     </td>
                     <td className="px-4 py-2">
                       <button
-                        onClick={() => setValue(1)}
+                        onClick={() => {
+                          setValue(1);
+                          setProjectId(project.id);
+                        }}
                         className="text-white rounded-md shadow-sm btn bg-textclr2/70 font-primaryRegular hover:bg-textclr2/30 btn-sm"
                         disabled={project.proposalStatus === "PENDING" ? false : true}
                       >
@@ -346,7 +349,7 @@ const Dashboard = () => {
             <select
               className="w-full max-w-2xl select-md select select-ghost !bg-slate-500/60 !border !border-textclr2"
               onChange={handleProjectSelect}
-              defaultValue="Select Project"
+              defaultValue={projectId}
             >
               <option disabled>Select Project</option>
               {projects.map((e) => {

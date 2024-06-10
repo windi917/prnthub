@@ -32,7 +32,9 @@ const Hero = () => {
             delay: 0.4,
           }}
         >
-          One platform for all launches!
+          One
+          <span className="mx-2 skew-y-3 text-gradient"> platform </span>
+          for all launches!
         </motion.h1>
         <motion.p
           className="mt-4 text-lg text-center font-primaryRegular text-textclr2"
@@ -47,20 +49,29 @@ const Hero = () => {
           Explore Token & NFT launches with ease. Stay informed & track all the
           latest launches in one location.
         </motion.p>
-        <div className="flex flex-row gap-6 px-2 py-2">
+        <motion.div
+          className="flex flex-row gap-6 px-2 py-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            ease: "easeInOut",
+            duration: 2,
+            delay: 0.7,
+          }}
+        >
           <button
             onClick={() => scrollToSection("token")}
-            className="btn btn-ghost flex-1 rounded-[6px] px-6 text-white font-primaryLight border !bg-#FFFFFF border-[#CCF869]"
+            className="flex-1 px-6 text-sm text-white bg-transparent border rounded-md border-btnbg font-primaryRegular animate-buttonheartbeat hover:bg-btnbg/10 hover:text-textclr2/80"
           >
             Token Launches
           </button>
           <button
             onClick={() => scrollToSection("nft")}
-            className="btn btn-ghost flex flex-nowrap items-center rounded-[6px] px-6 py-2 text-white font-primaryLight border border-[#CCF869]"
+            className="flex items-center text-sm text-white bg-transparent border rounded-md flex-nowrap btn rpx-6 border-btnbg font-primaryRegular animate-buttonheartbeat hover:bg-btnbg/10 hover:text-textclr2/80 hover:border-btnbg"
           >
             NFT Launches
           </button>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

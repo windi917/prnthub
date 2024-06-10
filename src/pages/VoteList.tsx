@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FaSort } from "react-icons/fa";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventIcon from "@mui/icons-material/Event";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -123,7 +125,7 @@ const VoteList = () => {
                 role="button"
                 className="flex items-center m-1 btn text-textclr2 font-primaryRegular"
               >
-                <FaSort className="inline mr-2" /> Sort
+                <FilterAltIcon className="inline mr-2 size-5" /> Sort
               </div>
               <div
                 tabIndex={0}
@@ -174,6 +176,30 @@ const VoteList = () => {
                       onClick={() => handleSort("all")}
                     >
                       <CalendarMonthIcon className="inline mr-2" /> All
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className={`w-full text-left ${
+                        sortOrder === "HightVote"
+                          ? "text-textclr"
+                          : "text-textclr2"
+                      }`}
+                      onClick={() => handleSort("HightVote")}
+                    >
+                      <TrendingUpIcon className="inline mr-2" /> Most Voted
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className={`w-full text-left ${
+                        sortOrder === "LowVote"
+                          ? "text-textclr"
+                          : "text-textclr2"
+                      }`}
+                      onClick={() => handleSort("LowVote")}
+                    >
+                      <TrendingDownIcon className="inline mr-2" /> Least Voted
                     </button>
                   </li>
                 </ul>
