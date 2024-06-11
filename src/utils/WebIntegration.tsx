@@ -1,32 +1,41 @@
-import { clusterApiUrl, Connection, PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js';
 import {
-  WalletNotConnectedError
-} from '@solana/wallet-adapter-base';
-import { WalletContextState } from '@solana/wallet-adapter-react';
+  clusterApiUrl,
+  Connection,
+  PublicKey,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
+import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
+import { WalletContextState } from "@solana/wallet-adapter-react";
 import {
   createTransferInstruction,
   createAssociatedTokenAccountInstruction,
   getAssociatedTokenAddress,
-  getAccount
-} from '@solana/spl-token';
-import { CLUSTER_API_URL } from '../config';
+  getAccount,
+} from "@solana/spl-token";
+import { CLUSTER_API_URL } from "../config";
 
-export const solConnection = new Connection(clusterApiUrl(CLUSTER_API_URL), 'finalized');
+export const solConnection = new Connection(
+  clusterApiUrl(CLUSTER_API_URL),
+  "finalized"
+);
 
-export async function getBalance(wallet: WalletContextState, tokenMint: string) {
+export async function getBalance(
+  wallet: WalletContextState,
+  tokenMint: string
+) {
   const publicKey = wallet.publicKey;
   if (!publicKey || !wallet.signTransaction) {
     throw new WalletNotConnectedError();
   }
 
   const mintToken = new PublicKey(tokenMint);
-  const tokenAccount = await getAssociatedTokenAddress(mintToken, publicKey)
+  const tokenAccount = await getAssociatedTokenAddress(mintToken, publicKey);
   const info = await solConnection.getTokenAccountBalance(tokenAccount);
-  if (info.value.uiAmount == null) throw new Error('No balance found');
-  console.log('Balance (using Solana-Web3.js): ', info.value.uiAmount);
+  if (info.value.uiAmount == null) throw new Error("No balance found");
+  console.log("Balance (using Solana-Web3.js): ", info.value.uiAmount);
   return info.value.uiAmount;
-};
-
+}
 export async function checkMintAddress(mintAddress: string) {
   const TOKEN_MINT_ADDRESS = mintAddress; // replace with your token mint address
 
@@ -57,17 +66,21 @@ export async function getDecimals(mintAddress: string) {
       console.log(`Decimals: ${parsedInfo.decimals}`);
       return { success: true, decimals: parsedInfo.decimals };
     } else {
-      console.log('Not a valid SPL token mint');
+      console.log("Not a valid SPL token mint");
       return { success: false };
     }
   } catch (err) {
-    console.log('Not a valid SPL token mint', err);
+    console.log("Not a valid SPL token mint", err);
     return { success: false };
   }
 }
 
-export async function createVote(tokenMintAddress: string, wallet: WalletContextState, to: string, amount: number) {
-
+export async function createVote(
+  tokenMintAddress: string,
+  wallet: WalletContextState,
+  to: string,
+  amount: number
+) {
   const publicKey = wallet.publicKey;
   if (!publicKey || !wallet.signTransaction) {
     throw new WalletNotConnectedError();
@@ -84,15 +97,17 @@ export async function createVote(tokenMintAddress: string, wallet: WalletContext
 
       return Buffer.from(signedMessage).toString("base64");
     } catch (error) {
-      console.log("Sign message error! ", error)
+      console.log("Sign message error! ", error);
     }
-  }
-  else {
+  } else {
     const mintToken = new PublicKey(tokenMintAddress);
     const recipientAddress = new PublicKey(to);
 
     const transactionInstructions: TransactionInstruction[] = [];
-    const associatedTokenFrom = await getAssociatedTokenAddress(mintToken, publicKey);
+    const associatedTokenFrom = await getAssociatedTokenAddress(
+      mintToken,
+      publicKey
+    );
     const fromAccount = await getAccount(solConnection, associatedTokenFrom);
     const associatedTokenTo = await getAssociatedTokenAddress(
       mintToken,
@@ -122,16 +137,22 @@ export async function createVote(tokenMintAddress: string, wallet: WalletContext
     transaction.feePayer = publicKey;
     transaction.recentBlockhash = blockHash.blockhash;
     const signed = await wallet.signTransaction(transaction);
-    const signature = await solConnection.sendRawTransaction(signed.serialize());
+    const signature = await solConnection.sendRawTransaction(
+      signed.serialize()
+    );
 
-    await solConnection.confirmTransaction({
-      blockhash: blockHash.blockhash,
-      lastValidBlockHeight: blockHash.lastValidBlockHeight,
-      signature: signature,
-    }, 'finalized');
+    await solConnection.confirmTransaction(
+      {
+        blockhash: blockHash.blockhash,
+        lastValidBlockHeight: blockHash.lastValidBlockHeight,
+        signature: signature,
+      },
+      "finalized"
+    );
 
     const txHash = (await signature).toString();
     console.log("signamture@@@@@@@@@@@@", txHash);
+
     return txHash;
   }
 }

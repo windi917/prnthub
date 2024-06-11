@@ -118,6 +118,7 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
       });
       return;
     }
+
     if ( tokenMint !== "NoneToken" ) {
       if ( !voteAmount || (parseInt(voteAmount) < minimumCount ) ) {
         toast.error(`Please enter a vote amount. (Minimum = ${minimumCount})`, {
@@ -142,12 +143,14 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
       }
     }
     setLoading(true);
+
     const txHash = await createVote(tokenMint, wallet, VOTE_WALLET_ADDRESS, parseInt(voteAmount) * Math.pow(10, decimals))
     if (!txHash) {
       setLoading(false);
       toast.error("Vote failed(transaction)!");
       return;
     }
+
     if ( tokenMint === "NoneToken" ) {
       const response = await createNoneVoteApi(jwtToken, txHash, projectId, 1);
       if (response.success == false) {
@@ -158,6 +161,7 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
       
       setVotePower(currentVotePower + 1);
     } else {
+      
       const response = await createVoteApi(jwtToken, txHash, projectId, parseInt(voteAmount));
       if (response.success == false) {
         setLoading(false);
@@ -167,6 +171,7 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
       
       setVotePower(currentVotePower + parseInt(voteAmount) * weight);
     }
+    
     toast.success("Vote submitted successfully!", {
       position: "bottom-center",
       autoClose: 5000,

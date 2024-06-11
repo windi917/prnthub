@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, useCallback } from "react";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 import { FaSort } from "react-icons/fa";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventIcon from "@mui/icons-material/Event";
@@ -11,29 +11,28 @@ import TokenSubmit from "./tokenSubmit";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 
 interface TokenPair {
-  id: number,
-  periodId: number,
-  voteTokenId: number,
-  weight: number,
-  minimumCount: number
-};
+  id: number;
+  periodId: number;
+  voteTokenId: number;
+  weight: number;
+  minimumCount: number;
+}
 
 interface Project {
-  id: number,
-  periodId: number,
-  logoURL: string,
-  name: string,
-  proposalDesc: string,
-  socials: ["https://twitter.com/", "https://google.com/"],
-  proposalStatus: string,
-  startAt: string,
-  endAt: string,
-  currentVotePower: number,
-  vTokens: TokenPair[]
-};
+  id: number;
+  periodId: number;
+  logoURL: string;
+  name: string;
+  proposalDesc: string;
+  socials: ["https://twitter.com/", "https://google.com/"];
+  proposalStatus: string;
+  startAt: string;
+  endAt: string;
+  currentVotePower: number;
+  vTokens: TokenPair[];
+}
 
 const MyVote = () => {
-  
   const [projects, setProjects] = useState<Project[]>([]);
   const [sortOrder, setSortOrder] = useState("all");
   const { userId } = useContext(JwtTokenContext);
@@ -44,32 +43,44 @@ const MyVote = () => {
     const periods = await getPeriods();
     const tokenPairs = await getTokenPairs();
 
-    if (pros.success === true && periods.success === true && tokenPairs.success === true) {
-      setProjects(pros.projects.filter((e: any) => (e.owner === userId && e.proposalStatus !== "DECLINED"))
-        .map((e: Project) => {
-          const period = periods.periods.filter((item: any) => (item.id === e.periodId))
+    if (
+      pros.success === true &&
+      periods.success === true &&
+      tokenPairs.success === true
+    ) {
+      setProjects(
+        pros.projects
+          .filter(
+            (e: any) => e.owner === userId && e.proposalStatus !== "DECLINED"
+          )
+          .map((e: Project) => {
+            const period = periods.periods.filter(
+              (item: any) => item.id === e.periodId
+            );
 
-          if (!period)
-            return null;
-          return {
-            id: e.id,
-            logoURL: e.logoURL,
-            name: e.name,
-            proposalDesc: e.proposalDesc,
-            proposalStatus: e.proposalStatus,
-            socials: ["https://twitter.com/", "https://google.com/"],
-            startAt: period[0].startAt,
-            endAt: period[0].endAt,
-            currentVotePower: e.currentVotePower,
-            vTokens: tokenPairs.tokenPairs.filter((item: any) => (item.periodId === e.periodId))
-          }
-        }))
+            if (!period) return null;
+            return {
+              id: e.id,
+              logoURL: e.logoURL,
+              name: e.name,
+              proposalDesc: e.proposalDesc,
+              proposalStatus: e.proposalStatus,
+              socials: ["https://twitter.com/", "https://google.com/"],
+              startAt: period[0].startAt,
+              endAt: period[0].endAt,
+              currentVotePower: e.currentVotePower,
+              vTokens: tokenPairs.tokenPairs.filter(
+                (item: any) => item.periodId === e.periodId
+              ),
+            };
+          })
+      );
     }
   }, []);
 
   useEffect(() => {
     fetchProjects();
-  }, [fetchProjects, showModal])
+  }, [fetchProjects, showModal]);
 
   const handleSort = (order: string) => {
     setSortOrder(order);
@@ -84,8 +95,7 @@ const MyVote = () => {
     } else if (sortOrder === "LAUNCHED") {
       return project.proposalStatus === "LAUNCHED";
     } else {
-      if (project.proposalStatus === "PENDING")
-        false
+      if (project.proposalStatus === "PENDING") return false;
       return true; // Default to show all projects
     }
   });
@@ -102,7 +112,7 @@ const MyVote = () => {
             Submit Token
           </button>
           <div className="max-w-6xl mx-auto">
-            <motion.h1
+            <h1
               className="my-4 mb-4 text-4xl text-center font-primaryBold"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -110,8 +120,8 @@ const MyVote = () => {
               layout
             >
               Vote List
-            </motion.h1>
-            <motion.p
+            </h1>
+            <p
               className="mb-4 text-center"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -120,16 +130,10 @@ const MyVote = () => {
             >
               Vote for your favourite projects.
               <br />
-            </motion.p>
+            </p>
 
             {/*  -- Sort Dropdown --  */}
-            <motion.div
-              className="my-2 dropdown"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              layout
-            >
+            <div className="my-2 dropdown">
               <div
                 tabIndex={0}
                 role="button"
@@ -144,10 +148,11 @@ const MyVote = () => {
                 <ul className="rounded-lg shadow-lg menu bg-base-300 shadow-slate-800 text-textclr2">
                   <li>
                     <button
-                      className={`w-full text-left ${sortOrder === "VOTING"
+                      className={`w-full text-left ${
+                        sortOrder === "VOTING"
                           ? "text-textclr"
                           : "text-textclr2"
-                        }`}
+                      }`}
                       onClick={() => handleSort("VOTING")}
                     >
                       <EventIcon className="inline mr-2" /> VOTING
@@ -155,10 +160,11 @@ const MyVote = () => {
                   </li>
                   <li>
                     <button
-                      className={`w-full text-left ${sortOrder === "APPROVED"
+                      className={`w-full text-left ${
+                        sortOrder === "APPROVED"
                           ? "text-textclr"
                           : "text-textclr2"
-                        }`}
+                      }`}
                       onClick={() => handleSort("APPROVED")}
                     >
                       <EventAvailableIcon className="inline mr-2" /> APPROVED
@@ -166,10 +172,11 @@ const MyVote = () => {
                   </li>
                   <li>
                     <button
-                      className={`w-full text-left ${sortOrder === "LAUNCHED"
+                      className={`w-full text-left ${
+                        sortOrder === "LAUNCHED"
                           ? "text-textclr"
                           : "text-textclr2"
-                        }`}
+                      }`}
                       onClick={() => handleSort("LAUNCHED")}
                     >
                       <EventAvailableIcon className="inline mr-2" /> LAUNCHED
@@ -177,8 +184,9 @@ const MyVote = () => {
                   </li>
                   <li>
                     <button
-                      className={`w-full text-left ${sortOrder === "all" ? "text-textclr" : "text-textclr2"
-                        }`}
+                      className={`w-full text-left ${
+                        sortOrder === "all" ? "text-textclr" : "text-textclr2"
+                      }`}
                       onClick={() => handleSort("all")}
                     >
                       <CalendarMonthIcon className="inline mr-2" /> All
@@ -186,33 +194,36 @@ const MyVote = () => {
                   </li>
                 </ul>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.5 }}
-            >
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filteredProjects.map((project, index) => {
-                if (project.proposalStatus == "LAUNCHED")
-                  return null;
-                return <TokenCard
-                  key={index}
-                  projectId={project.id}
-                  projectName={project.name}
-                  projectLogo={project.logoURL}
-                  projectDesc={project.proposalDesc}
-                  socials={project.socials}
-                  status={project.proposalStatus as "PENDING" | "VOTING" | "APPROVED" | "LAUNCHED" | "DECLINED"}
-                  startAt={project.startAt}
-                  endAt={project.endAt}
-                  currentVotePower={project.currentVotePower}
-                  vTokens={project.vTokens}
-                  isVote={false}
-                />
+                if (project.proposalStatus == "LAUNCHED") return null;
+                return (
+                  <TokenCard
+                    key={index}
+                    projectId={project.id}
+                    projectName={project.name}
+                    projectLogo={project.logoURL}
+                    projectDesc={project.proposalDesc}
+                    socials={project.socials}
+                    status={
+                      project.proposalStatus as
+                        | "PENDING"
+                        | "VOTING"
+                        | "APPROVED"
+                        | "LAUNCHED"
+                        | "DECLINED"
+                    }
+                    startAt={project.startAt}
+                    endAt={project.endAt}
+                    currentVotePower={project.currentVotePower}
+                    vTokens={project.vTokens}
+                    isVote={false}
+                  />
+                );
               })}
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>
@@ -261,12 +272,11 @@ const MyVote = () => {
                   </i>
                 </p>
               </div>
-              
             </div>
           </Drawer.Content>
         </Drawer.Portal>
       </Drawer.Root>
-      {showModal && <TokenSubmit setShowModal = {setShowModal}/>}
+      {showModal && <TokenSubmit setShowModal={setShowModal} />}
     </section>
   );
 };
