@@ -129,6 +129,7 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
           pauseOnHover: true,
           theme: "dark",
         }); 
+        return;
       }
       if ( parseInt(voteAmount) > tokenBalance ) {
         toast.error("Token balance is not enough", {

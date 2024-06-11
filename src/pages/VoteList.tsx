@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
@@ -91,7 +90,7 @@ const VoteList = () => {
     } else if (sortOrder === "LAUNCHED") {
       return project.proposalStatus === "LAUNCHED";
     } else {
-      if (project.proposalStatus === "PENDING") return false;
+      if (project.proposalStatus === "PENDING") false;
       return true; // Default to show all projects
     }
   });

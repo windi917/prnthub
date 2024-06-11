@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useCallback } from "react";
-// import { motion } from "framer-motion";
 import { FaSort } from "react-icons/fa";
+// import { motion } from "framer-motion";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventIcon from "@mui/icons-material/Event";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -95,7 +95,7 @@ const MyVote = () => {
     } else if (sortOrder === "LAUNCHED") {
       return project.proposalStatus === "LAUNCHED";
     } else {
-      if (project.proposalStatus === "PENDING") return false;
+      if (project.proposalStatus === "PENDING") false;
       return true; // Default to show all projects
     }
   });
@@ -112,22 +112,10 @@ const MyVote = () => {
             Submit Token
           </button>
           <div className="max-w-6xl mx-auto">
-            <h1
-              className="my-4 mb-4 text-4xl text-center font-primaryBold"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-              layout
-            >
+            <h1 className="my-4 mb-4 text-4xl text-center font-primaryBold">
               Vote List
             </h1>
-            <p
-              className="mb-4 text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-              layout
-            >
+            <p className="mb-4 text-center">
               Vote for your favourite projects.
               <br />
             </p>
@@ -148,11 +136,10 @@ const MyVote = () => {
                 <ul className="rounded-lg shadow-lg menu bg-base-300 shadow-slate-800 text-textclr2">
                   <li>
                     <button
-                      className={`w-full text-left ${
-                        sortOrder === "VOTING"
+                      className={`w-full text-left ${sortOrder === "VOTING"
                           ? "text-textclr"
                           : "text-textclr2"
-                      }`}
+                        }`}
                       onClick={() => handleSort("VOTING")}
                     >
                       <EventIcon className="inline mr-2" /> VOTING
@@ -160,11 +147,10 @@ const MyVote = () => {
                   </li>
                   <li>
                     <button
-                      className={`w-full text-left ${
-                        sortOrder === "APPROVED"
+                      className={`w-full text-left ${sortOrder === "APPROVED"
                           ? "text-textclr"
                           : "text-textclr2"
-                      }`}
+                        }`}
                       onClick={() => handleSort("APPROVED")}
                     >
                       <EventAvailableIcon className="inline mr-2" /> APPROVED
@@ -172,11 +158,10 @@ const MyVote = () => {
                   </li>
                   <li>
                     <button
-                      className={`w-full text-left ${
-                        sortOrder === "LAUNCHED"
+                      className={`w-full text-left ${sortOrder === "LAUNCHED"
                           ? "text-textclr"
                           : "text-textclr2"
-                      }`}
+                        }`}
                       onClick={() => handleSort("LAUNCHED")}
                     >
                       <EventAvailableIcon className="inline mr-2" /> LAUNCHED
@@ -184,9 +169,8 @@ const MyVote = () => {
                   </li>
                   <li>
                     <button
-                      className={`w-full text-left ${
-                        sortOrder === "all" ? "text-textclr" : "text-textclr2"
-                      }`}
+                      className={`w-full text-left ${sortOrder === "all" ? "text-textclr" : "text-textclr2"
+                        }`}
                       onClick={() => handleSort("all")}
                     >
                       <CalendarMonthIcon className="inline mr-2" /> All
@@ -209,11 +193,11 @@ const MyVote = () => {
                     socials={project.socials}
                     status={
                       project.proposalStatus as
-                        | "PENDING"
-                        | "VOTING"
-                        | "APPROVED"
-                        | "LAUNCHED"
-                        | "DECLINED"
+                      | "PENDING"
+                      | "VOTING"
+                      | "APPROVED"
+                      | "LAUNCHED"
+                      | "DECLINED"
                     }
                     startAt={project.startAt}
                     endAt={project.endAt}
