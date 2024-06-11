@@ -11,26 +11,26 @@ import { Drawer } from "vaul";
 import { getPeriods, getProjects, getTokenPairs } from "../api/apis";
 
 interface TokenPair {
-  id: number,
-  periodId: number,
-  voteTokenId: number,
-  weight: number,
-  minimumCount: number
-};
+  id: number;
+  periodId: number;
+  voteTokenId: number;
+  weight: number;
+  minimumCount: number;
+}
 
 interface Project {
-  id: number,
-  periodId: number,
-  logoURL: string,
-  name: string,
-  proposalDesc: string,
-  socials: ["https://twitter.com/", "https://google.com/"],
-  proposalStatus: string,
-  startAt: string,
-  endAt: string,
-  currentVotePower: number,
-  vTokens: TokenPair[]
-};
+  id: number;
+  periodId: number;
+  logoURL: string;
+  name: string;
+  proposalDesc: string;
+  socials: ["https://twitter.com/", "https://google.com/"];
+  proposalStatus: string;
+  startAt: string;
+  endAt: string;
+  currentVotePower: number;
+  vTokens: TokenPair[];
+}
 
 const VoteList = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -41,32 +41,42 @@ const VoteList = () => {
       const pros = await getProjects();
       const periods = await getPeriods();
       const tokenPairs = await getTokenPairs();
-  
-      if ( pros.success === true && periods.success === true && tokenPairs.success === true ) {
-        setProjects(pros.projects.filter((e: any) => (e.proposalStatus !== "DECLINED"))
-        .map((e: Project) => {
-          const period = periods.periods.filter((item: any) => (item.id === e.periodId))
 
-          if ( !period )
-            return null;
-          return {
-            id: e.id,
-            logoURL: e.logoURL,
-            name: e.name,
-            proposalDesc: e.proposalDesc,
-            proposalStatus: e.proposalStatus,
-            socials: ["https://twitter.com/", "https://google.com/"],
-            startAt: period[0].startAt,
-            endAt: period[0].endAt,
-            currentVotePower: e.currentVotePower,
-            vTokens: tokenPairs.tokenPairs.filter((item: any) => (item.periodId === e.periodId))
-          }
-        }))
+      if (
+        pros.success === true &&
+        periods.success === true &&
+        tokenPairs.success === true
+      ) {
+        setProjects(
+          pros.projects
+            .filter((e: any) => e.proposalStatus !== "DECLINED")
+            .map((e: Project) => {
+              const period = periods.periods.filter(
+                (item: any) => item.id === e.periodId
+              );
+
+              if (!period) return null;
+              return {
+                id: e.id,
+                logoURL: e.logoURL,
+                name: e.name,
+                proposalDesc: e.proposalDesc,
+                proposalStatus: e.proposalStatus,
+                socials: ["https://twitter.com/", "https://google.com/"],
+                startAt: period[0].startAt,
+                endAt: period[0].endAt,
+                currentVotePower: e.currentVotePower,
+                vTokens: tokenPairs.tokenPairs.filter(
+                  (item: any) => item.periodId === e.periodId
+                ),
+              };
+            })
+        );
       }
-    }
-  
+    };
+
     fetchProjects();
-  }, [])
+  }, []);
 
   const handleSort = (order: string) => {
     setSortOrder(order);
@@ -81,8 +91,7 @@ const VoteList = () => {
     } else if (sortOrder === "LAUNCHED") {
       return project.proposalStatus === "LAUNCHED";
     } else {
-      if ( project.proposalStatus === "PENDING" )
-        false
+      if (project.proposalStatus === "PENDING") return false;
       return true; // Default to show all projects
     }
   });
@@ -92,34 +101,16 @@ const VoteList = () => {
       <div className="flex justify-center min-h-screen">
         <div className="min-h-screen p-2 text-textclr2">
           <div className="max-w-6xl mx-auto">
-            <motion.h1
-              className="my-4 mb-4 text-4xl text-center font-primaryBold"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-              layout
-            >
+            <h1 className="my-4 mb-4 text-4xl text-center font-primaryBold">
               Vote List
-            </motion.h1>
-            <motion.p
-              className="mb-4 text-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-              layout
-            >
+            </h1>
+            <p className="mb-4 text-center">
               Vote for your favourite projects.
               <br />
-            </motion.p>
+            </p>
 
             {/*  -- Sort Dropdown --  */}
-            <motion.div
-              className="my-2 dropdown"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              layout
-            >
+            <div className="my-2 dropdown">
               <div
                 tabIndex={0}
                 role="button"
@@ -204,33 +195,36 @@ const VoteList = () => {
                   </li>
                 </ul>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.5 }}
-            >
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filteredProjects.map((project, index) => {
-                if ( project.proposalStatus == "LAUNCHED" )
-                  return null;
-                return <TokenCard
-                  key={index}
-                  projectId={project.id}
-                  projectName={project.name}
-                  projectLogo={project.logoURL}
-                  projectDesc={project.proposalDesc}
-                  socials={project.socials}
-                  status={project.proposalStatus as "PENDING" | "VOTING" | "APPROVED" | "LAUNCHED" | "DECLINED"}
-                  startAt={project.startAt}
-                  endAt={project.endAt}
-                  currentVotePower={project.currentVotePower}
-                  vTokens={project.vTokens}
-                  isVote={true}
-                />
+                if (project.proposalStatus == "LAUNCHED") return null;
+                return (
+                  <TokenCard
+                    key={index}
+                    projectId={project.id}
+                    projectName={project.name}
+                    projectLogo={project.logoURL}
+                    projectDesc={project.proposalDesc}
+                    socials={project.socials}
+                    status={
+                      project.proposalStatus as
+                        | "PENDING"
+                        | "VOTING"
+                        | "APPROVED"
+                        | "LAUNCHED"
+                        | "DECLINED"
+                    }
+                    startAt={project.startAt}
+                    endAt={project.endAt}
+                    currentVotePower={project.currentVotePower}
+                    vTokens={project.vTokens}
+                    isVote={true}
+                  />
+                );
               })}
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

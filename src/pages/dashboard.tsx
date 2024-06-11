@@ -29,18 +29,18 @@ interface Token {
 }
 
 interface Project {
-  id: number,
-  periodId: number,
-  logoURL: string,
-  name: string,
-  proposalDesc: string,
-  socials: ["https://twitter.com/", "https://google.com/"],
-  proposalStatus: string,
-  startAt: string,
-  endAt: string,
-  currentVotePower: number,
-  threshold: number
-};
+  id: number;
+  periodId: number;
+  logoURL: string;
+  name: string;
+  proposalDesc: string;
+  socials: ["https://twitter.com/", "https://google.com/"];
+  proposalStatus: string;
+  startAt: string;
+  endAt: string;
+  currentVotePower: number;
+  threshold: number;
+}
 
 const Dashboard = () => {
   const navigate = useNavigate(); // <-- Initialize useNavigate
@@ -70,36 +70,41 @@ const Dashboard = () => {
     const periods = await getPeriods();
 
     if (pros.success === true && periods.success === true) {
-      setProjects(pros.projects.filter((e: any) => (e.proposalStatus !== "DECLINED"))
-        .map((e: Project) => {
-          const period = periods.periods.filter((item: any) => (item.id === e.periodId));
-          if (!period) {
-            setLoading(false);
-            return null
-          }
+      setProjects(
+        pros.projects
+          .filter((e: any) => e.proposalStatus !== "DECLINED")
+          .map((e: Project) => {
+            const period = periods.periods.filter(
+              (item: any) => item.id === e.periodId
+            );
+            if (!period) {
+              setLoading(false);
+              return null;
+            }
 
-          setLoading(false);
-          return {
-            id: e.id,
-            logoURL: e.logoURL,
-            name: e.name,
-            proposalDesc: e.proposalDesc,
-            proposalStatus: e.proposalStatus,
-            socials: ["https://twitter.com/", "https://google.com/"],
-            startAt: period[0].startAt,
-            endAt: period[0].endAt,
-            currentVotePower: e.currentVotePower,
-            threshold: period[0].votePowerLimit
-          }
-        }))
+            setLoading(false);
+            return {
+              id: e.id,
+              logoURL: e.logoURL,
+              name: e.name,
+              proposalDesc: e.proposalDesc,
+              proposalStatus: e.proposalStatus,
+              socials: ["https://twitter.com/", "https://google.com/"],
+              startAt: period[0].startAt,
+              endAt: period[0].endAt,
+              currentVotePower: e.currentVotePower,
+              threshold: period[0].votePowerLimit,
+            };
+          })
+      );
     }
   }, []);
 
   useEffect(() => {
-    if ( userRole === "ADMIN") {
+    if (userRole === "ADMIN") {
       fetchProjects();
     } else {
-      navigate('/'); // <-- Redirect to another page if not admin
+      navigate("/"); // <-- Redirect to another page if not admin
     }
   }, [fetchProjects]);
 
@@ -109,12 +114,19 @@ const Dashboard = () => {
     setLoading(true);
 
     if (!fromDate || projectId == 0 || !toDate || passScore < 0) {
-      toast.error("Input values correctly!")
+      toast.error("Input values correctly!");
       setLoading(false);
       return;
     }
 
-    const response = await createVotePeriod(jwtToken, projectId, fromDate, toDate, "", passScore);
+    const response = await createVotePeriod(
+      jwtToken,
+      projectId,
+      fromDate,
+      toDate,
+      "",
+      passScore
+    );
     if (response.success == false) {
       toast.error("Create Vote Period error!");
       setLoading(false);
@@ -128,8 +140,13 @@ const Dashboard = () => {
 
     const period = response.period;
     for (let i = 0; i < tokens.length; i++) {
-
-      const res = await createTokenPair(jwtToken, period.id, tokens[i].id, tokens[i].weight, tokens[i].minVoteAmount);
+      const res = await createTokenPair(
+        jwtToken,
+        period.id,
+        tokens[i].id,
+        tokens[i].weight,
+        tokens[i].minVoteAmount
+      );
       if (res.success == false) {
         toast.error("Create TokenPair error!");
         setLoading(false);
@@ -175,7 +192,7 @@ const Dashboard = () => {
   const handleProjectSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     setProjectId(parseInt(e.target.value));
-  }
+  };
 
   const handleTokenRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -183,7 +200,8 @@ const Dashboard = () => {
     setLoading(true);
 
     const mintValid = await checkMintAddress(vTokenMintAddress);
-    if (mintValid.success === false) { // valid mint
+    if (mintValid.success === false) {
+      // valid mint
       setLoading(false);
       toast.error("Mint Address is invalid!");
       return;
@@ -196,7 +214,12 @@ const Dashboard = () => {
       return;
     }
 
-    const response = await createVToken(jwtToken, vTokenName, vTokenMintAddress, res.decimals);
+    const response = await createVToken(
+      jwtToken,
+      vTokenName,
+      vTokenMintAddress,
+      res.decimals
+    );
     if (response.success == false) {
       setLoading(false);
       toast.error("Create Vote Token error!");
@@ -296,35 +319,37 @@ const Dashboard = () => {
                   let status = project.proposalStatus;
 
                   const curTime = new Date();
-                  const endTime = new Date(project.startAt)
+                  const endTime = new Date(project.startAt);
 
-                  if ( curTime > endTime ) {
+                  if (curTime > endTime) {
                     status = "ENDED";
                   }
 
-                  return <tr key={index} className="border-b">
-                    <td className="px-4 py-2">{index + 1}</td>
-                    <td className="px-4 py-2">{project.name}</td>
+                  return (
+                    <tr key={index} className="border-b">
+                      <td className="px-4 py-2">{index + 1}</td>
+                      <td className="px-4 py-2">{project.name}</td>
 
-                    <td className="px-4 py-2 break-words">
-                      {project.proposalDesc}
-                    </td>
-                    <td className="px-4 py-2 break-words">
-                      {status}
-                    </td>
-                    <td className="px-4 py-2">
-                      <button
-                        onClick={() => {
-                          setValue(1);
-                          setProjectId(project.id);
-                        }}
-                        className="text-white rounded-md shadow-sm btn bg-textclr2/70 font-primaryRegular hover:bg-textclr2/30 btn-sm"
-                        disabled={project.proposalStatus === "PENDING" ? false : true}
-                      >
-                        Create Vote
-                      </button>
-                    </td>
-                  </tr>
+                      <td className="px-4 py-2 break-words">
+                        {project.proposalDesc}
+                      </td>
+                      <td className="px-4 py-2 break-words">{status}</td>
+                      <td className="px-4 py-2">
+                        <button
+                          onClick={() => {
+                            setValue(1);
+                            setProjectId(project.id);
+                          }}
+                          className="text-white rounded-md shadow-sm btn bg-textclr2/70 font-primaryRegular hover:bg-textclr2/30 btn-sm"
+                          disabled={
+                            project.proposalStatus === "PENDING" ? false : true
+                          }
+                        >
+                          Create Vote
+                        </button>
+                      </td>
+                    </tr>
+                  );
                 })}
               </tbody>
             </table>
@@ -501,36 +526,49 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody className="font-primaryRegular">
-                  {projects.filter((e) => {
-                    if (new Date(e.endAt) < new Date() && e.proposalStatus === "VOTING")
-                      return true;
-                    return false;
-                  }).map((project, index) => (
-                    <tr>
-                      {/* id change as needed */}
-                      <td>{index + 1}</td>
-                      <td>{project.name}</td>
-                      <td>{project.proposalDesc}</td> {/* Description change as needed */}
-                      <td>{project.threshold}</td>
-                      <td>{project.currentVotePower}</td>
-                      <td className="px-4 py-2 space-x-2 space-y-2">
-                        <button
-                          className="text-white rounded-md shadow-sm bg-green-500/40 btn font-primaryRegular hover:bg-green-400/20 btn-sm"
-                          onClick={() => handleApprove(project.id)}
-                          disabled={project.proposalStatus === "APPROVED" ? true : false}
-                        >
-                          Approve
-                        </button>
-                        <button
-                          className="text-white rounded-md shadow-sm btn bg-red-500/40 font-primaryRegular hover:bg-red-500/20 btn-sm"
-                          onClick={() => handleReject(project.id)}
-                          disabled={project.proposalStatus === "DECLINED" ? true : false}
-                        >
-                          Reject
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {projects
+                    .filter((e) => {
+                      if (
+                        new Date(e.endAt) < new Date() &&
+                        e.proposalStatus === "VOTING"
+                      )
+                        return true;
+                      return false;
+                    })
+                    .map((project, index) => (
+                      <tr>
+                        {/* id change as needed */}
+                        <td>{index + 1}</td>
+                        <td>{project.name}</td>
+                        <td>{project.proposalDesc}</td> {/* Description change as needed */}
+                        <td>{project.threshold}</td>
+                        <td>{project.currentVotePower}</td>
+                        <td className="px-4 py-2 space-x-2 space-y-2">
+                          <button
+                            className="text-white rounded-md shadow-sm bg-green-500/40 btn font-primaryRegular hover:bg-green-400/20 btn-sm"
+                            onClick={() => handleApprove(project.id)}
+                            disabled={
+                              project.proposalStatus === "APPROVED"
+                                ? true
+                                : false
+                            }
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className="text-white rounded-md shadow-sm btn bg-red-500/40 font-primaryRegular hover:bg-red-500/20 btn-sm"
+                            onClick={() => handleReject(project.id)}
+                            disabled={
+                              project.proposalStatus === "DECLINED"
+                                ? true
+                                : false
+                            }
+                          >
+                            Reject
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>

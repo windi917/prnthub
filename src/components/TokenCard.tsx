@@ -6,12 +6,12 @@ import LaunchModal from "./LaunchModal";
 import { toast } from "react-toastify";
 
 interface TokenPair {
-  id: number,
-  periodId: number,
-  voteTokenId: number,
-  weight: number,
-  minimumCount: number
-};
+  id: number;
+  periodId: number;
+  voteTokenId: number;
+  weight: number;
+  minimumCount: number;
+}
 
 interface TokenCardProps {
   projectId: number;
@@ -38,7 +38,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
   endAt,
   currentVotePower,
   vTokens,
-  isVote
+  isVote,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [approveShowModal, setApproveShowModal] = useState(false);
@@ -90,8 +90,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
       <div className="flex items-center px-2 py-2 my-2 text-sm rounded-md shadow-sm cursor-pointer bg-textclr2/30 hover:bg-textclr2/40 hover:text-textclr font-primaryRegular">
         <PollIcon className="inline mr-4 text-textclr2" />
         {status === "PENDING" ? (
-          <>
-          </>
+          <></>
         ) : (
           <div className="flex flex-col">
             <span className="text-textclr font-primaryRegular">
@@ -157,7 +156,6 @@ const TokenCard: React.FC<TokenCardProps> = ({
             const curTime = new Date();
             const startTime = new Date(startAt);
             const endTime = new Date(endAt);
-
             if (curTime < startTime) {
               toast.error("Vote is not started yet!");
               return;
@@ -166,8 +164,8 @@ const TokenCard: React.FC<TokenCardProps> = ({
               toast.error("Voting ended!");
               return;
             }
-            if (status === "VOTING")
-              setShowModal(true)
+
+            if (status === "VOTING") setShowModal(true);
           }}
           className="py-2 mt-4 tracking-wider rounded-md btn text-bg font-primaryRegular bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
         >
@@ -178,19 +176,30 @@ const TokenCard: React.FC<TokenCardProps> = ({
           {status === "APPROVED" ? (
             <button
               onClick={() => {
-                setApproveShowModal(true)
+                setApproveShowModal(true);
               }}
               className="py-2 mt-4 tracking-wider rounded-md btn text-bg font-primaryRegular bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
             >
               LAUNCH
             </button>
-          ) : (
-            null
-          )}
+          ) : null}
         </>
       )}
-      {showModal && <Modal setShowModal={setShowModal} projectId={projectId} voteTokens={vTokens} currentVotePower={votePower} setVotePower={setVotePower} />}
-      {approveShowModal && <LaunchModal setApproveShowModal={setApproveShowModal} projectId={projectId} />}
+      {showModal && (
+        <Modal
+          setShowModal={setShowModal}
+          projectId={projectId}
+          voteTokens={vTokens}
+          currentVotePower={votePower}
+          setVotePower={setVotePower}
+        />
+      )}
+      {approveShowModal && (
+        <LaunchModal
+          setApproveShowModal={setApproveShowModal}
+          projectId={projectId}
+        />
+      )}
     </div>
   );
 };

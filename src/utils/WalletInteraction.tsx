@@ -47,10 +47,11 @@ const WalletInteraction: FC = () => {
 
       const response = await axios.request(config);
 
-      if ( response.data.success == true ) {
+      if (response.data.success == true) {
         setJwtToken(response.data.token);
         setUserRole(response.data.role);
         setUserId(response.data.userId);
+        console.log("@@@@@@@@@@@@@", response.data);
         setIsRegistered(true);
         toast.success("Login successful!");
       } else {
@@ -117,8 +118,13 @@ const WalletInteraction: FC = () => {
       <ToastContainer />
       <WalletMultiButton />
       {publicKey && isRegistered === false && (
-        <div>
-          <button onClick={handleSignup}>Sign Up</button>
+        <div className="flex flex-row justify-end">
+          <button
+            className="bg-[#ccf869] border-2 mt-1 border-whitesmoke font-primaryRegular leading-normal py-2 px-6 rounded-3xl text-[0.9em] duration-300 ease-in-out text-black hover:bg-[#bbe759] hover:text-black"
+            onClick={handleSignup}
+          >
+            Sign Up
+          </button>
         </div>
       )}
     </div>
