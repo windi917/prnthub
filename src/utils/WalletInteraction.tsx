@@ -1,4 +1,4 @@
-import { FC, useCallback, useState, useEffect, useContext } from "react";
+import { FC, useCallback, useEffect, useContext } from "react";
 import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import axios from "axios";
