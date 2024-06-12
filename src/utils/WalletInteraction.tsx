@@ -10,7 +10,7 @@ import { API_URL } from "../config";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 
 const WalletInteraction: FC = () => {
-  const { publicKey, signMessage } = useWallet() as WalletContextState & {
+  const { publicKey, connected, signMessage } = useWallet() as WalletContextState & {
     signMessage: (message: Uint8Array) => Promise<Uint8Array>;
   };
 
@@ -112,7 +112,7 @@ const WalletInteraction: FC = () => {
       <ToastContainer />
       <div className="flex" style={{ alignItems: 'center' }}>
         <WalletMultiButton />
-        {isRegistered === false ? (
+        { connected && isRegistered === false ? (
           <button
             className="bg-[#ccf869] border-2 mt-1 border-whitesmoke font-primaryRegular leading-normal py-2 px-6 rounded-3xl text-[0.9em] duration-300 ease-in-out text-black hover:bg-[#bbe759] hover:text-black"
             onClick={handleSignup}
