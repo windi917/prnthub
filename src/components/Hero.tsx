@@ -61,13 +61,13 @@ const Hero = () => {
         >
           <button
             onClick={() => scrollToSection("token")}
-            className="flex-1 px-6 text-sm text-white bg-transparent border rounded-md border-btnbg font-primaryRegular animate-buttonheartbeat hover:bg-btnbg/10 hover:text-textclr2/80"
+            className="flex-1 px-6 text-sm text-center text-white bg-transparent border rounded-md flex-nowrap border-btnbg font-primaryRegular animate-buttonheartbeat hover:bg-btnbg/10 hover:text-textclr2/80"
           >
             Token Launches
           </button>
           <button
             onClick={() => scrollToSection("nft")}
-            className="flex items-center text-sm text-white bg-transparent border rounded-md flex-nowrap btn rpx-6 border-btnbg font-primaryRegular animate-buttonheartbeat hover:bg-btnbg/10 hover:text-textclr2/80 hover:border-btnbg"
+            className="flex items-center px-6 text-sm text-white bg-transparent border rounded-md flex-nowrap btn border-btnbg font-primaryRegular animate-buttonheartbeat hover:bg-btnbg/10 hover:text-textclr2/80 hover:border-btnbg"
           >
             NFT Launches
           </button>

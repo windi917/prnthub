@@ -18,8 +18,6 @@ const WalletInteraction: FC = () => {
   const { setUserRole } = useContext(JwtTokenContext);
   const { setUserId } = useContext(JwtTokenContext);
 
-  const [isRegistered, setIsRegistered] = useState<boolean | null>(null);
-
   const handleLogin = useCallback(async () => {
     if (!publicKey || !signMessage) {
       toast.error("Wallet not connected or signMessage not available");
@@ -27,12 +25,8 @@ const WalletInteraction: FC = () => {
     }
 
     try {
-      const message = new TextEncoder().encode("Sign this message for login");
-      const signedMessage = await signMessage(message);
       const data = JSON.stringify({
         address: publicKey.toBase58(), // Convert public key to base58 string
-        message: "Sign this message for login",
-        signature: Buffer.from(signedMessage).toString("base64"),
       });
 
       const config = {
@@ -51,15 +45,13 @@ const WalletInteraction: FC = () => {
         setJwtToken(response.data.token);
         setUserRole(response.data.role);
         setUserId(response.data.userId);
-        console.log("@@@@@@@@@@@@@", response.data);
-        setIsRegistered(true);
-        toast.success("Login successful!");
+        // setIsRegistered(true);
+        // toast.success("Login successful!");
       } else {
-        setIsRegistered(false);
-        toast.info("User not registered. Please sign up.");
+        // setIsRegistered(false);
+        handleSignup();
       }
     } catch (error) {
-      console.error("Login error:", error);
       if (error instanceof Error) {
         toast.error("Error logging in: " + error.message);
       } else {
@@ -117,7 +109,7 @@ const WalletInteraction: FC = () => {
     <div>
       <ToastContainer />
       <WalletMultiButton />
-      {publicKey && isRegistered === false && (
+      {/* {publicKey && isRegistered === false && (
         <div className="flex flex-row justify-end">
           <button
             className="bg-[#ccf869] border-2 mt-1 border-whitesmoke font-primaryRegular leading-normal py-2 px-6 rounded-3xl text-[0.9em] duration-300 ease-in-out text-black hover:bg-[#bbe759] hover:text-black"
@@ -126,7 +118,7 @@ const WalletInteraction: FC = () => {
             Sign Up
           </button>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

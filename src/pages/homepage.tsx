@@ -261,7 +261,7 @@ const Homepage: React.FC = () => {
           }}
           id="nft"
         >
-          NFT Showcase!
+          NFT Showcase
         </motion.div>
         <div className="grid grid-cols-1 gap-6 p-2 m-2 mt-6 text-pretty md:grid-cols-2 lg:grid-cols-3">
           {NFTdata.map((item, index) => (
@@ -279,7 +279,7 @@ const Homepage: React.FC = () => {
           }}
           id="token"
         >
-          Featured launches!
+          Featured launches
         </motion.div>
         <div className="grid grid-cols-1 gap-6 p-2 m-2 mt-6 text-pretty md:grid-cols-2 lg:grid-cols-3">
           {Tokendata.map((item, index) => (

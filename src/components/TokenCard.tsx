@@ -19,7 +19,14 @@ interface TokenCardProps {
   projectName: string;
   projectDesc: string;
   socials: string[];
-  status: "PENDING" | "VOTING" | "APPROVED" | "LAUNCHED" | "DECLINED" | "PREPENDING" | "ENDED";
+  status:
+    | "PENDING"
+    | "VOTING"
+    | "APPROVED"
+    | "LAUNCHED"
+    | "DECLINED"
+    | "PREPENDING"
+    | "ENDED";
   startAt: string;
   endAt: string;
   currentVotePower: number;
@@ -44,23 +51,28 @@ const TokenCard: React.FC<TokenCardProps> = ({
   const [approveShowModal, setApproveShowModal] = useState(false);
   const [votePower, setVotePower] = useState(currentVotePower);
 
-  let bgStyle = "bg-[#AAAAAA] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
+  let bgStyle =
+    "bg-[#AAAAAA] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
   if (status === "VOTING") {
     const curTime = new Date();
     const endTime = new Date(endAt);
 
     if (curTime > endTime) {
-      status = "ENDED"
-      bgStyle = "bg-[#F2844E] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
-    } else bgStyle = "bg-[#34D399] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
-  }
-  else if (status === "APPROVED")
-    bgStyle = "bg-[#3333FF] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
+      status = "ENDED";
+      bgStyle =
+        "bg-[#F2844E] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
+    } else
+      bgStyle =
+        "bg-[#34D399] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
+  } else if (status === "APPROVED")
+    bgStyle =
+      "bg-[#3333FF] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
   else if (status === "LAUNCHED")
-    bgStyle = "bg-[#33FFFF] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
+    bgStyle =
+      "bg-[#33FFFF] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
   else if (status === "DECLINED")
-    bgStyle = "bg-[#FF3333] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular"
-
+    bgStyle =
+      "bg-[#FF3333] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
 
   return (
     <div className="relative flex flex-col justify-between p-4 mx-4 border rounded-lg shadow-2xl min-w-[10rem] min-h-[20rem] border-textclr2 card bg-white/10">
@@ -110,10 +122,11 @@ const TokenCard: React.FC<TokenCardProps> = ({
         <BallotTwoToneIcon className="inline mr-4 text-textclr2" />
         <div className="flex flex-row gap-1">
           <span className=" text-textclr font-primaryRegular">
-            Votes Received:
+            Votes Received
           </span>
-          <span className="text-textclr2 font-primaryRegular">{votePower}</span>
-          {/* Hard coded for now */}
+          <span className="px-[0.5rem] py-[0.4] rounded-lg text-textclr2 font-primaryRegular bg-bg">
+            {votePower}
+          </span>
         </div>
       </div>
 

@@ -104,28 +104,20 @@ const MyVote = () => {
     <section className="bg-radial-gradient dark:bg-bg">
       <div className="flex justify-center min-h-screen">
         <div className="min-h-screen p-2 text-textclr2">
-          <button
-            type="submit"
-            className="px-4 py-2 rounded-md btn text-slate-500 bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
-            onClick={() => setShowModal(true)}
-          >
-            Submit Token
-          </button>
           <div className="max-w-6xl mx-auto">
             <h1 className="my-4 mb-4 text-4xl text-center font-primaryBold">
-              Vote List
+              My Votes
             </h1>
-            <p className="mb-4 text-center">
-              Vote for your favourite projects.
+            <p className="mb-4 text-center ">
+              Find the latest projects you have voted for & Apply for new ones.
               <br />
             </p>
-
             {/*  -- Sort Dropdown --  */}
-            <div className="my-2 dropdown">
+            <div className="dropdown">
               <div
                 tabIndex={0}
                 role="button"
-                className="flex items-center m-1 btn text-textclr2 font-primaryRegular"
+                className="flex items-center mx-2 border-lg btn text-textclr2 border-textclr2 font-primaryRegular hover:border-btnbg hover:text-btnbg focus:outline-none focus:bg-btnbg/10 focus:border-btnbg/10"
               >
                 <FaSort className="inline mr-2" /> Sort
               </div>
@@ -136,10 +128,11 @@ const MyVote = () => {
                 <ul className="rounded-lg shadow-lg menu bg-base-300 shadow-slate-800 text-textclr2">
                   <li>
                     <button
-                      className={`w-full text-left ${sortOrder === "VOTING"
+                      className={`w-full text-left ${
+                        sortOrder === "VOTING"
                           ? "text-textclr"
                           : "text-textclr2"
-                        }`}
+                      }`}
                       onClick={() => handleSort("VOTING")}
                     >
                       <EventIcon className="inline mr-2" /> VOTING
@@ -147,10 +140,11 @@ const MyVote = () => {
                   </li>
                   <li>
                     <button
-                      className={`w-full text-left ${sortOrder === "APPROVED"
+                      className={`w-full text-left ${
+                        sortOrder === "APPROVED"
                           ? "text-textclr"
                           : "text-textclr2"
-                        }`}
+                      }`}
                       onClick={() => handleSort("APPROVED")}
                     >
                       <EventAvailableIcon className="inline mr-2" /> APPROVED
@@ -158,10 +152,11 @@ const MyVote = () => {
                   </li>
                   <li>
                     <button
-                      className={`w-full text-left ${sortOrder === "LAUNCHED"
+                      className={`w-full text-left ${
+                        sortOrder === "LAUNCHED"
                           ? "text-textclr"
                           : "text-textclr2"
-                        }`}
+                      }`}
                       onClick={() => handleSort("LAUNCHED")}
                     >
                       <EventAvailableIcon className="inline mr-2" /> LAUNCHED
@@ -169,8 +164,9 @@ const MyVote = () => {
                   </li>
                   <li>
                     <button
-                      className={`w-full text-left ${sortOrder === "all" ? "text-textclr" : "text-textclr2"
-                        }`}
+                      className={`w-full text-left ${
+                        sortOrder === "all" ? "text-textclr" : "text-textclr2"
+                      }`}
                       onClick={() => handleSort("all")}
                     >
                       <CalendarMonthIcon className="inline mr-2" /> All
@@ -179,7 +175,13 @@ const MyVote = () => {
                 </ul>
               </div>
             </div>
-
+            <button
+              type="submit"
+              className="px-4 border-lg btn text-textclr2 border-textclr2 font-primaryRegular hover:border-btnbg hover:text-btnbg focus:outline-none focus:bg-btnbg/10 focus:border-btnbg/10"
+              onClick={() => setShowModal(true)}
+            >
+              Submit Token
+            </button>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filteredProjects.map((project, index) => {
                 if (project.proposalStatus == "LAUNCHED") return null;
@@ -193,11 +195,11 @@ const MyVote = () => {
                     socials={project.socials}
                     status={
                       project.proposalStatus as
-                      | "PENDING"
-                      | "VOTING"
-                      | "APPROVED"
-                      | "LAUNCHED"
-                      | "DECLINED"
+                        | "PENDING"
+                        | "VOTING"
+                        | "APPROVED"
+                        | "LAUNCHED"
+                        | "DECLINED"
                     }
                     startAt={project.startAt}
                     endAt={project.endAt}

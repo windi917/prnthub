@@ -107,8 +107,8 @@ const Accordion = () => {
         <div className="collapse-content">
           <p className="font-primaryRegular text-textclr text-pretty">
             <b>Prnt Hub</b> offers a streamlined process for launching tokens ,
-            We recommend methods & guide you with the tokenmoics, marketing to
-            liquidity pool managment , graphic's & much more. We provide
+            We recommend methods & guide you with the tokenomics, marketing to
+            liquidity pool management , graphic's & much more. We provide
             personalized assistance & support to help you launch your tokens
             successfully.
           </p>

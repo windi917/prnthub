@@ -72,7 +72,7 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
     data.append("twitter", formData.twitterURL);
     data.append("decimals", formData.decimals.toString());
     data.append("proposalTitle", "");
-    data.append("proposalStatus", "PENDING")
+    data.append("proposalStatus", "PENDING");
     data.append("proposalDesc", formData.description);
     data.append("periodId", "1");
     if (formData.tokenomics) {
@@ -87,8 +87,8 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
       maxBodyLength: Infinity,
       url: API_URL + "/token",
       headers: {
-        "Authorization": "Bearer " + jwtToken,
-        "Content-Type": "multipart/form-data"
+        Authorization: "Bearer " + jwtToken,
+        "Content-Type": "multipart/form-data",
       },
       data: data,
     };
@@ -104,9 +104,9 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
   };
   return (
     <>
-      <div className="flex fixed inset-0 z-10 items-center justify-center bg-opacity-50 bg-bg ">
+      <div className="fixed inset-0 z-10 flex items-center justify-center bg-opacity-50 bg-bg ">
         <motion.div
-          className="flex flex flex-col items-center max-w-3xl p-8 mx-auto my-16 border shadow-lg border-textclr2 backdrop-blur-3xl rounded-box bg-white/10 lg:px-12 lg:w-3/5 md:w-1/2 md:px-8 modal-container"
+          className="flex flex-col items-center max-w-3xl p-8 mx-auto my-16 border shadow-lg border-textclr2 backdrop-blur-3xl rounded-box bg-white/10 lg:px-12 lg:w-3/5 md:w-1/2 md:px-8 modal-container"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
@@ -325,13 +325,13 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
               <div className="flex-col items-center justify-center md:flex-row md:justify-between">
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-md btn text-slate-500 bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
+                  className="px-4 py-2 border-lg btn text-textclr2 border-textclr2 font-primaryRegular hover:border-btnbg hover:text-btnbg focus:outline-none focus:bg-btnbg/10 focus:border-btnbg/10"
                 >
                   Submit
                 </button>
                 <button
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-md btn text-slate-500 bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2 mr-4"
+                  className="px-4 py-2 mx-2 border-lg btn text-textclr2 border-textclr2 font-primaryRegular hover:border-btnbg hover:text-btnbg focus:outline-none focus:bg-btnbg/10 focus:border-btnbg/10"
                 >
                   Close
                 </button>
@@ -362,7 +362,7 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
             </form>
           </div>
         </motion.div>
-    </div>
+      </div>
     </>
   );
 };

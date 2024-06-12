@@ -52,7 +52,7 @@ const ClientReviews = () => {
       quote:
         "$PRNT team have made an extremely good example & set a high bar how WEB-3 projects / companies should work like with their customers. I can freely say that their team were able to help our project Fuddles NFT collection of 1111 NFTs sell out within a day! Their availability & constant communication is on another level.",
       name: "Dem",
-      role: "Fouder, Fuddles",
+      role: "Founder, Fuddles",
       image:
         "https://shdw-drive.genesysgo.net/EHYJeNPjwkkTr9Bv46eymGgT9p6GqVVvMjB3KRCHHiEK/Fuddles-logo.jpg",
     },
