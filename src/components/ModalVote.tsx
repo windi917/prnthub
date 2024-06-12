@@ -107,6 +107,11 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
 
   const handleSubmit = async () => {
 
+    if ( !jwtToken ) {
+      toast.error("Token Error: Please sign first!");
+      return;
+    }
+    
     if ( !tokenMint ) {
       toast.error(`Please select vote token`, {
         position: "bottom-center",

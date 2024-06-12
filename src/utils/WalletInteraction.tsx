@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useContext } from "react";
+import { FC, useCallback, useEffect, useContext, useState } from "react";
 import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import axios from "axios";
@@ -17,6 +17,8 @@ const WalletInteraction: FC = () => {
   const { setJwtToken } = useContext(JwtTokenContext);
   const { setUserRole } = useContext(JwtTokenContext);
   const { setUserId } = useContext(JwtTokenContext);
+
+  const [isRegistered, setIsRegistered] = useState(true);
 
   const handleLogin = useCallback(async () => {
     if (!publicKey || !signMessage) {
@@ -45,10 +47,10 @@ const WalletInteraction: FC = () => {
         setJwtToken(response.data.token);
         setUserRole(response.data.role);
         setUserId(response.data.userId);
-        // setIsRegistered(true);
+        setIsRegistered(true);
         // toast.success("Login successful!");
       } else {
-        // setIsRegistered(false);
+        setIsRegistered(false);
         handleSignup();
       }
     } catch (error) {
@@ -108,17 +110,17 @@ const WalletInteraction: FC = () => {
   return (
     <div>
       <ToastContainer />
-      <WalletMultiButton />
-      {/* {publicKey && isRegistered === false && (
-        <div className="flex flex-row justify-end">
+      <div className="flex" style={{ alignItems: 'center' }}>
+        <WalletMultiButton />
+        {isRegistered === false ? (
           <button
             className="bg-[#ccf869] border-2 mt-1 border-whitesmoke font-primaryRegular leading-normal py-2 px-6 rounded-3xl text-[0.9em] duration-300 ease-in-out text-black hover:bg-[#bbe759] hover:text-black"
             onClick={handleSignup}
           >
             Sign Up
           </button>
-        </div>
-      )} */}
+        ) : null}
+      </div>
     </div>
   );
 };

@@ -111,8 +111,13 @@ const Dashboard = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Logic to handle form submission
-    setLoading(true);
+    if ( !jwtToken ) {
+      toast.error("Token Error: Please sign first!");
+      return;
+    }
 
+    setLoading(true);
+    
     if (!fromDate || projectId == 0 || !toDate || passScore < 0) {
       toast.error("Input values correctly!");
       setLoading(false);
@@ -160,6 +165,11 @@ const Dashboard = () => {
   };
 
   const handleApprove = async (tokenId: number) => {
+    if ( !jwtToken ) {
+      toast.error("Token Error: Please sign first!");
+      return;
+    }
+
     setLoading(true);
 
     const res = await setTokenStatus(jwtToken, tokenId, "APPROVED");
@@ -175,8 +185,13 @@ const Dashboard = () => {
   };
 
   const handleReject = async (tokenId: number) => {
-    setLoading(true);
+    if ( !jwtToken ) {
+      toast.error("Token Error: Please sign first!");
+      return;
+    }
 
+    setLoading(true);
+    
     const res = await setTokenStatus(jwtToken, tokenId, "DECLINED");
     if (res.success == false) {
       setLoading(false);
@@ -197,8 +212,13 @@ const Dashboard = () => {
   const handleTokenRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if ( !jwtToken ) {
+      toast.error("Token Error: Please sign first!");
+      return;
+    }
+    
     setLoading(true);
-
+    
     const mintValid = await checkMintAddress(vTokenMintAddress);
     if (mintValid.success === false) {
       // valid mint

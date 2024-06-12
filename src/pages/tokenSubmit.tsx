@@ -6,6 +6,7 @@ import { Oval } from "react-loader-spinner";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 
 import { API_URL } from "../config";
+import { toast } from "react-toastify";
 
 interface FormData {
   name: string;
@@ -62,6 +63,12 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+
+    if ( !jwtToken ) {
+      toast.error("Token Error: Please sign first!");
+      return;
+    }
+    
     setLoading(true);
 
     const data = new FormData();
@@ -98,6 +105,11 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
       setShowModal(false);
       setSuccess(true);
     } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Error Submit Proposal: " + error.message);
+      } else {
+        toast.error("Error Submit Proposal");
+      }
     } finally {
       setLoading(false);
     }
