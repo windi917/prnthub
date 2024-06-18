@@ -7,7 +7,7 @@ import { getProjects, getPoolTokens } from "../api/apis";
 import { getTokenBalance } from "../utils/IntegrationConfig";
 import { toast } from "react-toastify";
 import { PublicKey } from "@solana/web3.js";
-import { createOpenBookMarket, createAmmPool } from "../utils/WebIntegration";
+import { createAmmPool } from "../utils/WebIntegration";
 import { createPoolApi } from "../api/apis";
 import { Oval } from "react-loader-spinner";
 
@@ -38,6 +38,7 @@ const LPsetup = () => {
   const [baseTokenAmount, setBaseTokenAmount] = useState(0);
   const [quoteTokenAmount, setQuoteTokenAmount] = useState(0);
   const [launchDate, setLaunchDate] = useState('');
+  const [marketaddress, setMarketAddress] = useState('');
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -78,18 +79,16 @@ const LPsetup = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("#################", baseTokenAddress, baseTokenAmount, quoteTokenAddress, quoteTokenAmount)
 
     setLoading(true);
     try {
-      const marketRes = await createOpenBookMarket(wallet, baseTokenAddress, quoteTokenAddress)
-      if (!marketRes) {
+      if (!marketaddress) {
         setLoading(false);
-        toast.error('Create Market Error');
+        toast.error('Market Address Invalid!');
         return;
       }
 
-      const marketId = marketRes.address;
+      const marketId = marketaddress;
 
       console.log("HANDLE CREATE POOL : ", marketId);
       const poolRes = await createAmmPool(wallet, baseTokenAddress, quoteTokenAddress, marketId, baseTokenAmount, quoteTokenAmount)
@@ -225,6 +224,23 @@ const LPsetup = () => {
                 </p>
               </div>
             </div>
+
+            <div className="grid gap-6 mt-6 md:grid-cols-2">
+              {/* --- Base Token set --- */}
+              <div>
+                <label className="block mb-2 text-textclr2 font-primaryBold">
+                  Market Id :
+                </label>
+
+                <input
+                  type="string"
+                  placeholder="Input Market Address"
+                  className="w-full mb-2 input lg:mb-0"
+                  onChange={(e) => setMarketAddress(e.target.value)}
+                />
+              </div>
+            </div>
+
             <div className="flex flex-col w-full gap-4 py-4 lg:flex-row">
               {/* --- Base Price --- */}
               <div className="grid items-center flex-grow grid-cols-1 gap-4 p-4 border border-btnbg card bg-base-300 rounded-box lg:grid-cols-3">
@@ -288,7 +304,7 @@ const LPsetup = () => {
             </div>
             <button
               type="submit"
-              className="px-4 py-2 text-black border rounded-lg border-textclr border-lg bg-btnbg hover:bg-btnbg/60 font-primaryRegular hover:border-btnbg hover:text-btnbg focus:outline-none focus:bg-btnbg/10 focus:border-btnbg/10"
+              className="px-4 py-2 border rounded-lg text-textclr border-textclr2 border-lg bg-btnbg/50 hover:bg-btnbg/60 hover:border-btnbg hover:text-btnbg focus:outline-none"
             >
               Create Liquidity Pool
             </button>

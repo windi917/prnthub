@@ -52,6 +52,20 @@ const Navbar = () => {
                   <li>
                     <Link to="/setupLP">Setup LP</Link>
                   </li>
+                  <li>
+                    <Link to="/setupMarket">Setup OpenBook Market</Link>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a className="text-textclr2">Pools Hub</a>
+                <ul className="p-2">
+                  <li>
+                    <Link to="/poolList">Pool List</Link>
+                  </li>
+                  <li>
+                    <Link to="/myPool">My Pools</Link>
+                  </li>
                 </ul>
               </li>
               <li>

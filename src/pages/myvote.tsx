@@ -112,6 +112,13 @@ const MyVote = () => {
               Find the latest projects you have voted for & Apply for new ones.
               <br />
             </p>
+            <button
+              type="submit"
+              className="px-4 mt-2 border-lg btn text-textclr2 border-textclr2 font-primaryRegular hover:border-btnbg hover:text-btnbg focus:outline-none focus:bg-btnbg/10 focus:border-btnbg/10"
+              onClick={() => setShowModal(true)}
+            >
+              Submit Token
+            </button>
             {/*  -- Sort Dropdown --  */}
             <div className="dropdown">
               <div
@@ -175,13 +182,6 @@ const MyVote = () => {
                 </ul>
               </div>
             </div>
-            <button
-              type="submit"
-              className="px-4 border-lg btn text-textclr2 border-textclr2 font-primaryRegular hover:border-btnbg hover:text-btnbg focus:outline-none focus:bg-btnbg/10 focus:border-btnbg/10"
-              onClick={() => setShowModal(true)}
-            >
-              Submit Token
-            </button>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filteredProjects.map((project, index) => {
                 // if (project.proposalStatus == "LAUNCHED") return null;
@@ -195,11 +195,11 @@ const MyVote = () => {
                     socials={project.socials}
                     status={
                       project.proposalStatus as
-                      | "PENDING"
-                      | "VOTING"
-                      | "APPROVED"
-                      | "LAUNCHED"
-                      | "DECLINED"
+                        | "PENDING"
+                        | "VOTING"
+                        | "APPROVED"
+                        | "LAUNCHED"
+                        | "DECLINED"
                     }
                     startAt={project.startAt}
                     endAt={project.endAt}

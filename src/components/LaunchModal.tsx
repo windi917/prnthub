@@ -147,7 +147,7 @@ const LaunchModal: React.FC<ModalProps> = ({ setApproveShowModal, projectId, set
           <img
             src={project?.logoURL}
             alt={project?.name}
-            className="w-full h-full object-cover rounded-full ring-2 ring-textclr2/70"
+            className="w-25 h-25 mr-4 rounded-full ring-2 ring-textclr2/70"
           />
         </div>
         <form onSubmit={handleSubmit}>

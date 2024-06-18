@@ -1,18 +1,29 @@
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 const TokenSetup = () => {
   return (
     <>
       <div className="min-h-screen p-4 bg-radial-gradient">
-        <div className="px-6 py-6 mx-auto border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2">
+        <motion.div
+          className="px-6 py-6 mx-auto border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <h1 className="text-4xl font-primaryBold text-textclr2">
             Token Setup
           </h1>
           <p className="text-lg text-textclr2/50 font-primaryRegular">
-            Setup token based on your requirements.
+            Setup a token presale.
           </p>
-        </div>
-        <div className="px-6 py-6 mx-auto mt-4 border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2">
+        </motion.div>
+        <motion.div
+          className="px-6 py-6 mx-auto mt-4 border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
           <h1 className="text-2xl font-primaryBold text-textclr2">
             Create Token Presale
           </h1>
@@ -36,7 +47,7 @@ const TokenSetup = () => {
                     to="/MyVote"
                     className="inline-block mt-1 text-sm text-textclr2"
                   >
-                    Don't have a token ? , Submit it here
+                    Don't have a token ? Submit it here
                   </Link>
                 </div>
 
@@ -168,8 +179,7 @@ const TokenSetup = () => {
 
               <div className="mt-6">
                 <p className="text-textclr2 font-primaryBold">
-                  {" "}
-                  Sending Tokens :{" "}
+                  Sending Tokens :
                 </p>
                 <span className="text-textclr">0.00 Tokens</span>
                 <p className="text-textclr2 font-primaryBold"> Sale Rate :</p>
@@ -191,7 +201,7 @@ const TokenSetup = () => {
               </div>
             </form>
           </div>
-        </div>
+        </motion.div>
       </div>
     </>
   );

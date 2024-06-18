@@ -353,7 +353,9 @@ export async function createToken(
 export async function createOpenBookMarket(
   wallet: WalletContextState, 
   baseTokenAddress: string, 
-  quoteTokenAddress: string
+  quoteTokenAddress: string,
+  lotSize: number,
+  tickSize: number
 ) {
   const owner = wallet.publicKey;
 
@@ -383,8 +385,8 @@ export async function createOpenBookMarket(
         mint: quoteToken.mint,
         decimals: quoteToken.decimals,
       },
-      lotSize: 1,
-      tickSize: 0.01,
+      lotSize: lotSize, // 1
+      tickSize: tickSize, // 0.01
       dexProgramId: OPENBOOK_PROGRAM_ID, // OPEN_BOOK_PROGRAM, // devnet: DEVNET_PROGRAM_ID.OPENBOOK_MARKET
       txVersion,
       // optional: set up priority fee here

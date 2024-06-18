@@ -92,6 +92,24 @@ export const getPoolTokens = async () => {
   }
 };
 
+export const getPools = async () => {
+  const config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: API_URL + "/pool",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+
+  try {
+    const response = await axios.request(config);
+    return { success: true, pools: response.data };
+  } catch (error) {
+    return { success: false };
+  }
+};
+
 export const createVToken = async (jwtToken: string | null, name: string, mint: string, decimals: number) => {
   const data = {
     'name': name,
@@ -328,6 +346,41 @@ export const createPoolApi = async (
     method: "post",
     maxBodyLength: Infinity,
     url: API_URL + "/pool",
+    headers: {
+      "Authorization": "Bearer " + jwtToken,
+      "Content-Type": "application/json"
+    },
+    data: data,
+  };
+
+  try {
+    await axios.request(config);
+    return { success: true }
+  } catch (error) {
+    return { success: false };
+  }
+}
+
+export const createMarketApi = async (
+  jwtToken: string | null,
+  marketAddress: string, 
+  baseTokenAddress: string, 
+  quoteTokenAddress: string, 
+  minOrder: number, 
+  tick: number
+) => {
+  const data = {
+    'marketaddress': marketAddress,
+    'basemint': baseTokenAddress,
+    'quotemint': quoteTokenAddress,
+    'minorder': minOrder,
+    'tick': tick,
+  };
+
+  const config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: API_URL + "/market",
     headers: {
       "Authorization": "Bearer " + jwtToken,
       "Content-Type": "application/json"

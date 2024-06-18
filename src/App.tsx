@@ -10,7 +10,10 @@ import PrivacyPolicy from "./pages/privacyPolicy";
 import MyVote from "./pages/myvote.tsx";
 import TokenSetup from "./pages/TokenSetup.tsx";
 import LPsetup from "./pages/setupLP.tsx";
+import PoolList from "./pages/PoolList.tsx";
+import MyPool from "./pages/MyPool.tsx";
 import { JwtTokenProvider } from "./contexts/JWTTokenProvider.tsx";
+import SetupMarket from "./pages/SetupMarket.tsx";
 
 function App() {
   return (
@@ -25,7 +28,9 @@ function App() {
                 <Route path="/myvote" element={<MyVote />} />
                 <Route path="/tokenSetup" element={<TokenSetup />} />
                 <Route path="/setupLP" element={<LPsetup />} />
-
+                <Route path="/SetupMarket" element={<SetupMarket />} />
+                <Route path="/poolList" element={<PoolList />} />
+                <Route path="/myPool" element={<MyPool />} />
                 <Route path="/NFTSubmit" element={<NFTSubmit />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
