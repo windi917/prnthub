@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import PoolCard from "../components/PoolCard";
 import { Drawer } from "vaul";
 import { getPools } from "../api/apis";
+import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 
 interface Pool {
   id: number;
@@ -15,6 +16,7 @@ interface Pool {
 }
 
 const MyPool = () => {
+  const { userId } = useContext(JwtTokenContext);
   const [pools, setPools] = useState<Pool[]>([]);
 
   useEffect(() => {
@@ -23,16 +25,18 @@ const MyPool = () => {
 
       if (pros.success === true) {
         setPools(
-          pros.pools.map((e: Pool) => ({
-            id: e.id,
-            pooladdress: e.pooladdress,
-            marketaddress: e.marketaddress,
-            basemint: e.basemint,
-            quotemint: e.quotemint,
-            lpmint: e.lpmint,
-            baseamount: e.baseamount,
-            quoteamount: e.quoteamount
-          }))
+          pros.pools
+            .filter((e: any) => e.owner === userId)
+            .map((e: Pool) => ({
+              id: e.id,
+              pooladdress: e.pooladdress,
+              marketaddress: e.marketaddress,
+              basemint: e.basemint,
+              quotemint: e.quotemint,
+              lpmint: e.lpmint,
+              baseamount: e.baseamount,
+              quoteamount: e.quoteamount
+            }))
         );
       }
     };
