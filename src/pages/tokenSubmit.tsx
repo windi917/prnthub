@@ -82,6 +82,7 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
     data.append("proposalStatus", "PENDING");
     data.append("proposalDesc", formData.description);
     data.append("periodId", "1");
+    data.append("mint", "")
     if (formData.tokenomics) {
       data.append("tokenomicsURL", formData.tokenomics);
     }

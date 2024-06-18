@@ -96,7 +96,7 @@ const VoteList = () => {
   });
 
   return (
-    <section className="bg-radial-gradient dark:bg-bg">
+    <section className="bg-radial-gradient">
       <div className="flex justify-center min-h-screen">
         <div className="min-h-screen p-2 text-textclr2">
           <div className="max-w-6xl mx-auto">
@@ -113,7 +113,7 @@ const VoteList = () => {
               <div
                 tabIndex={0}
                 role="button"
-                className="flex items-center m-1 btn text-textclr2 font-primaryRegular"
+                className="flex items-center m-1 border btn text-textclr2 border-textclr2 hover:border-textclr2/60 font-primaryRegular"
               >
                 <FilterAltIcon className="inline mr-2 size-5" /> Sort
               </div>
@@ -121,7 +121,7 @@ const VoteList = () => {
                 tabIndex={0}
                 className="dropdown-content z-[1] card card-compact w-64 p-1 shadow bg-primary/60 text-primary-content"
               >
-                <ul className="rounded-lg shadow-lg menu bg-base-300 shadow-slate-800 text-textclr2">
+                <ul className="rounded-lg shadow-lg menu bg-bg text-textclr2">
                   <li>
                     <button
                       className={`w-full text-left ${
@@ -131,7 +131,7 @@ const VoteList = () => {
                       }`}
                       onClick={() => handleSort("VOTING")}
                     >
-                      <EventIcon className="inline mr-2" /> VOTING
+                      <EventIcon className="inline mr-2" /> Voting
                     </button>
                   </li>
                   <li>
@@ -143,7 +143,7 @@ const VoteList = () => {
                       }`}
                       onClick={() => handleSort("APPROVED")}
                     >
-                      <EventAvailableIcon className="inline mr-2" /> APPROVED
+                      <EventAvailableIcon className="inline mr-2" /> Approved
                     </button>
                   </li>
                   <li>
@@ -155,7 +155,7 @@ const VoteList = () => {
                       }`}
                       onClick={() => handleSort("LAUNCHED")}
                     >
-                      <EventAvailableIcon className="inline mr-2" /> LAUNCHED
+                      <EventAvailableIcon className="inline mr-2" /> Launched
                     </button>
                   </li>
                   <li>

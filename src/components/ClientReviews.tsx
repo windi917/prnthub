@@ -24,7 +24,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
       }}
       transition={{ duration: 1.5 }}
     >
-      <p className="leading-loose font-primaryRegular text-textclr dark:text-textclr">
+      <p className="leading-loose font-primaryRegular text-textclr dark:text-textclr ">
         {testimonial.quote}
       </p>
 
@@ -36,10 +36,10 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
         />
 
         <div className="mx-2">
-          <h1 className="font-semibold text-textclr2 dark:text-black">
-            {testimonial.name}
-          </h1>
-          <span className="text-sm text-textclr">{testimonial.role}</span>
+          <h1 className="font-semibold text-textclr2">{testimonial.name}</h1>
+          <span className="text-sm text-textclr dark:text-textclr">
+            {testimonial.role}
+          </span>
         </div>
       </div>
     </motion.div>
@@ -91,7 +91,7 @@ const ClientReviews = () => {
         </motion.h1>
 
         <motion.p
-          className="max-w-2xl mx-auto mt-6 text-center font-primaryRegular text-textclr dark:text-slate-800/60"
+          className="max-w-2xl mx-auto mt-6 text-center font-primaryRegular !text-textclr"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{

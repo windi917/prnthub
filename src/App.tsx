@@ -8,11 +8,13 @@ import VoteList from "./pages/VoteList.tsx";
 import NFTSubmit from "./pages/NFTSubmit.tsx";
 import PrivacyPolicy from "./pages/privacyPolicy";
 import MyVote from "./pages/myvote.tsx";
+import TokenSetup from "./pages/TokenSetup.tsx";
+import LPsetup from "./pages/setupLP.tsx";
 import { JwtTokenProvider } from "./contexts/JWTTokenProvider.tsx";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App " theme-controller="dark">
       <JwtTokenProvider>
         <WalletsContextProvider>
           <Browser>
@@ -21,6 +23,9 @@ function App() {
                 <Route path="/" element={<Homepage />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/myvote" element={<MyVote />} />
+                <Route path="/tokenSetup" element={<TokenSetup />} />
+                <Route path="/setupLP" element={<LPsetup />} />
+
                 <Route path="/NFTSubmit" element={<NFTSubmit />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />

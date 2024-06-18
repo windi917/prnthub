@@ -15,10 +15,9 @@ import { Oval } from "react-loader-spinner";
 
 import { toast } from "react-toastify";
 import { checkMintAddress, getDecimals } from "../utils/WebIntegration";
-import { createTokenPair, createVToken, createVotePeriod } from "../api/apis";
+import { createTokenPair, createVToken, createVotePeriod, createPoolToken } from "../api/apis";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 import { getProjects, getPeriods, setTokenStatus } from "../api/apis";
-
 import { useNavigate } from "react-router-dom"; // <-- Import useNavigate
 
 interface Token {
@@ -53,6 +52,9 @@ const Dashboard = () => {
 
   const [vTokenMintAddress, setVTokenMintAddress] = useState<string>("");
   const [vTokenName, setVTokenName] = useState<string>("");
+
+  const [poolTokenMintAddress, setPoolTokenMintAddress] = useState<string>("");
+  const [poolTokenName, setPoolTokenName] = useState<string>("");
 
   const { jwtToken, userRole } = useContext(JwtTokenContext);
 
@@ -111,13 +113,13 @@ const Dashboard = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Logic to handle form submission
-    if ( !jwtToken ) {
+    if (!jwtToken) {
       toast.error("Token Error: Please sign first!");
       return;
     }
 
     setLoading(true);
-    
+
     if (!fromDate || projectId == 0 || !toDate || passScore < 0) {
       toast.error("Input values correctly!");
       setLoading(false);
@@ -165,7 +167,7 @@ const Dashboard = () => {
   };
 
   const handleApprove = async (tokenId: number) => {
-    if ( !jwtToken ) {
+    if (!jwtToken) {
       toast.error("Token Error: Please sign first!");
       return;
     }
@@ -185,13 +187,13 @@ const Dashboard = () => {
   };
 
   const handleReject = async (tokenId: number) => {
-    if ( !jwtToken ) {
+    if (!jwtToken) {
       toast.error("Token Error: Please sign first!");
       return;
     }
 
     setLoading(true);
-    
+
     const res = await setTokenStatus(jwtToken, tokenId, "DECLINED");
     if (res.success == false) {
       setLoading(false);
@@ -212,13 +214,13 @@ const Dashboard = () => {
   const handleTokenRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if ( !jwtToken ) {
+    if (!jwtToken) {
       toast.error("Token Error: Please sign first!");
       return;
     }
-    
+
     setLoading(true);
-    
+
     const mintValid = await checkMintAddress(vTokenMintAddress);
     if (mintValid.success === false) {
       // valid mint
@@ -238,6 +240,46 @@ const Dashboard = () => {
       jwtToken,
       vTokenName,
       vTokenMintAddress,
+      res.decimals
+    );
+    if (response.success == false) {
+      setLoading(false);
+      toast.error("Create Vote Token error!");
+      return;
+    }
+
+    setLoading(false);
+  };
+
+  const handlePoolTokenRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!jwtToken) {
+      toast.error("Token Error: Please sign first!");
+      return;
+    }
+
+    setLoading(true);
+
+    const mintValid = await checkMintAddress(poolTokenMintAddress);
+    if (mintValid.success === false) {
+      // valid mint
+      setLoading(false);
+      toast.error("Mint Address is invalid!");
+      return;
+    }
+
+    const res = await getDecimals(poolTokenMintAddress);
+    if (res.success == false) {
+      setLoading(false);
+      toast.error("Get Decimals error!");
+      return;
+    }
+
+    const response = await createPoolToken(
+      jwtToken,
+      poolTokenName,
+      poolTokenMintAddress,
       res.decimals
     );
     if (response.success == false) {
@@ -308,6 +350,11 @@ const Dashboard = () => {
             label="Register"
             aria-label="Token Register"
           />
+          <Tab
+            icon={<AppRegistrationIcon />}
+            label="Pool Token"
+            aria-label="Pool Token Register"
+          />
         </Tabs>
 
         {/* --- Approvals Container --- */}
@@ -341,7 +388,7 @@ const Dashboard = () => {
                   const curTime = new Date();
                   const endTime = new Date(project.startAt);
 
-                  if (curTime > endTime) {
+                  if (project.proposalStatus !== "PENDING" && curTime > endTime) {
                     status = "ENDED";
                   }
 
@@ -392,7 +439,7 @@ const Dashboard = () => {
               Project Name
             </h2>
             <select
-              className="w-full max-w-2xl select-md select select-ghost !bg-slate-500/60 !border !border-textclr2"
+              className="w-full max-w-2xl select-md  !bg-slate-900 select font-primaryRegular focus:border-textclr2 !text-white !bg-white/90 !border !border-textclr2"
               onChange={handleProjectSelect}
               defaultValue={projectId}
             >
@@ -403,7 +450,7 @@ const Dashboard = () => {
                 return null;
               })}
             </select>
-            <h2 className="my-4 mb-4 text-2xl text-left font-primaryBold text-textclr2">
+            <h2 className="my-4 mb-4 text-2xl text-left font-primaryBold focus:ring-textclr2 text-textclr2">
               Period
             </h2>
             <div className="flex flex-col mb-4 space-y-4 md:flex-row md:space-y-0 md:space-x-4">
@@ -505,7 +552,7 @@ const Dashboard = () => {
               placeholder="Enter Score"
               value={passScore}
               onChange={(e) => setPassScore(parseInt(e.target.value))}
-              className="block mt-2 w-full placeholder-slate-200/70 dark:placeholder-gray-500 rounded-lg border border-textclr2 bg-slate-500/60 px-5 py-2.5 text-slate-200/70 focus:border-textclr2 focus:outline-none focus:ring focus:ring-textclr2 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-textclr2"
+              className="block w-full mt-2 rounded-lg border border-textclr2 bg-slate-900 px-5 py-2.5 text-gray-300 placeholder-gray-500 focus:border-textclr2 focus:outline-none focus:ring focus:ring-textclr2 focus:ring-opacity-40"
             />
             <button
               type="submit"
@@ -529,9 +576,7 @@ const Dashboard = () => {
             <h2 className="mb-4 text-4xl text-center font-primaryBold text-textclr2">
               Applications
             </h2>
-            {/* <h2 className="mb-4 text-2xl text-left font-primaryBold text-textclr2"> */}
-            {/* Vote 1 */}
-            {/* </h2> */}
+
             {/* Table Component */}
             <div className="overflow-x-auto">
               <table className="table text-textclr2">
@@ -560,7 +605,8 @@ const Dashboard = () => {
                         {/* id change as needed */}
                         <td>{index + 1}</td>
                         <td>{project.name}</td>
-                        <td>{project.proposalDesc}</td> {/* Description change as needed */}
+                        <td>{project.proposalDesc}</td>{" "}
+                        {/* Description change as needed */}
                         <td>{project.threshold}</td>
                         <td>{project.currentVotePower}</td>
                         <td className="px-4 py-2 space-x-2 space-y-2">
@@ -629,6 +675,47 @@ const Dashboard = () => {
             <button
               type="submit"
               onClick={handleTokenRegister}
+              className="block w-3/6 px-4 py-2 mx-auto mt-4 rounded-md shadow-sm text-slate-700/75 bg-textclr2 font-primaryRegular hover:bg-textclr2/70"
+            >
+              Add
+            </button>
+          </motion.div>
+        )}
+        {/* --- Pool Token Reg Container --- */}
+        {value === 4 && (
+          <motion.div
+            className="flex flex-col justify-center w-full max-w-xl p-8 mx-auto mt-4 shadow-md rounded-box bg-white/10 backdrop-blur-3xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            layout
+          >
+            <h2 className="mb-4 text-4xl text-center font-primaryBold text-textclr2">
+              Pool Token Register
+            </h2>
+            <h2 className="mb-4 text-2xl text-left font-primaryRegular text-textclr2">
+              Mint Address
+            </h2>
+            <input
+              type="text"
+              placeholder="Enter Wallet Address"
+              value={poolTokenMintAddress}
+              onChange={(e) => setPoolTokenMintAddress(e.target.value)}
+              className="block mt-2 w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-textclr2 bg-white px-5 py-2.5 text-gray-700 focus:border-textclr2 focus:outline-none focus:ring focus:ring-textclr2 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-textclr2"
+            />
+            <h2 className="my-4 mb-4 text-2xl text-left font-primaryRegular text-textclr2">
+              Token Name
+            </h2>
+            <input
+              type="text"
+              placeholder="Enter Token Name"
+              value={poolTokenName}
+              onChange={(e) => setPoolTokenName(e.target.value)}
+              className="block w-full placeholder-gray-400/70 dark:placeholder-gray-500 rounded-lg border border-textclr2 bg-white px-5 py-2.5 text-gray-700 focus:border-textclr2 focus:outline-none focus:ring focus:ring-textclr2 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-textclr2"
+            />
+            <button
+              type="submit"
+              onClick={handlePoolTokenRegister}
               className="block w-3/6 px-4 py-2 mx-auto mt-4 rounded-md shadow-sm text-slate-700/75 bg-textclr2 font-primaryRegular hover:bg-textclr2/70"
             >
               Add

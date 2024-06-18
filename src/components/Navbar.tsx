@@ -14,7 +14,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="navbar bg-bg">
+      <nav className="bg-bg navbar min-h-15">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost">
@@ -35,10 +35,10 @@ const Navbar = () => {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 bg-bg text-textclr shadow rounded-box w-52"
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 bg-bg text-textclr shadow border-[0.03rem] border-btnbg rounded-md w-52"
             >
               <li>
-                <a>Tokens Hub</a>
+                <a className="text-textclr2">Tokens Hub</a>
                 <ul className="p-2">
                   <li>
                     <Link to="/VoteList">Vote List</Link>
@@ -46,10 +46,16 @@ const Navbar = () => {
                   <li>
                     <Link to="/myvote">My Votes</Link>
                   </li>
+                  <li>
+                    <Link to="/tokenSetup">Setup Token</Link>
+                  </li>
+                  <li>
+                    <Link to="/setupLP">Setup LP</Link>
+                  </li>
                 </ul>
               </li>
               <li>
-                <a>NFT Hub</a>
+                <a className="text-textclr2">NFT Hub</a>
                 <ul className="p-2">
                   <li>
                     <Link to="/NFTSubmit">NFT Application</Link>
@@ -89,7 +95,7 @@ const Navbar = () => {
           <img
             src={logo}
             alt="Logo"
-            className="w-auto h-8 sm:h-10 md:h-12 lg:h-12"
+            className="w-auto h-6 sm:h-10 md:h-12 lg:h-9"
           />
         </Link>
         {/* Dark / Light Toggle */}

@@ -3,7 +3,6 @@ import daisyui from "daisyui";
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  darkMode: "class",
   theme: {
     extend: {
       fontFamily: {
@@ -43,15 +42,11 @@ export default {
         bg: "#0D0D0D",
         primary: "#CCF869",
         secondary: "#CCF869",
-        // Uncomment and adjust as needed
-        // accent: "#32e9d4",
-        // text: "#071307",
-        // background: "#effaf0",
-        // primary: "#4fc951",
-        // secondary: "#d3f2ea",
-        // accent: "#64abcf",
       },
     },
   },
   plugins: [daisyui],
+  daisyui: {
+    themes: ["dark"],
+  },
 };

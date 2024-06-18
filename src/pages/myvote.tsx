@@ -135,7 +135,7 @@ const MyVote = () => {
                       }`}
                       onClick={() => handleSort("VOTING")}
                     >
-                      <EventIcon className="inline mr-2" /> VOTING
+                      <EventIcon className="inline mr-2" /> Voted
                     </button>
                   </li>
                   <li>
@@ -147,7 +147,7 @@ const MyVote = () => {
                       }`}
                       onClick={() => handleSort("APPROVED")}
                     >
-                      <EventAvailableIcon className="inline mr-2" /> APPROVED
+                      <EventAvailableIcon className="inline mr-2" /> Approved
                     </button>
                   </li>
                   <li>
@@ -159,7 +159,7 @@ const MyVote = () => {
                       }`}
                       onClick={() => handleSort("LAUNCHED")}
                     >
-                      <EventAvailableIcon className="inline mr-2" /> LAUNCHED
+                      <EventAvailableIcon className="inline mr-2" /> Launched
                     </button>
                   </li>
                   <li>
@@ -184,7 +184,7 @@ const MyVote = () => {
             </button>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filteredProjects.map((project, index) => {
-                if (project.proposalStatus == "LAUNCHED") return null;
+                // if (project.proposalStatus == "LAUNCHED") return null;
                 return (
                   <TokenCard
                     key={index}
@@ -195,11 +195,11 @@ const MyVote = () => {
                     socials={project.socials}
                     status={
                       project.proposalStatus as
-                        | "PENDING"
-                        | "VOTING"
-                        | "APPROVED"
-                        | "LAUNCHED"
-                        | "DECLINED"
+                      | "PENDING"
+                      | "VOTING"
+                      | "APPROVED"
+                      | "LAUNCHED"
+                      | "DECLINED"
                     }
                     startAt={project.startAt}
                     endAt={project.endAt}
