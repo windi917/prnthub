@@ -76,7 +76,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
       "bg-[#FF3333] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
 
   return (
-    <div className="relative flex flex-col justify-between p-4 mx-4 border rounded-lg shadow-2xl min-w-[10rem] min-h-[20rem] border-textclr2 card bg-white/10">
+    <div className="relative flex flex-col justify-between p-4 gap-4 mx-4 border rounded-lg shadow-2xl min-w-[10rem] min-h-[20rem] border-textclr2 card bg-white/10 hover:scale-105 hover:shadow-2xl hover:shadow-textclr2 transition duration-300 ease-in-out">
       <div className="flex items-center mb-4 cursor-pointer">
         <div className="flex items-center">
           <img

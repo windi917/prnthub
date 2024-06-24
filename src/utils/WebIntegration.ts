@@ -38,6 +38,23 @@ export async function getBalance(
   console.log("Balance (using Solana-Web3.js): ", info.value.uiAmount);
   return info.value.uiAmount;
 }
+
+export async function getAccountBalance(
+  address: PublicKey,
+  tokenMint: string
+) {
+  if (!address) {
+    throw new WalletNotConnectedError();
+  }
+
+  const mintToken = new PublicKey(tokenMint);
+  const tokenAccount = await getAssociatedTokenAddress(mintToken, address);
+  const info = await solConnection.getTokenAccountBalance(tokenAccount);
+  if (info.value.uiAmount == null) throw new Error("No balance found");
+  console.log("Balance (using Solana-Web3.js): ", info.value.uiAmount);
+  return info.value.uiAmount;
+}
+
 export async function checkMintAddress(mintAddress: string) {
   const TOKEN_MINT_ADDRESS = mintAddress; // replace with your token mint address
 

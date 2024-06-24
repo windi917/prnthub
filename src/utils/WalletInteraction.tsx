@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useContext, useState } from "react";
-import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
+import { useAnchorWallet, useWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -8,15 +8,16 @@ import { Buffer } from "buffer";
 import { API_URL } from "../config";
 
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
+import { getAllData, initProject } from "../solana/transaction";
 
 const WalletInteraction: FC = () => {
   const { publicKey, connected, signMessage } = useWallet() as WalletContextState & {
     signMessage: (message: Uint8Array) => Promise<Uint8Array>;
   };
 
-  const { setJwtToken } = useContext(JwtTokenContext);
-  const { setUserRole } = useContext(JwtTokenContext);
-  const { setUserId } = useContext(JwtTokenContext);
+  const anchorWallet = useAnchorWallet();
+
+  const { setJwtToken, setUserRole, setUserId, setPresales } = useContext(JwtTokenContext);
 
   const [isRegistered, setIsRegistered] = useState(true);
 
@@ -48,7 +49,14 @@ const WalletInteraction: FC = () => {
         setUserRole(response.data.role);
         setUserId(response.data.userId);
         setIsRegistered(true);
-        // toast.success("Login successful!");
+        
+        console.log("#######################################################", anchorWallet)
+        const data = await getAllData();
+        // await initProject(anchorWallet);
+    
+        console.log("@@@@@@@All Data@", data);
+        setPresales(data);
+
       } else {
         setIsRegistered(false);
         handleSignup();
@@ -112,7 +120,7 @@ const WalletInteraction: FC = () => {
       <ToastContainer />
       <div className="flex" style={{ alignItems: 'center' }}>
         <WalletMultiButton />
-        { connected && isRegistered === false ? (
+        {connected && isRegistered === false ? (
           <button
             className="bg-[#ccf869] border-2 mt-1 border-whitesmoke font-primaryRegular leading-normal py-2 px-6 rounded-3xl text-[0.9em] duration-300 ease-in-out text-black hover:bg-[#bbe759] hover:text-black"
             onClick={handleSignup}

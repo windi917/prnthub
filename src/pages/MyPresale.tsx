@@ -1,48 +1,11 @@
-import { useState, useEffect, useContext } from "react";
-import PoolCard from "../components/PoolCard";
+import { useContext } from "react";
+import PresaleCard from "../components/PresaleCard";
 import { Drawer } from "vaul";
-import { getPools } from "../api/apis";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 
-interface Pool {
-  id: number;
-  pooladdress: string;
-  marketaddress: string;
-  basemint: string;
-  quotemint: string;
-  lpmint: string;
-  baseamount: number;
-  quoteamount: number;
-}
-
-const MyPool = () => {
-  const { userId } = useContext(JwtTokenContext);
-  const [pools, setPools] = useState<Pool[]>([]);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      const pros = await getPools();
-
-      if (pros.success === true) {
-        setPools(
-          pros.pools
-            .filter((e: any) => e.owner === userId)
-            .map((e: Pool) => ({
-              id: e.id,
-              pooladdress: e.pooladdress,
-              marketaddress: e.marketaddress,
-              basemint: e.basemint,
-              quotemint: e.quotemint,
-              lpmint: e.lpmint,
-              baseamount: e.baseamount,
-              quoteamount: e.quoteamount
-            }))
-        );
-      }
-    };
-
-    fetchProjects();
-  }, []);
+const MyPresale = () => {
+  // const { userId } = useContext(JwtTokenContext);
+  const { presales } = useContext(JwtTokenContext);
 
   return (
     <section className="bg-radial-gradient">
@@ -54,11 +17,11 @@ const MyPool = () => {
             </h1>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
-              {pools.map((pool, index) => {
+              {presales.map((presale, index) => {
                 return (
-                  <PoolCard
+                  <PresaleCard
                     key={index}
-                    pool={pool}
+                    presale={presale}
                   />
                 );
               })}
@@ -119,4 +82,4 @@ const MyPool = () => {
   );
 };
 
-export default MyPool;
+export default MyPresale;
