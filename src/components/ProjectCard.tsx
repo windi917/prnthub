@@ -158,15 +158,15 @@ const ProjectCard: React.FC<CardProps> = ({ project }) => {
         <div className="flex flex-col space-y-3 text-textclr2 font-primaryRegular">
           <div className="flex justify-between mt-2">
             <span>Sale Price</span>
-            <span className=" text-textclr">{project.sale_price} {project.quote_symbol}</span>
+            <span className="font-mono text-textclr">{project.sale_price} {project.quote_symbol}</span>
           </div>
           <div className="flex justify-between">
             <span>Hardcap</span>
-            <span className="text-textclr">{project.hardcap} {project.quote_symbol}</span>
+            <span className="font-mono text-textclr">{project.hardcap} {project.quote_symbol}</span>
           </div>
           <div className="flex justify-between">
             <span>Sold</span>
-            <span className="text-textclr">{project.total_contributions} {project.quote_symbol}</span>
+            <span className="font-mono text-textclr">{project.total_contributions} {project.quote_symbol}</span>
           </div>
           <progress
             className="w-full progress progress-success"
