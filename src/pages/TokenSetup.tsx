@@ -36,17 +36,16 @@ const TokenSetup = () => {
   const [baseTokenAddress, setBaseTokenAddress] = useState('');
   const [quoteTokenAddress, setQuoteTokenAddress] = useState('');
   const [salePrice, setSalePrice] = useState(0);
-  const [launchPrice, setLaunchPrice] = useState(0);
   const [minimumBuy, setMinimumBuy] = useState(0);
   const [maximumBuy, setMaximumBuy] = useState(0);
-  const [softCap, setSoftCap] = useState(0);
   const [hardCap, setHardCap] = useState(0);
   const [sendTokenCount, setSendTokenCount] = useState(0);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-
-
   const [loading, setLoading] = useState<boolean>(false);
+
+  const launchPrice = 0;
+  const softCap = 0;
 
   const fetchProjects = useCallback(async () => {
     // set base token
@@ -144,10 +143,6 @@ const TokenSetup = () => {
     }
     if (minimumBuy > maximumBuy) {
       toast.error('Minimum Buy must lower than Maximum Buy!');
-      return;
-    }
-    if (softCap > hardCap) {
-      toast.error('Soft Cap must lower than Hard Cap!');
       return;
     }
     if (startDate > endDate) {
@@ -276,6 +271,27 @@ const TokenSetup = () => {
                 <div>
                   <label
                     className="block mb-2 text-textclr2 font-primaryBold"
+                    htmlFor="hardcap"
+                  >
+                    Hardcap (SOL) :
+                  </label>
+                  <input
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-textclr2 focus:outline-none"
+                    type="number"
+                    id="hardcap"
+                    defaultValue="0"
+                    onChange={(e) => {
+                      setHardCap(parseInt(e.target.value));
+                      setSendTokenCount(parseInt(e.target.value) / salePrice);
+                    }}
+                  />
+                  <p className="text-sm text-textclr2">
+                    Hardcap for maximum amount of SOL to raise
+                  </p>
+                </div>
+                {/* <div>
+                  <label
+                    className="block mb-2 text-textclr2 font-primaryBold"
                     htmlFor="lp-launch-price"
                   >
                     LP Launch Price :
@@ -287,7 +303,7 @@ const TokenSetup = () => {
                     placeholder="Set token price for Liquidity pool"
                     onChange={(e) => setLaunchPrice(parseFloat(e.target.value))}
                   />
-                </div>
+                </div> */}
               </div>
 
               <div className="grid gap-6 mt-6 md:grid-cols-2">
@@ -330,7 +346,7 @@ const TokenSetup = () => {
                 </div>
               </div>
 
-              <div className="grid gap-6 mt-6 md:grid-cols-2">
+              {/* <div className="grid gap-6 mt-6 md:grid-cols-2">
                 <div>
                   <label
                     className="block mb-2 text-textclr2 font-primaryBold"
@@ -371,7 +387,7 @@ const TokenSetup = () => {
                     Hardcap for maximum amount of SOL to raise
                   </p>
                 </div>
-              </div>
+              </div> */}
 
               <div className="grid gap-6 mt-6 md:grid-cols-2">
                 <div>
