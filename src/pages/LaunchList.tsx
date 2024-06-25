@@ -113,7 +113,10 @@ const LaunchList = () => {
     setLoading(false);
   }, [fetchProjects]);
 
-  const handleChange = (_event: any, newValue: React.SetStateAction<number>) => {
+  const handleChange = (
+    _event: React.SyntheticEvent, 
+    newValue: React.SetStateAction<number>
+  ) => {
     setValue(newValue);
   };
 
@@ -162,8 +165,8 @@ const LaunchList = () => {
           >
             <Tabs
               value={value}
-              centered
               onChange={handleChange}
+              centered
               aria-label="Launch List Tabs"
               // className=""
               sx={{

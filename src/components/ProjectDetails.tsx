@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React, { useState, useEffect, useCallback } from "react";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
@@ -138,37 +139,68 @@ const ProjectDetails = () => {
   return (
     <>
       <section className="min-h-screen p-4 bg-radial-gradient">
-        <div className="flex flex-col items-center p-6 mx-auto rounded-lg shadow-lg max-w-[90vh] bg-white/15 md:max-w-[80vw] lg:max-w-[70vw]">
-          <h2 className="text-2xl font-primaryBold text-textclr2">
-            {projectData?.name}
-          </h2>
-          <div className="flex flex-wrap justify-center mt-2 space-x-4">
-            <a
-              href={projectData?.socials?.twitter}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-textclr2 hover:text-btnbg/30"
-            >
-              <FaXTwitter size={24} />
-            </a>
-            <a
-              href={projectData?.socials.telegram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-textclr2 hover:text-btnbg/30"
-            >
-              <FaTelegram size={24} />
-            </a>
-            <a
-              href={projectData?.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-textclr2 hover:text-btnbg/30"
-            >
-              <FaGlobe size={24} />
-            </a>
-          </div>
-          <p className="mt-4 text-center text-textclr font-primaryRegular md:text-left">
+        <motion.div 
+          className="flex flex-col p-6 mx-auto rounded-lg shadow-lg max-w-[90vh] bg-white/15 md:max-w-[80vw] lg:max-w-[70vw]"
+          initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{
+            duration: 0.8,
+            delay: 0.3,
+            ease: "easeInOut",
+            staggerChildren: 0.2, // Add staggering effect if there are child elements
+          }}
+        >
+          <motion.div
+            className="flex flex-col mb-4 md:flex-row md:items-center"
+            initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{
+              duration: 0.8,
+              delay: 0.4,
+              ease: "easeInOut",
+              staggerChildren: 0.2, // Add staggering effect if there are child elements
+            }}
+          >
+            <div className="mb-2 md:justify-start md:mb-0 md:mr-8">
+              <img
+                src={projectData?.logo}
+                className="w-24 h-24 rounded-lg"
+                alt="Project Logo"
+              />
+            </div>
+            <div className="flex flex-col md:items-start">
+              <h2 className="mb-2 text-2xl font-primaryBold text-textclr2 md:text-left">
+                {projectData?.name}
+              </h2>
+              <div className="flex space-x-4">
+                <a
+                  href={projectData?.socials?.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-textclr2 hover:text-btnbg/30"
+                >
+                  <FaXTwitter size={24} />
+                </a>
+                <a
+                  href={projectData?.socials.telegram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-textclr2 hover:text-btnbg/30"
+                >
+                  <FaTelegram size={24} />
+                </a>
+                <a
+                  href={projectData?.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-textclr2 hover:text-btnbg/30"
+                >
+                  <FaGlobe size={24} />
+                </a>
+              </div>
+            </div>
+          </motion.div>
+          {/* <p className="mt-4 text-center text-textclr font-primaryRegular md:text-left">
             Website:
             <a
               href={projectData?.website}
@@ -178,12 +210,32 @@ const ProjectDetails = () => {
             >
               {projectData?.website}
             </a>
-          </p>
-          <p className="mt-2 text-center text-textclr font-primaryRegular md:text-left">
+          </p> */}
+          <motion.p 
+            className="mt-2 text-justify text-textclr font-primaryRegular md:text-left"
+            initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{
+              duration: 0.8,
+              delay: 0.3,
+              ease: "easeInOut",
+              staggerChildren: 0.2, // Add staggering effect if there are child elements
+            }}
+          >
             {projectData?.description}
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col items-center justify-between w-full mt-4 space-y-4 md:flex-row md:space-y-0">
+          <motion.div 
+            className="flex flex-col items-center justify-between w-full mt-4 space-y-4 md:flex-row md:space-y-0"
+            initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{
+              duration: 0.8,
+              delay: 0.5,
+              ease: "easeInOut",
+              staggerChildren: 0.2, // Add staggering effect if there are child elements
+            }}
+          >
             <div className="flex flex-col w-full md:w-1/2">
               <div className="flex justify-between mb-2">
                 <p className="text-textclr font-primaryRegular">
@@ -196,7 +248,7 @@ const ProjectDetails = () => {
                   <span className="font-mono text-textclr2">
                     {projectData?.hardcap}
                   </span>{" "}
-                  {projectData?.quote_symbol}
+                  {projectData?.quote_symbol}{" "}
                 </p>
               </div>
               <progress
@@ -259,9 +311,19 @@ const ProjectDetails = () => {
                 <span className="font-mono text-textclr2">{buyCount} {projectData?.quote_symbol}</span>
               </p>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="flex flex-col justify-center w-full mt-4 space-y-4 md:flex-row md:space-y-0 md:space-x-4">
+          <motion.div 
+            className="flex flex-col justify-center w-full mt-4 space-y-4 md:flex-row md:space-y-0 md:space-x-4"
+            initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{
+              duration: 0.9,
+              delay: 0.2,
+              ease: "easeInOut",
+              staggerChildren: 0.4, // Add staggering effect if there are child elements
+            }}
+          >
             <div className="w-full md:w-auto">
               <p className="text-center text-textclr2 font-primaryRegular md:text-left">
                 Whitelist Sale Finished:
@@ -278,9 +340,19 @@ const ProjectDetails = () => {
                 {projectData ? new Date(projectData?.end_time).toLocaleString() : '00:00:00'}
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="w-full mt-4">
+          <motion.div 
+            className="w-full mt-4"
+            initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{
+              duration: 0.8,
+              delay: 0.8,
+              ease: "easeInOut",
+              staggerChildren: 0.2,
+            }}
+          >
             <div className="collapse collapse-arrow">
               <input type="checkbox" className="peer" />
               <div className="collapse-title text-textclr2 font-primaryBold">
@@ -346,8 +418,8 @@ const ProjectDetails = () => {
                 </p>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
         {loading ? (
           <>
             <Oval

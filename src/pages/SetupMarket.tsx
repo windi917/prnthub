@@ -240,7 +240,7 @@ const SetupMarket = () => {
                       placeholder="0"
                       value={minOrderSize}
                       readOnly
-                      className="w-full md:w-[32rem] p-2 lg:text-3xl sm:text-sm bg-transparent border border-transparent text-center"
+                      className="w-full md:w-[32rem] p-2 font-mono lg:text-3xl sm:text-sm bg-transparent border border-transparent text-center"
                     />
                     <button
                       className="p-2 ml-6 mr-6 text-white transform border rounded-lg border-btnbg bg-btnbg/50 hover:bg-btnbg/60 hover:border-btnbg focus:outline-none focus:ring-2 focus:ring-btnbg focus:ring-opacity-80"
@@ -268,7 +268,7 @@ const SetupMarket = () => {
                       step="0.0001"
                       value={tickSize.toFixed(4)}
                       readOnly
-                      className="w-full md:w-[32rem] p-2 lg:text-3xl sm:text-sm bg-transparent border border-transparent text-center"
+                      className="w-full md:w-[32rem] p-2 font-mono lg:text-3xl sm:text-sm bg-transparent border border-transparent text-center"
                     />
                     <button
                       className="p-2 mx-6 text-white transform border rounded-lg border-btnbg bg-btnbg/50 hover:bg-btnbg/60 hover:border-btnbg focus:outline-none focus:ring-2 focus:ring-btnbg focus:ring-opacity-80"
