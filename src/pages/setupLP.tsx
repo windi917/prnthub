@@ -10,6 +10,7 @@ import { PublicKey } from "@solana/web3.js";
 import { createAmmPool } from "../utils/WebIntegration";
 import { createPoolApi } from "../api/apis";
 import { Oval } from "react-loader-spinner";
+import { motion } from "framer-motion";
 
 interface Project {
   id: number;
@@ -299,7 +300,7 @@ const LPsetup = () => {
                 className="block px-3 py-2 mt-1 border border-gray-200 rounded-md shadow-sm w-fit focus:outline-none focus:ring-textclr2 focus:border-textclr2 sm:text-sm"
               />
               <p className="py-1 text-sm text-textclr2/50 font-primaryRegular text-pretty">
-                Select the time when Liquidity Pool will go live.
+                Select the date when you would want the LP Pool to go live.
               </p>
             </div>
             <button
@@ -339,6 +340,68 @@ const LPsetup = () => {
             />
           </>
         )}
+{/* --- Info Section --- */}
+        <motion.div
+          className="px-6 py-6 mx-auto mt-4 border shadow-2xl rounded-2xl bg-white/10 min-w-fit border-textclr2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.h1
+            className="text-2xl font-primaryBold text-textclr2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            How to Create Liquidity Pool ?
+          </motion.h1>
+          <motion.div
+            className="grid gap-6 md:grid-cols-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            <p className="px-2 py-2 text-lg text-textclr2 font-primaryRegular">
+              1. Connect your Solana wallet.
+              <br />
+              2. Select the Token Pair.
+              <br />
+              <span className="text-textclr2/75">
+                * The Quote Token (usually SOL/USDC) will define the price of
+                the Base Token (the token you created).
+              </span>
+              <br />
+              3. Set the Starting Price.
+              <br />
+              4. Set the Minimum Token Quantity that users can buy.
+              <br />
+              5. Set the Minimum Price Change in SOL or USDC.
+              <br />
+              6. Specify the amount of Liquidity you want to add.
+              <br />
+              7. Click on "Create Liquidity Pool" & confirm the transaction.
+              This process will take a few seconds depending on the network.
+            </p>
+
+            <p className="px-2 text-lg text-justify text-textclr/80 font-primaryRegular">
+              Creating a Liquidity Pool will cost between X & XX SOL. This fee
+              encompasses all necessary expenses for establishing both the
+              Market (Token Pair) & the Liquidity Pool. Once you initiate the
+              process, it will begin immediately and involve a series of
+              transactions.
+              <br />
+              The entire creation process typically takes a few seconds to
+              complete. Be prepared to confirm a couple of transactions to
+              finalize the setup.
+              <br />
+              <br />
+              <i className="text-sm text-justify">
+                *Please note that in some cases there might be delays due to
+                network congestion.
+              </i>
+            </p>
+          </motion.div>
+        </motion.div>
       </div>
     </>
   );

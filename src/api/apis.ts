@@ -3,39 +3,39 @@ import axios from "axios";
 import { API_URL } from "../config";
 
 export const getProjects = async () => {
-  const config = {
-    method: "get",
-    maxBodyLength: Infinity,
-    url: API_URL + "/token",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  };
+    const config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: API_URL + "/token",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    };
 
-  try {
-    const response = await axios.request(config);
-    return { success: true, projects: response.data };
-  } catch (error) {
-    return { success: false };
-  }
+    try {
+      const response = await axios.request(config);
+      return { success: true, projects: response.data };
+    } catch (error) {
+      return { success: false };
+    }
 };
 
 export const getPeriods = async () => {
-  const config = {
-    method: "get",
-    maxBodyLength: Infinity,
-    url: API_URL + "/period",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  };
+    const config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: API_URL + "/period",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    };
 
-  try {
-    const response = await axios.request(config);
-    return { success: true, periods: response.data };
-  } catch (error) {
-    return { success: false };
-  }
+    try {
+      const response = await axios.request(config);
+      return { success: true, periods: response.data };
+    } catch (error) {
+      return { success: false };
+    }
 };
 
 export const getTokenPairs = async () => {
@@ -57,21 +57,21 @@ export const getTokenPairs = async () => {
 };
 
 export const getVTokens = async () => {
-  const config = {
-    method: "get",
-    maxBodyLength: Infinity,
-    url: API_URL + "/vtoken",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  };
+    const config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: API_URL + "/vtoken",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    };
 
-  try {
-    const response = await axios.request(config);
-    return { success: true, vtokens: response.data };
-  } catch (error) {
-    return { success: false };
-  }
+    try {
+      const response = await axios.request(config);
+      return { success: true, vtokens: response.data };
+    } catch (error) {
+      return { success: false };
+    }
 };
 
 export const getPoolTokens = async () => {
@@ -154,21 +154,21 @@ export const createPoolToken = async (jwtToken: string | null, name: string, min
     data: data,
   };
 
-  try {
-    await axios.request(config);
-    return { success: true }
-  } catch (error) {
-    return { success: false };
-  }
+    try {
+        await axios.request(config);
+        return { success: true }
+    } catch (error) {
+        return { success: false };
+    }
 };
 
-export const createVotePeriod = async (jwtToken: string | null, projectId: number, startAt: string, endAt: string, votingtitle: string, votePowerLimit: number) => {
+export const createVotePeriod = async (jwtToken: string | null, projectId: number, startAt: string, endAt: string , votingtitle: string, votePowerLimit: number) => {
   const data = {
-    'projectId': projectId,
-    'startAt': new Date(startAt).toISOString(),
-    'endAt': new Date(endAt).toISOString(),
-    'votingtitle': votingtitle,
-    'votePowerLimit': votePowerLimit
+      'projectId': projectId,
+      'startAt': new Date(startAt).toISOString(),
+      'endAt': new Date(endAt).toISOString(),
+      'votingtitle': votingtitle,
+      'votePowerLimit': votePowerLimit
   };
 
   const config = {
@@ -183,19 +183,19 @@ export const createVotePeriod = async (jwtToken: string | null, projectId: numbe
   };
 
   try {
-    const response = await axios.request(config);
-    return { success: true, period: response.data }
+      const response = await axios.request(config);
+      return { success: true, period: response.data }
   } catch (error) {
-    return { success: false };
+      return { success: false };
   }
 };
 
-export const createTokenPair = async (jwtToken: string | null, periodId: number, voteTokenId: number, weight: number, minVoteAmount: number) => {
+export const createTokenPair = async (jwtToken: string | null, periodId: number, voteTokenId: number , weight: number, minVoteAmount: number) => {
   const data = {
-    'periodId': periodId,
-    'voteTokenId': voteTokenId,
-    'weight': weight,
-    'minimumCount': minVoteAmount
+      'periodId': periodId,
+      'voteTokenId': voteTokenId,
+      'weight': weight,
+      'minimumCount': minVoteAmount
   };
 
   const config = {
@@ -210,18 +210,18 @@ export const createTokenPair = async (jwtToken: string | null, periodId: number,
   };
 
   try {
-    await axios.request(config);
-    return { success: true }
+      await axios.request(config);
+      return { success: true }
   } catch (error) {
-    return { success: false };
+      return { success: false };
   }
 };
 
 export const createVoteApi = async (jwtToken: string | null, txHash: string, tokenId: number, votePower: number) => {
   const data = {
-    'txHash': txHash,
-    'tokenId': tokenId,
-    'votePower': votePower
+      'txHash': txHash,
+      'tokenId': tokenId,
+      'votePower': votePower
   };
 
   const config = {
@@ -236,18 +236,18 @@ export const createVoteApi = async (jwtToken: string | null, txHash: string, tok
   };
 
   try {
-    await axios.request(config);
-    return { success: true }
+      await axios.request(config);
+      return { success: true }
   } catch (error) {
-    return { success: false };
+      return { success: false };
   }
 };
 
 export const createNoneVoteApi = async (jwtToken: string | null, txHash: string, tokenId: number, votePower: number) => {
   const data = {
-    'txHash': txHash,
-    'tokenId': tokenId,
-    'votePower': votePower
+      'txHash': txHash,
+      'tokenId': tokenId,
+      'votePower': votePower
   };
 
   const config = {
@@ -262,11 +262,11 @@ export const createNoneVoteApi = async (jwtToken: string | null, txHash: string,
   };
 
   try {
-    await axios.request(config);
-    return { success: true }
+      await axios.request(config);
+      return { success: true }
   } catch (error) {
-    if (axios.isAxiosError(error))
-      if (error.response)
+    if ( axios.isAxiosError(error) )
+      if ( error.response )
         return { success: false, error: error.response.data.Error }
     return { success: false, error: error };
   }
@@ -274,8 +274,8 @@ export const createNoneVoteApi = async (jwtToken: string | null, txHash: string,
 
 export const setTokenStatus = async (jwtToken: string | null, tokenId: number, status: string) => {
   const data = {
-    tokenId: tokenId,
-    status: status
+      tokenId: tokenId,
+      status: status
   };
 
   const config = {
@@ -290,10 +290,10 @@ export const setTokenStatus = async (jwtToken: string | null, tokenId: number, s
   };
 
   try {
-    await axios.request(config);
-    return { success: true }
+      await axios.request(config);
+      return { success: true }
   } catch (error) {
-    return { success: false };
+      return { success: false };
   }
 };
 

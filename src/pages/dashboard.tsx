@@ -1,7 +1,7 @@
 import { useState, useContext, useCallback, useEffect } from "react";
 import * as React from "react";
 import { motion } from "framer-motion";
-import Modal from "../components/Modal";
+import Modal from "../components/RegisterTokenModal";
 // import EditModal from "../components/TokenRegisterModal";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";

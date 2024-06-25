@@ -98,7 +98,7 @@ const VoteList = () => {
   return (
     <section className="bg-radial-gradient">
       <div className="flex justify-center min-h-screen">
-        <div className="min-h-screen p-2 text-textclr2">
+        <div className="min-h-screen text-textclr2">
           <div className="max-w-6xl mx-auto">
             <h1 className="my-4 mb-4 text-4xl text-center font-primaryBold">
               Vote List

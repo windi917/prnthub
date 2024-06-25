@@ -228,7 +228,6 @@ export const createPresaleTx = async (
         globalAuthority,
         [baseTokenMint]
     );
-    console.log("Dest BASE Account!! = ", ix0.destinationAccounts[0].toBase58());
 
     //Quote Token Token Account on User Account
     let ix1 = await getATokenAccountsNeedCreate(
@@ -237,7 +236,6 @@ export const createPresaleTx = async (
         wallet.publicKey,
         [quoteTokenMint]
     );
-    console.log("Dest QUOTE Account~~ = ", ix1.destinationAccounts[0].toBase58());
 
     let presale;
     let i;
@@ -281,7 +279,6 @@ export const createPresaleTx = async (
 
         const baseDecimals = baseDecRes.decimals;
         const quoteDecimals = quoteDecRes.decimals;
-        console.log("##$#$#$#$##$#", baseDecimals, quoteDecimals)
 
         const ix2 = await program.instruction.createPresale(
             new anchor.BN(min_allocation * 10 ** quoteDecimals),
@@ -310,7 +307,6 @@ export const createPresaleTx = async (
                 signers: []
             })
         tx.add(ix2);
-        console.log("########################$$$$$$$$$$$$$$$$$", tx)
     }
 
     return tx;
@@ -334,7 +330,6 @@ export const buyTokensTx = async (
     let tx = new Transaction();
     if (presaleKey) {
         const presaleState = await getStateByKey(presaleKey);
-        console.log("&&&&&&&&&&&&&", presaleState)
         if (!presaleState)
             return;
 
@@ -369,7 +364,6 @@ export const buyTokensTx = async (
                 [quoteToken]
             );
 
-            console.log("!!!!!!!!!!!!", ix4.instructions.length, ix4.destinationAccounts[0].toBase58());
             if (ix1.instructions.length > 0 && baseToken.toBase58() != EMPTY_USER) { console.log("here1"); tx.add(...ix1.instructions) };
             if (ix2.instructions.length > 0 && baseToken.toBase58() != EMPTY_USER) { console.log("here2"); tx.add(...ix2.instructions) };
             if (ix3.instructions.length > 0 && quoteToken.toBase58() != EMPTY_USER) { console.log("here3"); tx.add(...ix3.instructions) };
@@ -397,7 +391,6 @@ export const buyTokensTx = async (
             // const userQuoteTokenAccount = (isNative === 1) ? wallet.publicKey : ix3.destinationAccounts[0];
             // const globalQuoteTokenAccount = (isNative === 1) ? globalAuthority : ix4.destinationAccounts[0];
 
-            console.log("###############", wallet.publicKey.toBase58(), presaleKey.toBase58())
             tx.add(program.instruction.buyTokens(
                 new anchor.BN(amount * 10 ** quoteRes.decimals),
                 new anchor.BN(baseRes.decimals),
@@ -469,7 +462,6 @@ export const withdrawTx = async (
     let tx = new Transaction();
     if (presaleKey) {
         const presaleState = await getStateByKey(presaleKey);
-        console.log("&&&&&&&&&&&&&", presaleState)
         if (!presaleState)
             return;
 

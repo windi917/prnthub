@@ -167,11 +167,11 @@ const SetupMarket = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-4xl font-primaryBold text-textclr2">
+          <h1 className="text-4xl leading-7 font-primaryBold text-textclr2">
             Create OpenBook Market
           </h1>
           <p className="text-lg text-textclr2/50 font-primaryRegular">
-            Create your Openbook Market.
+            Create your Openbook Market for your Token
           </p>
         </motion.div>
 
@@ -307,6 +307,59 @@ const SetupMarket = () => {
             />
           </>
         )}
+{/* --- Info Section --- */}
+        <motion.div
+          className="px-6 py-6 mx-auto mt-4 border shadow-2xl rounded-2xl bg-white/10 min-w-fit border-textclr2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.h1
+            className="text-2xl font-primaryBold text-textclr2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            How to Create OpenBook Market ?
+          </motion.h1>
+          <motion.div
+            className="grid gap-6 md:grid-cols-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            <p className="px-2 py-2 text-lg text-textclr/80 font-primaryRegular">
+              1. Connect your Solana wallet.
+              <br />
+              2. Select the Base Token.
+              <br />
+              3. Select the Quote Token.
+              <br />
+              4. Set the Minimum Buy (Minimum Order Size).
+              <br />
+              5. Set the Minimum Price Change (Price Tick).
+              <br />
+              6. Click on Create Market.
+              <br />
+              7. Accept the transaction and wait until your Market is ready.
+            </p>
+
+            <p className="px-2 text-lg text-justify text-textclr/80 font-primaryRegular">
+              The cost of creating a Market ID is XX SOL, which includes a base
+              fee plus additional storage costs starting at XX SOL. Once you
+              initiate the creation process, it will take a few seconds to
+              complete. After the process is finished, your Market ID will be
+              displayed. It's important to copy and save this Market ID, as
+              you'll need it to create your Liquidity Pool.
+              <br />
+              <br />
+              <i className="text-sm text-justify">
+                *Please note that in some cases there might be delays due to
+                network congestion.
+              </i>
+            </p>
+          </motion.div>
+        </motion.div>
       </div>
     </>
   );

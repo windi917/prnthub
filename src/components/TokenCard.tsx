@@ -194,7 +194,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
               }}
               className="py-2 mt-4 tracking-wider rounded-md btn text-bg font-primaryRegular bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
             >
-              LAUNCH
+              Launch
             </button>
           ) : null}
         </>

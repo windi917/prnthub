@@ -240,6 +240,11 @@ textarea:not([rows]) {
   scroll-margin-block: 5ex;
 }
 
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
 .modal-container {
   max-height: 95vh;
   overflow-y: auto;
