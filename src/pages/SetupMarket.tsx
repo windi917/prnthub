@@ -138,7 +138,7 @@ const SetupMarket = () => {
     setLoading(true);
     try {
       const marketRes = await createOpenBookMarket(wallet, baseTokenAddress, quoteTokenAddress, minOrderSize, tickSize)
-      if (!marketRes) {
+      if (marketRes.status === 'failed') {
         setLoading(false);
         toast.error('Create Market Error');
         return;
@@ -152,7 +152,7 @@ const SetupMarket = () => {
       }
 
       setLoading(false);
-      toast.success('Create Market Success!');
+      toast.success(`Create Market Success! Market ID = ${marketRes.address}`);
     } catch (err) {
       setLoading(false);
       toast.error(`Create Market Error: ${err}`);
