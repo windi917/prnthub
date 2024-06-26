@@ -33,25 +33,32 @@ const SetupMarket = () => {
   const [poolTokens, setPoolTokens] = useState<PoolToken[]>([]);
   const [baseTokenAddress, setBaseTokenAddress] = useState('');
   const [quoteTokenAddress, setQuoteTokenAddress] = useState('');
+  const [eventQueueLength, setEventQueueLength] = useState(11308);
+  const [requestQueueLength, setRequestQueueLength] = useState(764);
+  const [orderbookLength, setOrderBookLength] = useState(14524);
 
   const [minOrderSize, setMinOrderSize] = useState(1.0);
   const [tickSize, setTickSize] = useState(0.0001);
   const [loading, setLoading] = useState<boolean>(false);
 
   /* --- Order & Tick size default Value configuration --- */
-  const incrementOrderSize = () => {
+  const incrementOrderSize = (e: React.FormEvent) => {
+    e.preventDefault();
     setMinOrderSize((prev) => prev + 1);
   };
 
-  const decrementOrderSize = () => {
+  const decrementOrderSize = (e: React.FormEvent) => {
+    e.preventDefault();
     setMinOrderSize((prev) => (prev > 0 ? prev - 1 : 0));
   };
 
-  const incrementTickSize = () => {
+  const incrementTickSize = (e: React.FormEvent) => {
+    e.preventDefault();
     setTickSize((prev) => parseFloat((prev + 0.0001).toFixed(10)));
   };
 
-  const decrementTickSize = () => {
+  const decrementTickSize = (e: React.FormEvent) => {
+    e.preventDefault();
     setTickSize((prev) =>
       prev > 0.0001 ? parseFloat((prev - 0.0001).toFixed(10)) : 0
     );
@@ -132,13 +139,33 @@ const SetupMarket = () => {
     setQuoteTokenAddress(quoteToken);
   };
 
+  const handleOpenBookMarket = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+
+    if (parseInt(e.target.value) === 0) {
+      console.log("here1");
+      setEventQueueLength(11308);
+      setRequestQueueLength(764);
+      setOrderBookLength(14524);
+    } else if (parseInt(e.target.value) === 1) {
+      console.log("here2");
+      setEventQueueLength(123244);
+      setRequestQueueLength(5084);
+      setOrderBookLength(32452);
+    } else {
+      console.log("here3");
+      setEventQueueLength(262108);
+      setRequestQueueLength(5084);
+      setOrderBookLength(65500);
+    }
+  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setLoading(true);
     try {
-      const marketRes = await createOpenBookMarket(wallet, baseTokenAddress, quoteTokenAddress, minOrderSize, tickSize)
-      if (marketRes.status === 'failed') {
+      const marketRes = await createOpenBookMarket(wallet, baseTokenAddress, quoteTokenAddress, minOrderSize, tickSize, eventQueueLength, requestQueueLength, orderbookLength) // 2.8SOL
+      if (marketRes.status === 'failed' || !marketRes.address) {
         setLoading(false);
         toast.error('Create Market Error');
         return;
@@ -280,6 +307,23 @@ const SetupMarket = () => {
                 </div>
               </label>
             </div>
+            {/* --- Quote Token set --- */}
+            <div>
+              <label className="block mb-2 text-textclr2 font-primaryBold">
+                Advanced Option :
+              </label>
+              <select
+                className="w-full p-2 border rounded-lg border-textclr2 focus:ring-2 focus:ring-textclr2 focus:outline-none"
+                id="quote-token"
+                onChange={handleOpenBookMarket}
+                defaultValue="Select Quote Token"
+              >
+                <option disabled>Select a standard OpenBook Market</option>
+                <option value={0}>0.4 SOL</option>
+                <option value={1}>1.5 SOL</option>
+                <option value={2}>2.8 SOL</option>
+              </select>
+            </div>
             <div className="justify-center mt-4 text-center">
               <button
                 type="submit"
@@ -307,7 +351,7 @@ const SetupMarket = () => {
             />
           </>
         )}
-{/* --- Info Section --- */}
+        {/* --- Info Section --- */}
         <motion.div
           className="px-6 py-6 mx-auto mt-4 border shadow-2xl rounded-2xl bg-white/10 min-w-fit border-textclr2"
           initial={{ opacity: 0, y: 20 }}

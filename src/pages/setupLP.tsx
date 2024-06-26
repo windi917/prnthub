@@ -4,10 +4,8 @@ import AddIcon from "@mui/icons-material/Add";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 import { getProjects, getPoolTokens } from "../api/apis";
-import { getTokenBalance } from "../utils/IntegrationConfig";
 import { toast } from "react-toastify";
-import { PublicKey } from "@solana/web3.js";
-import { createAmmPool } from "../utils/WebIntegration";
+import { createAmmPool, getBalance } from "../utils/WebIntegration";
 import { createPoolApi } from "../api/apis";
 import { Oval } from "react-loader-spinner";
 import { motion } from "framer-motion";
@@ -98,6 +96,12 @@ const LPsetup = () => {
         toast.error('Create Pool Error');
         return;
       }
+
+      if (poolRes.status === 'failed') {
+        setLoading(false);
+        toast.error(`Create Pool Error: ${poolRes.msg}`);
+        return;
+      }
       console.log("****************", poolRes);
 
       const res = await createPoolApi(jwtToken, poolRes.address, marketId, baseTokenAddress, quoteTokenAddress, poolRes.lpMint, baseTokenAmount, quoteTokenAmount);
@@ -108,7 +112,7 @@ const LPsetup = () => {
       }
 
       setLoading(false);
-      toast.success('Create Pool Success!');
+      toast.success(`Create Pool Success! Pool Address: ${poolRes.address}`);
     } catch (err) {
       setLoading(false);
       toast.error(`Create Pool Error: ${err}`);
@@ -134,11 +138,9 @@ const LPsetup = () => {
     const baseToken = e.target.value;
     setBaseTokenAddress(baseToken);
 
-    const project = projects.filter((e) => (e.mint === baseToken))[0];
-
     try {
-      const baseBalance = await getTokenBalance(wallet.publicKey, new PublicKey(baseToken));
-      setBaseTokenBalance(baseBalance.toNumber() / (10 ** project.decimals));
+      const baseBalance = await getBalance(wallet, baseToken);
+      setBaseTokenBalance(baseBalance);
     } catch (err) {
       toast.error(`Get balance error: ${err}`)
     }
@@ -163,11 +165,9 @@ const LPsetup = () => {
     const quoteToken = e.target.value;
     setQuoteTokenAddress(quoteToken);
 
-    const poolToken = poolTokens.filter((e) => (e.tokenMint === quoteToken))[0];
-
     try {
-      const quoteBalance = await getTokenBalance(wallet.publicKey, new PublicKey(quoteToken));
-      setQuoteTokenBalance(quoteBalance.toNumber() / (10 ** poolToken.decimals));
+      const quoteBalance = await getBalance(wallet, quoteToken);
+      setQuoteTokenBalance(quoteBalance);
     } catch (err) {
       toast.error(`Get balance error: ${err}`);
     }

@@ -18,7 +18,13 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    // other options
+    "baseUrl": ".",
+    "paths": {
+      "@raydium-io/raydium-sdk": ["node_modules/@raydium-io/raydium-sdk/lib/types"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

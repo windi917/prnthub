@@ -9,7 +9,7 @@ import {
 import { IDL as PresaleContractIDL, PresaleContract } from "./prnt";
 
 import { ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { solConnection } from "../utils/IntegrationConfig";
+import { solConnection } from "../utils/WebIntegration";
 import { PresalePool } from "./type";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
 import { TOKEN_PROGRAM_ID } from "@project-serum/anchor/dist/cjs/utils/token";
