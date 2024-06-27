@@ -939,7 +939,8 @@ export async function createAmmPool(
   quoteTokenAddress: string,
   market: string,
   addBase: number,
-  addQuote: number
+  addQuote: number,
+  launchDate: string
 ) {
   if (!wallet)
     return {
@@ -1078,7 +1079,7 @@ export async function createAmmPool(
     throw new Error(`Failed to decode market state: ${error}`);
   }
 
-  const startTime = new BN(Math.trunc(Date.now() / 1000) - 4)
+  const startTime = new BN(Math.trunc(Date.parse(launchDate) / 1000))
 
   try {
 

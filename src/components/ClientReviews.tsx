@@ -100,7 +100,7 @@ const ClientReviews = () => {
             delay: 0.4,
           }}
         >
-          Some of the review's from our clients who have worked with us.
+          Some of the reviews from our clients who have worked with us.
         </motion.p>
 
         <section className="grid grid-cols-1 gap-8 mt-8 xl:mt-12 lg:grid-cols-2 xl:grid-cols-3">

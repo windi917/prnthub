@@ -8,6 +8,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import TokenCard from "../components/TokenCard";
 import { Drawer } from "vaul";
 import { getPeriods, getProjects, getTokenPairs } from "../api/apis";
+import { motion } from "framer-motion";
 
 interface TokenPair {
   id: number;
@@ -99,7 +100,16 @@ const VoteList = () => {
     <section className="bg-radial-gradient">
       <div className="flex justify-center min-h-screen">
         <div className="min-h-screen text-textclr2">
-          <div className="max-w-6xl mx-auto">
+          <motion.div
+            className="max-w-6xl mx-auto"
+            initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{
+              duration: 0.6,
+              ease: "easeInOut",
+              staggerChildren: 0.3,
+            }}
+          >
             <h1 className="my-4 mb-4 text-4xl text-center font-primaryBold">
               Vote List
             </h1>
@@ -224,7 +234,7 @@ const VoteList = () => {
                 );
               })}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
       {/* // Pagination  */}

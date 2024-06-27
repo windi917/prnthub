@@ -9,6 +9,7 @@ import { Drawer } from "vaul";
 import { getPeriods, getProjects, getTokenPairs } from "../api/apis";
 import TokenSubmit from "./tokenSubmit";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
+import { motion } from "framer-motion";
 
 interface TokenPair {
   id: number;
@@ -104,7 +105,16 @@ const MyVote = () => {
     <section className="bg-radial-gradient dark:bg-bg">
       <div className="flex justify-center min-h-screen">
         <div className="min-h-screen p-2 text-textclr2">
-          <div className="max-w-6xl mx-auto">
+          <motion.div
+            className="max-w-6xl mx-auto"
+            initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{
+              duration: 0.6,
+              ease: "easeInOut",
+              staggerChildren: 0.3,
+            }}
+          >
             <h1 className="my-4 mb-4 text-4xl text-center font-primaryBold">
               My Votes
             </h1>
@@ -210,7 +220,7 @@ const MyVote = () => {
                 );
               })}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
       {/* // Pagination  */}

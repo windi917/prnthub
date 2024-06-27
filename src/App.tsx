@@ -14,6 +14,7 @@ import LPsetup from "./pages/setupLP.tsx";
 import SetupMarket from "./pages/SetupMarket.tsx";
 import LaunchList from "./pages/LaunchList.tsx";
 import ProjectDetails from "./components/ProjectDetails.tsx";
+// import TokenSubmit from "./pages/tokenSubmit.tsx";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/myvote" element={<MyVote />} />
                 <Route path="/tokenSetup" element={<TokenSetup />} />
+                {/* <Route path="/tokenSubmit" element={<TokenSubmit />} /> */}
                 <Route path="/setupLP" element={<LPsetup />} />
                 <Route path="/SetupMarket" element={<SetupMarket />} />
                 <Route path="/LaunchList" element={<LaunchList />} />
@@ -39,7 +41,10 @@ function App() {
 
                 {/* -- Project Routing via ID-- */}
                 <Route path="/" element={<LaunchList />} />
-                <Route path="/project/:presaleKey" element={<ProjectDetails />} />
+                <Route
+                  path="/project/:presaleKey"
+                  element={<ProjectDetails />}
+                />
               </Route>
             </Routes>
           </Browser>

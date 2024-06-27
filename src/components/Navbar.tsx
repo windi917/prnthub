@@ -5,6 +5,15 @@ import { Link } from "react-router-dom";
 import "@solana/wallet-adapter-react-ui/styles.css";
 import WalletInteraction from "../utils/WalletInteraction";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
+import {
+  BallotTwoTone as BallotTwoToneIcon,
+  RocketLaunch as RocketLaunchIcon,
+  HowToVote as HowToVoteIcon,
+  MonetizationOn as MonetizationOnIcon,
+  AutoStories as AutoStoriesIcon,
+  Waves as WavesIcon,
+  AddTask as AddTaskIcon,
+} from "@mui/icons-material";
 
 const logo =
   "https://shdw-drive.genesysgo.net/6ckeAEwCjs6qjCTv5mghBfdwHkB5aCfTes9mqxbxb5EE/logo_prntHub.png";
@@ -37,29 +46,56 @@ const Navbar = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 bg-bg text-textclr shadow border-[0.03rem] border-btnbg rounded-md w-52"
             >
+              {/* Presale Section */}
               <li>
-                <a className="text-textclr2">Tokens Hub</a>
-                <ul className="p-2">
+                <a className="text-textclr2">Presale</a>
+                <ul className="p-1 text-sm">
                   <li>
-                    <Link to="/VoteList">Vote List</Link>
+                    <Link to="/setupMarket">
+                      <AutoStoriesIcon /> Create Market ID
+                    </Link>
                   </li>
                   <li>
-                    <Link to="/LaunchList">Launch List</Link>
+                    <Link to="/tokenSetup">
+                      <MonetizationOnIcon /> Presale Setup
+                    </Link>
                   </li>
                   <li>
-                    <Link to="/myvote">My Votes</Link>
-                  </li>
-                  <li>
-                    <Link to="/tokenSetup">Create Token Presale</Link>
-                  </li>
-                  <li>
-                    <Link to="/setupLP">Setup LP</Link>
-                  </li>
-                  <li>
-                    <Link to="/setupMarket">Setup OpenBook Market</Link>
+                    <Link to="/setupLP">
+                      <WavesIcon /> LP Funding
+                    </Link>
                   </li>
                 </ul>
               </li>
+
+              {/* Token Launch Section */}
+              <li>
+                <a className="text-textclr2">Token Launch</a>
+                <ul className="p-1 text-sm">
+                  <li>
+                    <Link to="/tokenSubmit">
+                      <AddTaskIcon /> Submit Token
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/VoteList">
+                      <BallotTwoToneIcon /> Vote List
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/LaunchList">
+                      <RocketLaunchIcon /> Launches
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/myvote">
+                      <HowToVoteIcon /> My Votes
+                    </Link>
+                  </li>
+                </ul>
+              </li>
+
+              {/* Existing Menu Items */}
               <li>
                 <a className="text-textclr2">NFT Hub</a>
                 <ul className="p-2">
@@ -97,6 +133,7 @@ const Navbar = () => {
             </ul>
           </div>
         </div>
+
         <Link to="/" className="navbar-center">
           <img
             src={logo}

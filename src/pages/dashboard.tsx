@@ -15,10 +15,16 @@ import { Oval } from "react-loader-spinner";
 
 import { toast } from "react-toastify";
 import { checkMintAddress, getDecimals } from "../utils/WebIntegration";
-import { createTokenPair, createVToken, createVotePeriod, createPoolToken } from "../api/apis";
+import {
+  createTokenPair,
+  createVToken,
+  createVotePeriod,
+  createPoolToken,
+} from "../api/apis";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 import { getProjects, getPeriods, setTokenStatus } from "../api/apis";
-import { useNavigate } from "react-router-dom"; // <-- Import useNavigate
+import { useNavigate } from "react-router-dom"; //
+import AddchartIcon from "@mui/icons-material/Addchart";
 
 interface Token {
   id: number;
@@ -346,7 +352,7 @@ const Dashboard = () => {
             aria-label="Applications"
           />
           <Tab
-            icon={<AppRegistrationIcon />}
+            icon={<AddchartIcon />}
             label="Register"
             aria-label="Token Register"
           />
@@ -388,7 +394,10 @@ const Dashboard = () => {
                   const curTime = new Date();
                   const endTime = new Date(project.startAt);
 
-                  if (project.proposalStatus !== "PENDING" && curTime > endTime) {
+                  if (
+                    project.proposalStatus !== "PENDING" &&
+                    curTime > endTime
+                  ) {
                     status = "ENDED";
                   }
 

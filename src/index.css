@@ -66,11 +66,17 @@
   color: whitesmoke;
 }
 
+.wallet-adapter-button {
+  border-radius: 6rem;
+  background-color: #befb39;
+}
+
 .wallet-adapter-button:hover:not([disabled]) {
   background-color: #bbe759;
   border-color: #445028;
+  border-radius: 3rem;
   color: #000;
-  border: 2px solid whitesmoke;
+  border: 2px solid rgb(156, 249, 74);
 }
 
 .wallet-adapter-modal-title {
@@ -82,7 +88,7 @@
 }
 
 .wallet-adapter-modal-wrapper {
-  background-color: #bae759a0;
+  background-color: #bae759ca;
   padding: 1em;
   position: relative;
   font-family: Regular;
@@ -248,4 +254,18 @@ table {
 .modal-container {
   max-height: 95vh;
   overflow-y: auto;
+}
+
+/* Hero text circle line */
+.circular-line::after {
+  content: "";
+  position: absolute;
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%);
+  width: calc(100% + 17px); /* Adjust width as needed */
+  height: calc(100% + 18px); /* Adjust height as needed */
+  border: 2px solid #bbe759;
+  border-radius: 50%;
+  pointer-events: none;
 }

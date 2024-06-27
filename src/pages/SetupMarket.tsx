@@ -159,6 +159,7 @@ const SetupMarket = () => {
       setOrderBookLength(65500);
     }
   }
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React, { useState } from "react";
 
 const ContactForm: React.FC = () => {
@@ -64,7 +65,16 @@ const ContactForm: React.FC = () => {
 
   return (
     <div className="bg-radial-gradient">
-      <div className="max-w-xl p-6 mx-auto">
+      <motion.div
+        className="max-w-xl p-6 mx-auto"
+        initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{
+          duration: 0.6,
+          ease: "easeInOut",
+          staggerChildren: 0.3,
+        }}
+      >
         <h1 className="mb-4 text-3xl font-primaryBold text-textclr2">
           PRNT Hub: NFT Application Form
         </h1>
@@ -212,7 +222,7 @@ const ContactForm: React.FC = () => {
             </button>
           </form>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

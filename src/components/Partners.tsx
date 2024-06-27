@@ -36,7 +36,7 @@ const Partners = () => {
   return (
     <>
       <div className="bg-radial-gradient">
-        <div className="h-auto px-1 py-16 mx-auto text-center md:max-w-screen-md lg:max-w-screen-lg">
+        <div className="h-auto px-1 py-16 mx-auto mt-12 text-center rounded-2xl bg-white/30 md:max-w-screen-md lg:max-w-screen-lg">
           <motion.span
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

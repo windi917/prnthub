@@ -16,28 +16,28 @@ interface Project {
   proposalStatus: string;
   mint: string;
   decimals: number;
-};
+}
 
 interface PoolToken {
   id: number;
   name: string;
   tokenMint: string;
   decimals: number;
-};
+}
 
 const LPsetup = () => {
   const wallet = useWallet();
   const { jwtToken } = useContext(JwtTokenContext);
   const [projects, setProjects] = useState<Project[]>([]);
   const [poolTokens, setPoolTokens] = useState<PoolToken[]>([]);
-  const [baseTokenAddress, setBaseTokenAddress] = useState('');
-  const [quoteTokenAddress, setQuoteTokenAddress] = useState('');
+  const [baseTokenAddress, setBaseTokenAddress] = useState("");
+  const [quoteTokenAddress, setQuoteTokenAddress] = useState("");
   const [baseTokenBalance, setBaseTokenBalance] = useState(0);
   const [quoteTokenBalance, setQuoteTokenBalance] = useState(0);
   const [baseTokenAmount, setBaseTokenAmount] = useState(0);
   const [quoteTokenAmount, setQuoteTokenAmount] = useState(0);
-  const [launchDate, setLaunchDate] = useState('');
-  const [marketaddress, setMarketAddress] = useState('');
+  const [launchDate, setLaunchDate] = useState("");
+  const [marketaddress, setMarketAddress] = useState("");
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -53,7 +53,7 @@ const LPsetup = () => {
             proposalStatus: e.proposalStatus,
             symbol: e.symbol,
             decimals: e.decimals,
-            mint: e.mint
+            mint: e.mint,
           }))
       );
     }
@@ -66,9 +66,9 @@ const LPsetup = () => {
           id: e.id,
           name: e.name,
           decimals: e.decimals,
-          tokenMint: e.tokenMint
+          tokenMint: e.tokenMint,
         }))
-      )
+      );
     }
   }, [setProjects, setPoolTokens]);
 
@@ -83,17 +83,25 @@ const LPsetup = () => {
     try {
       if (!marketaddress) {
         setLoading(false);
-        toast.error('Market Address Invalid!');
+        toast.error("Market Address Invalid!");
         return;
       }
 
       const marketId = marketaddress;
 
       console.log("HANDLE CREATE POOL : ", marketId);
-      const poolRes = await createAmmPool(wallet, baseTokenAddress, quoteTokenAddress, marketId, baseTokenAmount, quoteTokenAmount)
+      const poolRes = await createAmmPool(
+        wallet,
+        baseTokenAddress,
+        quoteTokenAddress,
+        marketId,
+        baseTokenAmount,
+        quoteTokenAmount,
+        launchDate
+      );
       if (!poolRes) {
         setLoading(false);
-        toast.error('Create Pool Error');
+        toast.error("Create Pool Error");
         return;
       }
 
@@ -104,10 +112,19 @@ const LPsetup = () => {
       }
       console.log("****************", poolRes);
 
-      const res = await createPoolApi(jwtToken, poolRes.address, marketId, baseTokenAddress, quoteTokenAddress, poolRes.lpMint, baseTokenAmount, quoteTokenAmount);
+      const res = await createPoolApi(
+        jwtToken,
+        poolRes.address,
+        marketId,
+        baseTokenAddress,
+        quoteTokenAddress,
+        poolRes.lpMint,
+        baseTokenAmount,
+        quoteTokenAmount
+      );
       if (!res.success) {
         setLoading(false);
-        toast.error('Create Pool API error!');
+        toast.error("Create Pool API error!");
         return;
       }
 
@@ -117,21 +134,23 @@ const LPsetup = () => {
       setLoading(false);
       toast.error(`Create Pool Error: ${err}`);
     }
-  }
+  };
 
-  const handleBaseTokenSelect = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleBaseTokenSelect = async (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     e.preventDefault();
 
     if (!e.target.value) {
-      toast.error('Token mint address error!');
+      toast.error("Token mint address error!");
       return;
     }
     if (!wallet) {
-      toast.error('Wallet connect error!');
+      toast.error("Wallet connect error!");
       return;
     }
     if (!wallet.publicKey) {
-      toast.error('Wallet connect error! (PublicKey)')
+      toast.error("Wallet connect error! (PublicKey)");
       return;
     }
 
@@ -146,19 +165,21 @@ const LPsetup = () => {
     }
   };
 
-  const handleQuoteTokenSelect = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleQuoteTokenSelect = async (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     e.preventDefault();
 
     if (!e.target.value) {
-      toast.error('Token mint address error!');
+      toast.error("Token mint address error!");
       return;
     }
     if (!wallet) {
-      toast.error('Wallet connect error!');
+      toast.error("Wallet connect error!");
       return;
     }
     if (!wallet.publicKey) {
-      toast.error('Wallet connect error! (PublicKey)')
+      toast.error("Wallet connect error! (PublicKey)");
       return;
     }
 
@@ -176,7 +197,16 @@ const LPsetup = () => {
   return (
     <>
       <div className="min-h-screen p-4 bg-radial-gradient">
-        <div className="px-6 py-6 mx-auto border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2">
+        <motion.div
+          className="px-6 py-6 mx-auto border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2"
+          initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{
+            duration: 0.8,
+            ease: "easeInOut",
+            staggerChildren: 0.4,
+          }}
+        >
           <h1 className="text-4xl font-primaryBold text-textclr2">
             Create Liquidity Pool
           </h1>
@@ -199,7 +229,9 @@ const LPsetup = () => {
                   defaultValue="Select Base Token"
                 >
                   <option disabled>Select Base Token</option>
-                  {projects.map((e) => <option value={e.mint}>{e.symbol}</option>)}
+                  {projects.map((e) => (
+                    <option value={e.mint}>{e.symbol}</option>
+                  ))}
                 </select>
                 <p className="py-1 text-sm text-textclr2/50">
                   Select Base Token to create Liquidity Pool
@@ -218,7 +250,9 @@ const LPsetup = () => {
                   defaultValue="Select Quote Token"
                 >
                   <option disabled>Select Quote Token</option>
-                  {poolTokens.map((e) => <option value={e.tokenMint}>{e.name}</option>)}
+                  {poolTokens.map((e) => (
+                    <option value={e.tokenMint}>{e.name}</option>
+                  ))}
                 </select>
                 <p className="py-1 text-sm text-textclr2/50">
                   Select Quote Token to create Liquidity Pool
@@ -256,7 +290,8 @@ const LPsetup = () => {
                 />
                 <div className="flex items-center justify-between w-full lg:justify-start lg:col-span-3">
                   <span className="text-textclr2 font-primaryRegular">
-                    Balance: <span className="text-textclr">{baseTokenBalance}</span>
+                    Balance:{" "}
+                    <span className="text-textclr">{baseTokenBalance}</span>
                   </span>
                 </div>
               </div>
@@ -272,11 +307,14 @@ const LPsetup = () => {
                   type="number"
                   placeholder="Quote Amount"
                   className="mb-2 input lg:col-span-2 lg:mb-0"
-                  onChange={(e) => setQuoteTokenAmount(parseInt(e.target.value))}
+                  onChange={(e) =>
+                    setQuoteTokenAmount(parseInt(e.target.value))
+                  }
                 />
                 <div className="flex items-center justify-between w-full lg:justify-start lg:col-span-3">
                   <span className="text-textclr2 font-primaryRegular">
-                    Balance: <span className="text-textclr">{quoteTokenBalance}</span>
+                    Balance:{" "}
+                    <span className="text-textclr">{quoteTokenBalance}</span>
                   </span>
                 </div>
               </div>
@@ -322,7 +360,7 @@ const LPsetup = () => {
               </p>
             </div>
           </form>
-        </div>
+        </motion.div>
         {loading && (
           <>
             <Oval
@@ -340,7 +378,7 @@ const LPsetup = () => {
             />
           </>
         )}
-{/* --- Info Section --- */}
+        {/* --- Info Section --- */}
         <motion.div
           className="px-6 py-6 mx-auto mt-4 border shadow-2xl rounded-2xl bg-white/10 min-w-fit border-textclr2"
           initial={{ opacity: 0, y: 20 }}

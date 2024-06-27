@@ -16,11 +16,11 @@ interface Presale {
   description: string;
   logo: string;
   owner: string;
-  website: "https://apple.com",
+  website: "https://apple.com";
   socials: {
-    twitter: "#",
-    telegram: "#",
-  },
+    twitter: "#";
+    telegram: "#";
+  };
   state: string;
   base_mint: string;
   quote_mint: string;
@@ -35,11 +35,10 @@ interface Presale {
   end_time: number;
   total_contributions: number;
   max_contribution: number;
-};
+}
 
 // Dummy data for now, replace with dynamic data later
 const ProjectDetails = () => {
-
   const anchorWallet = useAnchorWallet();
   const [buyCount, setBuyCount] = useState(0);
   const { presaleKey } = useParams<{ presaleKey: string }>();
@@ -51,66 +50,65 @@ const ProjectDetails = () => {
     const poolTokenRes = await getPoolTokens();
     const presaleDatas = await getAllData();
 
-    if (projects.success === false)
-      return null;
-    if (poolTokenRes.success === false)
-      return null;
-    if (!presaleDatas)
-      return null;
+    if (projects.success === false) return null;
+    if (poolTokenRes.success === false) return null;
+    if (!presaleDatas) return null;
 
-    const presaleObjs: Presale[] = presaleDatas.map((e: any) => {
-      const project = projects.projects.find(
-        (item: any) => item.mint === e.base_mint
-      );
-      if (!project) return null;
+    const presaleObjs: Presale[] = presaleDatas
+      .map((e: any) => {
+        const project = projects.projects.find(
+          (item: any) => item.mint === e.base_mint
+        );
+        if (!project) return null;
 
-      const poolToken = poolTokenRes.pooltokens.find(
-        (item: any) => item.tokenMint === e.quote_mint
-      );
-      if (!poolToken) return null
+        const poolToken = poolTokenRes.pooltokens.find(
+          (item: any) => item.tokenMint === e.quote_mint
+        );
+        if (!poolToken) return null;
 
-      const curTime = new Date();
-      const startTime = new Date(e.start_time); // assuming e.start_time is in seconds
-      const endTime = new Date(e.end_time); // assuming e.end_time is in seconds
+        const curTime = new Date();
+        const startTime = new Date(e.start_time); // assuming e.start_time is in seconds
+        const endTime = new Date(e.end_time); // assuming e.end_time is in seconds
 
-      let state = 'Pending';
-      if (e.state === 0 && curTime < startTime) state = 'Upcoming';
-      if (e.state === 0 && curTime >= startTime && curTime < endTime) state = 'Live';
-      if (e.state === 0 && curTime >= endTime) state = 'Ended';
-      if (e.state === 1) state = 'Approved';
-      if (e.state === 2) state = 'Closed';
+        let state = "Pending";
+        if (e.state === 0 && curTime < startTime) state = "Upcoming";
+        if (e.state === 0 && curTime >= startTime && curTime < endTime)
+          state = "Live";
+        if (e.state === 0 && curTime >= endTime) state = "Ended";
+        if (e.state === 1) state = "Approved";
+        if (e.state === 2) state = "Closed";
 
-      return {
-        presaleKey: e.presaleKey,
-        name: project.name,
-        description: project.description,
-        logo: project.logoURL,
-        owner: e.owner,
-        website: "https://apple.com",
-        socials: {
-          twitter: "#",
-          telegram: "#",
-        },
-        state: state,
-        base_mint: e.base_mint,
-        quote_mint: e.quote_mint,
-        quote_symbol: poolToken.name,
-        min_allocation: e.min_allocation / (10 ** poolToken.decimals),
-        max_allocation: e.max_allocation / (10 ** poolToken.decimals),
-        hardcap: e.hardcap / (10 ** poolToken.decimals),
-        softcap: e.softcap / (10 ** poolToken.decimals),
-        sale_price: e.sale_price / (10 ** poolToken.decimals),
-        launch_price: e.launch_price / (10 ** poolToken.decimals),
-        start_time: e.start_time,
-        end_time: e.end_time,
-        total_contributions: e.total_contributions / (10 ** poolToken.decimals),
-        max_contribution: e.max_contribution,
-      };
-    }).filter((presale: any): presale is Presale => presale !== null);
+        return {
+          presaleKey: e.presaleKey,
+          name: project.name,
+          description: project.description,
+          logo: project.logoURL,
+          owner: e.owner,
+          website: "https://apple.com",
+          socials: {
+            twitter: "#",
+            telegram: "#",
+          },
+          state: state,
+          base_mint: e.base_mint,
+          quote_mint: e.quote_mint,
+          quote_symbol: poolToken.name,
+          min_allocation: e.min_allocation / 10 ** poolToken.decimals,
+          max_allocation: e.max_allocation / 10 ** poolToken.decimals,
+          hardcap: e.hardcap / 10 ** poolToken.decimals,
+          softcap: e.softcap / 10 ** poolToken.decimals,
+          sale_price: e.sale_price / 10 ** poolToken.decimals,
+          launch_price: e.launch_price / 10 ** poolToken.decimals,
+          start_time: e.start_time,
+          end_time: e.end_time,
+          total_contributions: e.total_contributions / 10 ** poolToken.decimals,
+          max_contribution: e.max_contribution,
+        };
+      })
+      .filter((presale: any): presale is Presale => presale !== null);
 
     const res = presaleObjs.filter((e) => e.presaleKey === presaleKey);
-    if (!res)
-      return;
+    if (!res) return;
 
     setProjectData(res[0]);
   }, [setProjectData]);
@@ -119,28 +117,34 @@ const ProjectDetails = () => {
     fetchProjects();
   }, [fetchProjects]);
 
-  const handleBuy = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleBuy = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    if (!projectData)
-      return;
+      if (!projectData) return;
 
-    setLoading(true);
+      setLoading(true);
 
-    try {
-      await buyTokens(anchorWallet, new PublicKey(projectData.presaleKey), buyCount);
-    } catch (err) {
-      toast.error('Buy tokens error!');
-    }
+      try {
+        await buyTokens(
+          anchorWallet,
+          new PublicKey(projectData.presaleKey),
+          buyCount
+        );
+      } catch (err) {
+        toast.error("Buy tokens error!");
+      }
 
-    setLoading(false);
-  }, [buyCount]);
+      setLoading(false);
+    },
+    [buyCount]
+  );
 
   return (
     <>
       <section className="min-h-screen p-4 bg-radial-gradient">
-        <motion.div 
-          className="flex flex-col p-6 mx-auto rounded-lg shadow-lg max-w-[90vh] bg-white/15 md:max-w-[80vw] lg:max-w-[70vw]"
+        <motion.div
+          className="flex flex-col p-6 mx-auto rounded-lg shadow-lg max-w-[90vh] mb-6 bg-white/15 md:max-w-[80vw] lg:max-w-[70vw]"
           initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{
@@ -211,7 +215,7 @@ const ProjectDetails = () => {
               {projectData?.website}
             </a>
           </p> */}
-          <motion.p 
+          <motion.p
             className="mt-2 text-justify text-textclr font-primaryRegular md:text-left"
             initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -225,7 +229,7 @@ const ProjectDetails = () => {
             {projectData?.description}
           </motion.p>
 
-          <motion.div 
+          <motion.div
             className="flex flex-col items-center justify-between w-full mt-4 space-y-4 md:flex-row md:space-y-0"
             initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -286,11 +290,11 @@ const ProjectDetails = () => {
                   max={projectData?.max_allocation}
                   value={buyCount}
                   onChange={(e) => {
-                    setBuyCount(parseInt(e.target.value))
+                    setBuyCount(parseInt(e.target.value));
                   }}
                   step="1"
                 />
-                {projectData?.state === 'Live' ? (
+                {projectData?.state === "Live" ? (
                   <button
                     className="px-4 py-2 ml-2 border rounded-lg text-textclr border-textclr2 border-lg bg-btnbg/50 hover:bg-btnbg/60 hover:border-btnbg hover:text-btnbg focus:outline-none"
                     onClick={handleBuy}
@@ -308,12 +312,14 @@ const ProjectDetails = () => {
               </div>
               <p className="mt-2 text-textclr font-primaryRegular">
                 Buying{" "}
-                <span className="font-mono text-textclr2">{buyCount} {projectData?.quote_symbol}</span>
+                <span className="font-mono text-textclr2">
+                  {buyCount} {projectData?.quote_symbol}
+                </span>
               </p>
             </div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className="flex flex-col justify-center w-full mt-4 space-y-4 md:flex-row md:space-y-0 md:space-x-4"
             initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -337,12 +343,14 @@ const ProjectDetails = () => {
                 Public Sale Ending in:
               </p>
               <div className="p-2 mt-2 font-mono text-center border-2 border-dashed border-btnbg/80">
-                {projectData ? new Date(projectData?.end_time).toLocaleString() : '00:00:00'}
+                {projectData
+                  ? new Date(projectData?.end_time).toLocaleString()
+                  : "00:00:00"}
               </div>
             </div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className="w-full mt-4"
             initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -404,7 +412,7 @@ const ProjectDetails = () => {
                 </p>
               </div>
             </div>
-            <div className="mt-2 collapse collapse-arrow">
+            {/* <div className="mt-2 collapse collapse-arrow">
               <input type="checkbox" className="peer" />
               <div className="collapse-title text-textclr2 font-primaryBold">
                 Lorem 2
@@ -417,7 +425,7 @@ const ProjectDetails = () => {
                   voluptatum explicabo, sequi ipsam nam molestias.
                 </p>
               </div>
-            </div>
+            </div> */}
           </motion.div>
         </motion.div>
         {loading ? (

@@ -4,7 +4,6 @@ import axios from "axios";
 import { FaFileAlt, FaDownload } from "react-icons/fa";
 import { Oval } from "react-loader-spinner";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
-
 import { API_URL } from "../config";
 import { toast } from "react-toastify";
 
@@ -64,11 +63,11 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
-    if ( !jwtToken ) {
+    if (!jwtToken) {
       toast.error("Token Error: Please sign first!");
       return;
     }
-    
+
     setLoading(true);
 
     const data = new FormData();
@@ -82,7 +81,7 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
     data.append("proposalStatus", "PENDING");
     data.append("proposalDesc", formData.description);
     data.append("periodId", "1");
-    data.append("mint", "")
+    data.append("mint", "");
     if (formData.tokenomics) {
       data.append("tokenomicsURL", formData.tokenomics);
     }
