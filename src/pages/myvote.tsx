@@ -1,13 +1,11 @@
 import { useState, useEffect, useContext, useCallback } from "react";
 import { FaSort } from "react-icons/fa";
-// import { motion } from "framer-motion";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventIcon from "@mui/icons-material/Event";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import TokenCard from "../components/TokenCard";
 import { Drawer } from "vaul";
 import { getPeriods, getProjects, getTokenPairs } from "../api/apis";
-import TokenSubmit from "./tokenSubmit";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 import { motion } from "framer-motion";
 
@@ -37,7 +35,6 @@ const MyVote = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [sortOrder, setSortOrder] = useState("all");
   const { userId } = useContext(JwtTokenContext);
-  const [showModal, setShowModal] = useState(false);
 
   const fetchProjects = useCallback(async () => {
     const pros = await getProjects();
@@ -81,7 +78,7 @@ const MyVote = () => {
 
   useEffect(() => {
     fetchProjects();
-  }, [fetchProjects, showModal]);
+  }, [fetchProjects]);
 
   const handleSort = (order: string) => {
     setSortOrder(order);
@@ -122,13 +119,6 @@ const MyVote = () => {
               Find the latest projects you have voted for & Apply for new ones.
               <br />
             </p>
-            <button
-              type="submit"
-              className="px-4 mt-2 border-lg btn text-textclr2 border-textclr2 font-primaryRegular hover:border-btnbg hover:text-btnbg focus:outline-none focus:bg-btnbg/10 focus:border-btnbg/10"
-              onClick={() => setShowModal(true)}
-            >
-              Submit Token
-            </button>
             {/*  -- Sort Dropdown --  */}
             <div className="dropdown">
               <div
@@ -272,7 +262,6 @@ const MyVote = () => {
           </Drawer.Content>
         </Drawer.Portal>
       </Drawer.Root>
-      {showModal && <TokenSubmit setShowModal={setShowModal} />}
     </section>
   );
 };

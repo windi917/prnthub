@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent, useContext } from "react";
+import { useState, ChangeEvent, FormEvent, useContext } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { FaFileAlt, FaDownload } from "react-icons/fa";
@@ -19,11 +19,7 @@ interface FormData {
   logo: File | null;
 }
 
-interface ModalProps {
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
+const TokenSubmit = () => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     symbol: "",
@@ -102,7 +98,6 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
 
     try {
       await axios.request(config);
-      setShowModal(false);
       setSuccess(true);
     } catch (error) {
       if (error instanceof Error) {
@@ -116,264 +111,259 @@ const TokenSubmit: React.FC<ModalProps> = ({ setShowModal }) => {
   };
   return (
     <>
-      <div className="fixed inset-0 z-10 flex items-center justify-center bg-opacity-50 bg-bg ">
-        <motion.div
-          className="flex flex-col items-center max-w-3xl p-8 mx-auto my-16 border shadow-lg border-textclr2 backdrop-blur-3xl rounded-box bg-white/10 lg:px-12 lg:w-3/5 md:w-1/2 md:px-8 modal-container"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          layout
-        >
-          <div className="w-full">
-            <h1 className="text-2xl tracking-wider capitalize font-primaryBold text-textclr2 dark:text-white">
+      <div className="min-h-screen p-4 bg-radial-gradient p-10">
+        <div className="w-full">
+          <motion.div
+            className="px-6 py-6 mx-auto shadow-lg rounded-2xl bg-white/10 min-w-fit"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h1 className="text-4xl leading-6 font-primaryBold text-textclr2">
               Submit Token
             </h1>
-
-            <form
-              onSubmit={handleSubmit}
-              className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2"
-            >
-              <div>
-                <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Token Name"
-                  className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
-                />
-              </div>
-              <div>
-                <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
-                  Symbol
-                </label>
-                <input
-                  type="text"
-                  name="symbol"
-                  value={formData.symbol}
-                  onChange={handleChange}
-                  placeholder="Token Symbol"
-                  className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
-                />
-              </div>
-              <div>
-                <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
-                  Supply
-                </label>
-                <input
-                  type="text"
-                  name="supply"
-                  value={formData.supply}
-                  onChange={handleChange}
-                  placeholder="Token Supply"
-                  className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
-                />
-              </div>
-              <div>
-                <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
-                  Decimals
-                </label>
-                <input
-                  type="number"
-                  name="decimals"
-                  value={formData.decimals}
-                  onChange={handleChange}
-                  min="0"
-                  max="9"
-                  placeholder="Decimals"
-                  className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
-                  title="Numbers only"
-                />
-              </div>
-              <div>
-                <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
-                  Project Website
-                </label>
-                <input
-                  type="text"
-                  name="websitename"
-                  value={formData.websitename}
-                  onChange={handleChange}
-                  placeholder="Website"
-                  className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
-                />
-              </div>
-              <div>
-                <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
-                  Project Twitter
-                </label>
-                <input
-                  type="text"
-                  name="twitterURL"
-                  value={formData.twitterURL}
-                  onChange={handleChange}
-                  placeholder="Twitter"
-                  className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label
-                  htmlFor="Description"
-                  className="block w-full text-md text-textclr2 dark:text-white"
+            <p className="mt-2 text-lg text-textclr2/50 font-primaryRegular">
+              Submit your own token.
+            </p>
+          </motion.div>
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2"
+          >
+            <div>
+              <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
+                Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Token Name"
+                className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
+              />
+            </div>
+            <div>
+              <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
+                Symbol
+              </label>
+              <input
+                type="text"
+                name="symbol"
+                value={formData.symbol}
+                onChange={handleChange}
+                placeholder="Token Symbol"
+                className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
+              />
+            </div>
+            <div>
+              <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
+                Supply
+              </label>
+              <input
+                type="text"
+                name="supply"
+                value={formData.supply}
+                onChange={handleChange}
+                placeholder="Token Supply"
+                className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
+              />
+            </div>
+            <div>
+              <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
+                Decimals
+              </label>
+              <input
+                type="number"
+                name="decimals"
+                value={formData.decimals}
+                onChange={handleChange}
+                min="0"
+                max="9"
+                placeholder="Decimals"
+                className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
+                title="Numbers only"
+              />
+            </div>
+            <div>
+              <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
+                Project Website
+              </label>
+              <input
+                type="text"
+                name="websitename"
+                value={formData.websitename}
+                onChange={handleChange}
+                placeholder="Website"
+                className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
+              />
+            </div>
+            <div>
+              <label className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200">
+                Project Twitter
+              </label>
+              <input
+                type="text"
+                name="twitterURL"
+                value={formData.twitterURL}
+                onChange={handleChange}
+                placeholder="Twitter"
+                className="block w-full px-5 py-3 mt-2 text-gray-700 bg-white border rounded-lg placeholder-slate-400 border-slate-200 dark:placeholder-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-700 focus:border-textclr2 dark:focus:border-textclr2 focus:ring-textclr2 focus:outline-none focus:ring focus:ring-opacity-40"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label
+                htmlFor="Description"
+                className="block w-full text-md text-textclr2 dark:text-white"
+              >
+                Description
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Description about team & project"
+                className="block mt-2 w-full rounded-lg border border-gray-200 bg-white px-4 h-32 py-2.5 text-slate-700 focus:border-textclr2 focus:outline-none focus:ring focus:ring-textclr2 focus:ring-opacity-40 dark:border-white dark:bg-gray-900 dark:text-white dark:focus:border-textclr2"
+              ></textarea>
+            </div>
+            {/* Tokenomics Upload */}
+            <div>
+              <label
+                htmlFor="tokenomics"
+                className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200"
+              >
+                Tokenomics
+              </label>
+              <label
+                htmlFor="tokenomics"
+                className="flex flex-col items-center w-full max-w-lg p-5 mx-auto mt-2 text-center bg-white border-2 border-dashed cursor-pointer border-slate-300 dark:bg-slate-900 dark:border-slate-700 rounded-xl"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-8 h-8 text-slate-500 dark:text-slate-400"
                 >
-                  Description
-                </label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  placeholder="Description about team & project"
-                  className="block mt-2 w-full rounded-lg border border-gray-200 bg-white px-4 h-32 py-2.5 text-slate-700 focus:border-textclr2 focus:outline-none focus:ring focus:ring-textclr2 focus:ring-opacity-40 dark:border-white dark:bg-gray-900 dark:text-white dark:focus:border-textclr2"
-                ></textarea>
-              </div>
-              {/* Tokenomics Upload */}
-              <div>
-                <label
-                  htmlFor="tokenomics"
-                  className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200"
-                >
-                  Tokenomics
-                </label>
-                <label
-                  htmlFor="tokenomics"
-                  className="flex flex-col items-center w-full max-w-lg p-5 mx-auto mt-2 text-center bg-white border-2 border-dashed cursor-pointer border-slate-300 dark:bg-slate-900 dark:border-slate-700 rounded-xl"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-8 h-8 text-slate-500 dark:text-slate-400"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
-                    />
-                  </svg>
-                  <h2 className="mt-1 tracking-wide font-primaryBold text-textclr2 dark:text-slate-200">
-                    Upload Tokenomics
-                  </h2>
-                  <p className="mt-2 text-xs tracking-wide text-slate-500 dark:text-slate-400">
-                    Upload your file PDF, PNG, JPG or GIF.
-                  </p>
-                  <input
-                    id="tokenomics"
-                    type="file"
-                    name="tokenomics"
-                    onChange={handleChange}
-                    className="hidden"
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
                   />
-                  {tokenomicsFileName && (
-                    <div className="flex items-center mt-2 text-xs text-slate-700 dark:text-slate-400">
-                      <div className="flex items-center">
-                        <FaFileAlt className="mr-2 text-slate-500 dark:text-slate-400" />
-                        <span>{tokenomicsFileName}</span>
-                      </div>
-                      <div className="ml-4">
-                        <FaDownload className="cursor-pointer text-slate-500 dark:text-slate-400" />
-                      </div>
+                </svg>
+                <h2 className="mt-1 tracking-wide font-primaryBold text-textclr2 dark:text-slate-200">
+                  Upload Tokenomics
+                </h2>
+                <p className="mt-2 text-xs tracking-wide text-slate-500 dark:text-slate-400">
+                  Upload your file PDF, PNG, JPG or GIF.
+                </p>
+                <input
+                  id="tokenomics"
+                  type="file"
+                  name="tokenomics"
+                  onChange={handleChange}
+                  className="hidden"
+                />
+                {tokenomicsFileName && (
+                  <div className="flex items-center mt-2 text-xs text-slate-700 dark:text-slate-400">
+                    <div className="flex items-center">
+                      <FaFileAlt className="mr-2 text-slate-500 dark:text-slate-400" />
+                      <span>{tokenomicsFileName}</span>
                     </div>
-                  )}
-                </label>
-              </div>
-              {/* Logo Upload */}
-              <div>
-                <label
-                  htmlFor="logo"
-                  className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200"
+                    <div className="ml-4">
+                      <FaDownload className="cursor-pointer text-slate-500 dark:text-slate-400" />
+                    </div>
+                  </div>
+                )}
+              </label>
+            </div>
+            {/* Logo Upload */}
+            <div>
+              <label
+                htmlFor="logo"
+                className="block mb-2 text-md font-primaryRegular text-textclr2 dark:text-slate-200"
+              >
+                Logo
+              </label>
+              <label
+                htmlFor="logo"
+                className="flex flex-col items-center w-full max-w-lg p-5 mx-auto mt-2 text-center bg-white border-2 border-dashed cursor-pointer border-slate-300 dark:bg-slate-900 dark:border-slate-700 rounded-xl"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-8 h-8 text-slate-500 dark:text-slate-400"
                 >
-                  Logo
-                </label>
-                <label
-                  htmlFor="logo"
-                  className="flex flex-col items-center w-full max-w-lg p-5 mx-auto mt-2 text-center bg-white border-2 border-dashed cursor-pointer border-slate-300 dark:bg-slate-900 dark:border-slate-700 rounded-xl"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-8 h-8 text-slate-500 dark:text-slate-400"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
-                    />
-                  </svg>
-                  <h2 className="mt-1 tracking-wide font-primaryBold text-textclr2 dark:text-slate-200">
-                    Upload Logo
-                  </h2>
-                  <p className="mt-2 text-xs tracking-wide text-slate-500 dark:text-slate-400">
-                    Upload your file SVG, PNG, JPG or GIF.
-                  </p>
-                  <input
-                    id="logo"
-                    type="file"
-                    name="logo"
-                    onChange={handleChange}
-                    className="hidden"
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
                   />
-                  {logoFileName && (
-                    <div className="flex items-center mt-2 text-xs text-slate-700 dark:text-slate-400">
-                      <div className="flex items-center">
-                        <FaFileAlt className="mr-2 text-slate-500 dark:text-slate-400" />
-                        <span>{logoFileName}</span>
-                      </div>
-                      <div className="ml-4">
-                        <FaDownload className="cursor-pointer text-slate-500 dark:text-slate-400" />
-                      </div>
+                </svg>
+                <h2 className="mt-1 tracking-wide font-primaryBold text-textclr2 dark:text-slate-200">
+                  Upload Logo
+                </h2>
+                <p className="mt-2 text-xs tracking-wide text-slate-500 dark:text-slate-400">
+                  Upload your file SVG, PNG, JPG or GIF.
+                </p>
+                <input
+                  id="logo"
+                  type="file"
+                  name="logo"
+                  onChange={handleChange}
+                  className="hidden"
+                />
+                {logoFileName && (
+                  <div className="flex items-center mt-2 text-xs text-slate-700 dark:text-slate-400">
+                    <div className="flex items-center">
+                      <FaFileAlt className="mr-2 text-slate-500 dark:text-slate-400" />
+                      <span>{logoFileName}</span>
                     </div>
-                  )}
-                </label>
-              </div>
-              {/* -- Submit Button -- */}
-              <div className="flex-col items-center justify-center md:flex-row md:justify-between">
-                <button
-                  type="submit"
-                  className="px-4 py-2 border-lg btn text-textclr2 border-textclr2 font-primaryRegular hover:border-btnbg hover:text-btnbg focus:outline-none focus:bg-btnbg/10 focus:border-btnbg/10"
-                >
-                  Submit
-                </button>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="px-4 py-2 mx-2 border-lg btn text-textclr2 border-textclr2 font-primaryRegular hover:border-btnbg hover:text-btnbg focus:outline-none focus:bg-btnbg/10 focus:border-btnbg/10"
-                >
-                  Close
-                </button>
-              </div>
-              {/* Loading Spinner */}
-              {loading && (
-                <>
-                  <Oval
-                    height="80"
-                    visible={true}
-                    width="80"
-                    color="#CCF869"
-                    ariaLabel="oval-loading"
-                    wrapperStyle={{
-                      position: "fixed",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                    }}
-                  />
-                  {success && (
-                    <div className="fixed inset-0 z-10 flex justify-center pt-20 pb-4 font-semibold text-center bg-opacity-50 text-textclr2 bg-bg">
-                      Submitted successfully!
+                    <div className="ml-4">
+                      <FaDownload className="cursor-pointer text-slate-500 dark:text-slate-400" />
                     </div>
-                  )}
-                </>
-              )}
-            </form>
-          </div>
-        </motion.div>
+                  </div>
+                )}
+              </label>
+            </div>
+            {/* -- Submit Button -- */}
+            <div className="flex-col items-center justify-center md:flex-row md:justify-between">
+              <button
+                type="submit"
+                className="px-4 py-2 border-lg btn text-textclr2 border-textclr2 font-primaryRegular hover:border-btnbg hover:text-btnbg focus:outline-none focus:bg-btnbg/10 focus:border-btnbg/10"
+              >
+                Submit
+              </button>
+            </div>
+            {/* Loading Spinner */}
+            {loading && (
+              <>
+                <Oval
+                  height="80"
+                  visible={true}
+                  width="80"
+                  color="#CCF869"
+                  ariaLabel="oval-loading"
+                  wrapperStyle={{
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                />
+                {success && (
+                  <div className="fixed inset-0 z-10 flex justify-center pt-20 pb-4 font-semibold text-center bg-opacity-50 text-textclr2 bg-bg">
+                    Submitted successfully!
+                  </div>
+                )}
+              </>
+            )}
+          </form>
+        </div>
       </div>
     </>
   );
