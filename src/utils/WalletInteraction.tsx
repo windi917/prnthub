@@ -52,7 +52,7 @@ const WalletInteraction: FC = () => {
         const data = await getAllData();
         // await initProject(anchorWallet);
     
-        console.log("@@@@@@@All Data@", data);
+        console.log("Presales: ", data);
         setPresales(data);
 
       } else {

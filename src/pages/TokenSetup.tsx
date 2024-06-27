@@ -1,9 +1,8 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useState, useEffect, useContext, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import * as React from "react";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
-import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 import { getProjects, getPoolTokens } from "../api/apis";
 import { toast } from "react-toastify";
 import { Oval } from "react-loader-spinner";
@@ -30,7 +29,6 @@ interface PoolToken {
 const TokenSetup = () => {
   const wallet = useWallet();
   const anchorWallet = useAnchorWallet();
-  const { jwtToken } = useContext(JwtTokenContext);
   const [projects, setProjects] = useState<Project[]>([]);
   const [poolTokens, setPoolTokens] = useState<PoolToken[]>([]);
   const [baseTokenAddress, setBaseTokenAddress] = useState('');
@@ -172,9 +170,6 @@ const TokenSetup = () => {
       new Date(endDate).getTime());
 
     setLoading(false);
-
-    console.log("#$####", jwtToken, baseTokenAddress, quoteTokenAddress)
-    console.log("#$####--", salePrice, launchPrice, minimumBuy, maximumBuy, softCap, hardCap, startDate, endDate, new Date(startDate).getTime(), new Date(endDate).getTime());
   }
 
   return (

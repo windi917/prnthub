@@ -109,7 +109,6 @@ export const createPresale = async (
         const signedTx = await wallet.signTransaction(tx);
         const txId = await program.provider.connection.sendRawTransaction(signedTx.serialize(), { skipPreflight: true });
 
-        console.log("signedTx =", signedTx);
         console.log("txHash =", txId);
     } catch (error) {
         console.log(error);
@@ -121,7 +120,6 @@ export const buyTokens = async (
     presaleKey: PublicKey,
     amount: number
 ) => {
-    console.log(amount);
     if (!wallet) return;
     let provider = new anchor.AnchorProvider(solConnection, wallet as anchor.Wallet, { skipPreflight: true })
     const program = new anchor.Program(PresaleContractIDL as anchor.Idl, MYPRO_ID, provider);
@@ -219,7 +217,6 @@ export const createPresaleTx = async (
         [Buffer.from(GLOBAL_AUTHORITY_SEED)],
         program.programId
     );
-    console.log(globalAuthority.toBase58());
     // Base Token Account
     let baseTokenAccount = await getAssociatedTokenAccount(wallet.publicKey, baseTokenMint);
     let ix0 = await getATokenAccountsNeedCreate(
@@ -247,14 +244,12 @@ export const createPresaleTx = async (
         );
         let state = await getStateByKey(presale);
         if (state === null) {
-            console.log("idx:", i);
             break;
         }
     }
 
     let tx = new Transaction();
     if (presale) {
-        console.log("Programe ID:", program.programId.toBase58());
         let ix = SystemProgram.createAccountWithSeed({
             fromPubkey: wallet.publicKey,
             basePubkey: wallet.publicKey,
@@ -268,8 +263,6 @@ export const createPresaleTx = async (
         tx.add(ix);
         if (ix0.instructions.length > 0) tx.add(...ix0.instructions)
         if (ix1.instructions.length > 0 && quoteTokenMint.toBase58() != EMPTY_USER) tx.add(...ix1.instructions)
-
-        console.log("BASE, QUOTE, TA:", baseTokenMint.toBase58(), quoteTokenMint.toBase58(), TOKEN_PROGRAM_ID.toBase58());
 
         const baseDecRes = await getDecimals(baseTokenMint.toBase58());
         const quoteDecRes = await getDecimals(quoteTokenMint.toBase58());
@@ -364,13 +357,11 @@ export const buyTokensTx = async (
                 [quoteToken]
             );
 
-            if (ix1.instructions.length > 0 && baseToken.toBase58() != EMPTY_USER) { console.log("here1"); tx.add(...ix1.instructions) };
-            if (ix2.instructions.length > 0 && baseToken.toBase58() != EMPTY_USER) { console.log("here2"); tx.add(...ix2.instructions) };
-            if (ix3.instructions.length > 0 && quoteToken.toBase58() != EMPTY_USER) { console.log("here3"); tx.add(...ix3.instructions) };
-            if (ix4.instructions.length > 0 && quoteToken.toBase58() != EMPTY_USER) { console.log("here4"); tx.add(...ix4.instructions) };
+            if (ix1.instructions.length > 0 && baseToken.toBase58() != EMPTY_USER) { tx.add(...ix1.instructions) };
+            if (ix2.instructions.length > 0 && baseToken.toBase58() != EMPTY_USER) { tx.add(...ix2.instructions) };
+            if (ix3.instructions.length > 0 && quoteToken.toBase58() != EMPTY_USER) { tx.add(...ix3.instructions) };
+            if (ix4.instructions.length > 0 && quoteToken.toBase58() != EMPTY_USER) { tx.add(...ix4.instructions) };
             
-            console.log(ix2.destinationAccounts[0].toBase58());
-
             const baseRes = await getDecimals(baseToken.toBase58())
             if (!baseRes.success) {
                 return;
@@ -508,12 +499,12 @@ export const withdrawTx = async (
                 [quoteToken]
             );
 
-            if (ix1.instructions.length > 0 && baseToken.toBase58() != EMPTY_USER) { console.log("here1"); tx.add(...ix1.instructions) };
-            if (ix2.instructions.length > 0 && baseToken.toBase58() != EMPTY_USER) { console.log("here2"); tx.add(...ix2.instructions) };
-            if (ix3.instructions.length > 0 && quoteToken.toBase58() != EMPTY_USER) { console.log("here3"); tx.add(...ix3.instructions) };
-            if (ix4.instructions.length > 0 && quoteToken.toBase58() != EMPTY_USER) { console.log("here4"); tx.add(...ix4.instructions) };
-            if (ix5.instructions.length > 0 && baseToken.toBase58() != EMPTY_USER) { console.log("here5"); tx.add(...ix5.instructions) };
-            if (ix6.instructions.length > 0 && quoteToken.toBase58() != EMPTY_USER) { console.log("here6"); tx.add(...ix6.instructions) };
+            if (ix1.instructions.length > 0 && baseToken.toBase58() != EMPTY_USER) { tx.add(...ix1.instructions) };
+            if (ix2.instructions.length > 0 && baseToken.toBase58() != EMPTY_USER) { tx.add(...ix2.instructions) };
+            if (ix3.instructions.length > 0 && quoteToken.toBase58() != EMPTY_USER) { tx.add(...ix3.instructions) };
+            if (ix4.instructions.length > 0 && quoteToken.toBase58() != EMPTY_USER) { tx.add(...ix4.instructions) };
+            if (ix5.instructions.length > 0 && baseToken.toBase58() != EMPTY_USER) { tx.add(...ix5.instructions) };
+            if (ix6.instructions.length > 0 && quoteToken.toBase58() != EMPTY_USER) { tx.add(...ix6.instructions) };
 
             const baseRes = await getDecimals(baseToken.toBase58())
             if (!baseRes.success) {
@@ -658,7 +649,6 @@ export const getStateByKey = async (
     let cloneWindow: any = window;
     let provider = new anchor.AnchorProvider(solConnection, cloneWindow['solana'], anchor.AnchorProvider.defaultOptions())
     const program = new anchor.Program(PresaleContractIDL as anchor.Idl, MYPRO_ID, provider);
-    console.log("baseTokenKey:", baseTokenKey.toBase58());
     try {
         let rentalState = await program.account.presale.fetch(baseTokenKey);
         return rentalState as unknown as PresalePool;

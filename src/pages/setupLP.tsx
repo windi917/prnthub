@@ -110,7 +110,7 @@ const LPsetup = () => {
         toast.error(`Create Pool Error: ${poolRes.msg}`);
         return;
       }
-      console.log("****************", poolRes);
+      console.log("Pool Res: ", poolRes);
 
       const res = await createPoolApi(
         jwtToken,

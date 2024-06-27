@@ -143,17 +143,14 @@ const SetupMarket = () => {
     e.preventDefault();
 
     if (parseInt(e.target.value) === 0) {
-      console.log("here1");
       setEventQueueLength(11308);
       setRequestQueueLength(764);
       setOrderBookLength(14524);
     } else if (parseInt(e.target.value) === 1) {
-      console.log("here2");
       setEventQueueLength(123244);
       setRequestQueueLength(5084);
       setOrderBookLength(32452);
     } else {
-      console.log("here3");
       setEventQueueLength(262108);
       setRequestQueueLength(5084);
       setOrderBookLength(65500);

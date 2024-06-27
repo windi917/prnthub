@@ -23,7 +23,7 @@ import { toBufferBE } from "bigint-buffer";
 import { ACCOUNT_SIZE, NATIVE_MINT, MINT_SIZE, TOKEN_PROGRAM_ID, MintLayout, createInitializeMintInstruction, getMinimumBalanceForRentExemptMint, createMintToInstruction, createInitializeAccountInstruction, getAssociatedTokenAddressSync } from '@solana/spl-token';
 import { createCreateMetadataAccountV3Instruction, PROGRAM_ID } from '@metaplex-foundation/mpl-token-metadata';
 import { WebBundlr } from '@bundlr-network/client';
-import { Liquidity, TxVersion, SPL_ACCOUNT_LAYOUT, Market as RayMarket, ZERO } from '@raydium-io/raydium-sdk'
+import { Liquidity, TxVersion, SPL_ACCOUNT_LAYOUT, ZERO } from '@raydium-io/raydium-sdk'
 import { web3 } from "@project-serum/anchor";
 import { NETWORK } from '../config'
 
@@ -204,7 +204,7 @@ export async function createVote(
     );
 
     const txHash = (await signature).toString();
-    console.log("signamture@@@@@@@@@@@@", txHash);
+    console.log("Vote Tx: ", txHash);
 
     return txHash;
   }
@@ -224,8 +224,6 @@ export async function initializeBundlr(
     wallet.wallet.adapter,
     { providerUrl: 'https://api.devnet.solana.com' }
   );
-
-  console.log(bundler)
 
   try {
     // Check for valid bundlr node
@@ -598,7 +596,6 @@ export async function createOpenBookMarket(
     })
   );
 
-  console.log("---------------", vaultInstructions, marketInstructions)
   const vaultTransaction = new Transaction().add(...vaultInstructions);
   try {
     const blockHash = (await solConnection.getLatestBlockhash()).blockhash;
@@ -971,8 +968,6 @@ export async function createAmmPool(
   let [baseMintAccountInfo, quoteMintAccountInfo, marketAccountInfo, userBaseAtaInfo, userQuoteAtaInfo] = await solConnection.getMultipleAccountsInfo([baseMint, quoteMint, marketId, userBaseAta, userQuoteAta]).catch(() => [null, null, null, null])
   if (!baseMintAccountInfo || !quoteMintAccountInfo || !marketAccountInfo) throw "AccountInfo not found"
 
-  console.log("###########", baseMint.toBase58(), quoteMint.toBase58(), marketAccountInfo.owner.toBase58())
-
   // Check base token balance
   const baseTokenBalance = await getBalance(wallet, baseTokenAddress);
   console.log("BASE------", baseTokenBalance, addBase)
@@ -1048,11 +1043,9 @@ export async function createAmmPool(
     }
   }
 
-  console.log("--------userBaseAtaInfo, userQuoteAtaInfo-", userBaseAtaInfo, userQuoteAtaInfo);
   const baseMintState = MintLayout.decode(baseMintAccountInfo.data);
   const quoteMintState = MintLayout.decode(quoteMintAccountInfo.data);
 
-  console.log("--------baseMintState, quoteMintState-", baseMintState, quoteMintState);
   const marketInfo = {
     marketId: marketId,
     programId: marketAccountInfo.owner
@@ -1067,17 +1060,6 @@ export async function createAmmPool(
   }
   const baseAmount = new BN(toBufferBE(BigInt(calcNonDecimalValue(addBase, baseMintState.decimals).toString()), 8))
   const quoteAmount = new BN(toBufferBE(BigInt(calcNonDecimalValue(addQuote, quoteMintState.decimals).toString()), 8))
-
-  console.log("--------baseAmount, quoteAmount-", baseAmount.toNumber(), quoteAmount.toNumber());
-
-  // Decode market state to check validity
-  try {
-    const marketStateLayout = RayMarket.getLayouts(3).state;
-    const marketState = marketStateLayout.decode(marketAccountInfo.data);
-    console.log("Market State:", marketState);
-  } catch (error) {
-    throw new Error(`Failed to decode market state: ${error}`);
-  }
 
   const startTime = new BN(Math.trunc(Date.parse(launchDate) / 1000))
 
@@ -1108,7 +1090,6 @@ export async function createAmmPool(
       // computeBudgetConfig: { microLamports: 250_000, units: 8000_000 },
     })).innerTransactions
 
-    console.log("^^^^^^^^", createPoolIxs)
     const ixs: web3.TransactionInstruction[] = []
     const signers: web3.Signer[] = []
     // ixs.push(...createPoolIxs.instructions)
@@ -1117,8 +1098,6 @@ export async function createAmmPool(
       ixs.push(...ix.instructions)
       signers.push(...ix.signers)
     }
-
-    console.log("############", ixs, signers)
 
     const recentBlockhash = (await solConnection.getLatestBlockhash()).blockhash;
     const tx = new Transaction().add(...ixs);
