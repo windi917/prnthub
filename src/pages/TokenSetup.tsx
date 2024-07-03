@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import * as React from "react";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { getProjects, getPoolTokens } from "../api/apis";
 import { toast } from "react-toastify";
 import { Oval } from "react-loader-spinner";
 
+import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 import { createPresale } from "../solana/transaction";
 import { PublicKey } from "@solana/web3.js";
 import { getBalance } from "../utils/WebIntegration";
@@ -29,6 +30,7 @@ interface PoolToken {
 const TokenSetup = () => {
   const wallet = useWallet();
   const anchorWallet = useAnchorWallet();
+  const { userId } = useContext(JwtTokenContext);
   const [projects, setProjects] = useState<Project[]>([]);
   const [poolTokens, setPoolTokens] = useState<PoolToken[]>([]);
   const [baseTokenAddress, setBaseTokenAddress] = useState('');
@@ -51,7 +53,7 @@ const TokenSetup = () => {
     if (pros.success === true) {
       setProjects(
         pros.projects
-          .filter((e: any) => e.proposalStatus === "LAUNCHED")
+          .filter((e: any) => e.owner === userId && e.proposalStatus === "LAUNCHED")
           .map((e: Project) => ({
             id: e.id,
             proposalStatus: e.proposalStatus,

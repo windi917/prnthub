@@ -27,7 +27,7 @@ interface PoolToken {
 
 const SetupMarket = () => {
   const wallet = useWallet();
-  const { jwtToken } = useContext(JwtTokenContext);
+  const { jwtToken, userId } = useContext(JwtTokenContext);
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [poolTokens, setPoolTokens] = useState<PoolToken[]>([]);
@@ -70,7 +70,7 @@ const SetupMarket = () => {
     if (pros.success === true) {
       setProjects(
         pros.projects
-          .filter((e: any) => e.proposalStatus === "LAUNCHED")
+          .filter((e: any) => e.owner === userId && e.proposalStatus === "LAUNCHED")
           .map((e: Project) => ({
             id: e.id,
             proposalStatus: e.proposalStatus,

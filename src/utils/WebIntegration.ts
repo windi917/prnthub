@@ -27,7 +27,7 @@ import { Liquidity, TxVersion, SPL_ACCOUNT_LAYOUT, ZERO } from '@raydium-io/rayd
 import { web3 } from "@project-serum/anchor";
 import { NETWORK } from '../config'
 
-const RPC_URL: string = (NETWORK == 'devnet') ? 'https://devnet.helius-rpc.com/?api-key=67cbb36a-b35f-4c88-9240-c78a20c73f6c' : 'https://mainnet.helius-rpc.com/?api-key=07d048c5-5058-42e4-9991-b92ac3fc17d0';
+const RPC_URL: string = (NETWORK == 'devnet') ? 'https://api.devnet.solana.com' : 'https://mainnet.helius-rpc.com/?api-key=07d048c5-5058-42e4-9991-b92ac3fc17d0';
 
 export function getOpenbookData() {
   if (NETWORK === 'devnet') {
@@ -222,7 +222,7 @@ export async function initializeBundlr(
     'https://devnet.bundlr.network',
     'solana',
     wallet.wallet.adapter,
-    { providerUrl: 'https://devnet.helius-rpc.com/?api-key=67cbb36a-b35f-4c88-9240-c78a20c73f6c' }
+    { providerUrl: 'https://api.devnet.solana.com' }
   );
 
   try {
