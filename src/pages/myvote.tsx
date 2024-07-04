@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback } from "react";
+import { useState, useEffect, useContext } from "react";
 import { FaSort } from "react-icons/fa";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventIcon from "@mui/icons-material/Event";
@@ -8,6 +8,7 @@ import { Drawer } from "vaul";
 import { getPeriods, getProjects, getTokenPairs } from "../api/apis";
 import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 import { motion } from "framer-motion";
+import LaunchModal from "../components/LaunchModal";
 
 interface TokenPair {
   id: number;
@@ -34,51 +35,54 @@ interface Project {
 const MyVote = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [sortOrder, setSortOrder] = useState("all");
+  const [_showModal, setShowModal] = useState(false);
+  const [approveShowModal, setApproveShowModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(0);
   const { userId } = useContext(JwtTokenContext);
 
-  const fetchProjects = useCallback(async () => {
-    const pros = await getProjects();
-    const periods = await getPeriods();
-    const tokenPairs = await getTokenPairs();
-
-    if (
-      pros.success === true &&
-      periods.success === true &&
-      tokenPairs.success === true
-    ) {
-      setProjects(
-        pros.projects
-          .filter(
-            (e: any) => e.owner === userId && e.proposalStatus !== "DECLINED"
-          )
-          .map((e: Project) => {
-            const period = periods.periods.filter(
-              (item: any) => item.id === e.periodId
-            );
-
-            if (!period) return null;
-            return {
-              id: e.id,
-              logoURL: e.logoURL,
-              name: e.name,
-              proposalDesc: e.proposalDesc,
-              proposalStatus: e.proposalStatus,
-              socials: ["https://twitter.com/", "https://google.com/"],
-              startAt: period[0].startAt,
-              endAt: period[0].endAt,
-              currentVotePower: e.currentVotePower,
-              vTokens: tokenPairs.tokenPairs.filter(
-                (item: any) => item.periodId === e.periodId
-              ),
-            };
-          })
-      );
-    }
-  }, []);
-
   useEffect(() => {
+    const fetchProjects = async () => {
+      const pros = await getProjects();
+      const periods = await getPeriods();
+      const tokenPairs = await getTokenPairs();
+  
+      if (
+        pros.success === true &&
+        periods.success === true &&
+        tokenPairs.success === true
+      ) {
+        setProjects(
+          pros.projects
+            .filter(
+              (e: any) => e.owner === userId && e.proposalStatus !== "DECLINED"
+            )
+            .map((e: Project) => {
+              const period = periods.periods.filter(
+                (item: any) => item.id === e.periodId
+              );
+  
+              if (!period) return null;
+              return {
+                id: e.id,
+                logoURL: e.logoURL,
+                name: e.name,
+                proposalDesc: e.proposalDesc,
+                proposalStatus: e.proposalStatus,
+                socials: ["https://twitter.com/", "https://google.com/"],
+                startAt: period[0].startAt,
+                endAt: period[0].endAt,
+                currentVotePower: e.currentVotePower,
+                vTokens: tokenPairs.tokenPairs.filter(
+                  (item: any) => item.periodId === e.periodId
+                ),
+              };
+            })
+        );
+      }
+    };
+
     fetchProjects();
-  }, [fetchProjects]);
+  }, [approveShowModal]);
 
   const handleSort = (order: string) => {
     setSortOrder(order);
@@ -99,7 +103,7 @@ const MyVote = () => {
   });
 
   return (
-    <section className="bg-radial-gradient dark:bg-bg">
+    <section className="bg-radial-gradient dark:bg-bg pt-16">
       <div className="flex justify-center min-h-screen">
         <div className="min-h-screen p-2 text-textclr2">
           <motion.div
@@ -182,7 +186,7 @@ const MyVote = () => {
                 </ul>
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2 lg:grid-cols-3">
               {filteredProjects.map((project, index) => {
                 // if (project.proposalStatus == "LAUNCHED") return null;
                 return (
@@ -203,9 +207,12 @@ const MyVote = () => {
                     }
                     startAt={project.startAt}
                     endAt={project.endAt}
-                    currentVotePower={project.currentVotePower}
-                    vTokens={project.vTokens}
+                    votePower={project.currentVotePower}
+                    // vTokens={project.vTokens}
                     isVote={false}
+                    setShowModal={setShowModal}
+                    setApproveShowModal={setApproveShowModal}
+                    setSelectedId={setSelectedId}
                   />
                 );
               })}
@@ -262,6 +269,12 @@ const MyVote = () => {
           </Drawer.Content>
         </Drawer.Portal>
       </Drawer.Root>
+      {approveShowModal && (
+        <LaunchModal
+          setApproveShowModal={setApproveShowModal}
+          projectId={selectedId}
+        />
+      )}
     </section>
   );
 };

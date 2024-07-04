@@ -2,7 +2,7 @@
 
 const PrivacyPolicy = () => {
   return (
-    <div className="min-h-screen px-12 py-10 bg-radial-gradient">
+    <div className="min-h-screen px-12 py-10 bg-radial-gradient pt-20">
       <h1 className="text-4xl font-primaryBold text-textclr2">
         Privacy Policy
       </h1>

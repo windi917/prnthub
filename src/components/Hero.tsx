@@ -5,6 +5,11 @@ import {
   HowToVote,
   Waves,
   AutoStories,
+  EditNote,
+  DesignServices,
+  Spa,
+  RocketLaunch,
+  AdsClick,
 } from "@mui/icons-material/";
 
 // const hub =
@@ -16,6 +21,81 @@ const scrollToSection = (sectionId: string) => {
     element.scrollIntoView({ behavior: "smooth" });
   }
 };
+
+const featureData = [
+  {
+    icon: <BallotTwoTone fontSize="large" className="text-btnbg" />,
+    title: "Community-Driven Launch",
+    subFeatures: [
+      {
+        icon: <BallotTwoTone fontSize="large" className="text-btnbg/70" />,
+        title: "Vote for Your Project",
+        description:
+          "Participate and cast your vote for your favorite projects. select your project & vote for it.",
+      },
+      {
+        icon: <HowToVote fontSize="large" className="text-btnbg/70" />,
+        title: "Highest Voted Project Wins",
+        description:
+          "The project with the highest votes gets launched on our platform automatically.",
+      },
+      {
+        icon: <AdsClick fontSize="large" className="text-btnbg " />,
+        title: "Featured Project Spotlight",
+        description:
+          "Earn exclusive visibility as our featured project, chosen based on community votes.",
+      },
+    ],
+  },
+  {
+    icon: <MonetizationOn fontSize="large" className="text-btnbg" />,
+    title: "Token Presale",
+    subFeatures: [
+      {
+        icon: <MonetizationOn fontSize="large" className="text-btnbg/70" />,
+        title: "Presale Setup",
+        description:
+          "Quickly configure your token's presale with our easy-to-use tools.",
+      },
+      {
+        icon: <Waves fontSize="large" className="text-btnbg" />,
+        title: "LP Funding Creator",
+        description:
+          "Create liquidity pools effortlessly with our integrated solutions.",
+      },
+      {
+        icon: <AutoStories fontSize="large" className="text-btnbg" />,
+        title: "Market ID Creator",
+        description:
+          "Generate market IDs for your projects seamlessly by integrating our platform.",
+      },
+    ],
+  },
+  {
+    icon: <EditNote fontSize="large" className="text-btnbg" />,
+    title: "NFT Launches",
+    subFeatures: [
+      {
+        icon: <EditNote fontSize="large" className="text-btnbg/70" />,
+        title: "NFT Creator",
+        description:
+          "Bring your NFT project to life with our expert assistance from design to launch.",
+      },
+      {
+        icon: <DesignServices fontSize="large" className="text-btnbg" />,
+        title: "Custom Mint Site",
+        description:
+          "Get a unique mint site tailored for your NFT project to ensure a successful launch.",
+      },
+      {
+        icon: <Spa fontSize="large" className="text-btnbg" />,
+        title: "Prnt Cares",
+        description:
+          "Supporting NFT projects by minimizing fees. We help smaller projects launch for free or with reduced fees.",
+      },
+    ],
+  },
+];
 
 const Hero = () => {
   return (
@@ -41,9 +121,11 @@ const Hero = () => {
               delay: 0.4,
             }}
           >
+            {" "}
             One{" "}
             <span className="relative mx-2 transform -skew-y-3 text-gradient circular-line">
               {" "}
+              <span className="absolute h-20 rounded-lg bg-[#9bd186] w-60 mx-12 filter blur-3xl"></span>
               platform{" "}
             </span>{" "}
             for all launches!
@@ -84,138 +166,78 @@ const Hero = () => {
               NFT Launches
             </button>
           </motion.div>
+        </div>
+      </div>
 
-          {/* Vote Based Launching Section */}
-          <div className="flex gap-8 p-7 lg:flex-row lg:justify-center lg:gap-14">
+      {/* --- Our Features Section --- */}
+      <div className="max-w-6xl px-4 py-16 mx-auto text-center bg-black/10">
+        <div className="flex items-center justify-center mb-12 ">
+          <div className="relative">
             <motion.div
-              className="w-full max-w-md p-6 text-center rounded-lg shadow-lg bg-white/10 lg:w-96"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h2 className="mb-4 text-2xl text-textclr2 font-primaryBold">
-                Vote Based Launching
-              </h2>
-              <p className="mb-6 text-textclr font-primaryRegular text-pretty">
-                Vote for your project. The highest voted project wins and gets
-                launched on our platform.
-              </p>
-              <div className="flex flex-col gap-4">
-                <motion.div
-                  className="p-4 rounded-lg shadow-md bg-btnbg/20"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <BallotTwoTone fontSize="large" className="text-btnbg" />
-                  <h3 className="mt-2 text-xl font-semibold text-textclr2">
-                    Vote for Your Project
-                  </h3>
-                  <p className="text-textclr">
-                    Participate and cast your vote for your favorite projects.
-                  </p>
-                </motion.div>
-                <motion.div
-                  className="p-4 rounded-lg shadow-md bg-btnbg/20"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <HowToVote fontSize="large" className="text-btnbg" />
-                  <h3 className="mt-2 text-xl font-semibold text-textclr2">
-                    Highest Voted Project Wins
-                  </h3>
-                  <p className="text-textclr">
-                    The project with the highest votes gets launched on our
-                    platform.
-                  </p>
-                </motion.div>
-                <motion.div
-                  className="p-4 rounded-lg shadow-md bg-btnbg/20"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <HowToVote fontSize="large" className="text-btnbg" />
-                  <h3 className="mt-2 text-xl font-semibold text-textclr2">
-                    add another featuture
-                  </h3>
-                  <p className="text-textclr">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Incidunt, sit hic.
-                  </p>
-                </motion.div>
-              </div>
-            </motion.div>
-
-            {/* Presale Section */}
-            <motion.div
-              className="w-full max-w-md p-6 text-center bg-white rounded-lg shadow-lg lg:w-96 bg-white/10"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h2 className="mb-4 text-2xl text-textclr2 font-primaryBold">
-                Token Presale
-              </h2>
-              <p className="mb-6 text-textclr font-primaryRegular text-pretty">
-                Set up your token presale with our in-house tools, including
-                presale setup, LP funding creator, and market ID creator.
-              </p>
-              <div className="flex flex-col gap-4">
-                <motion.div
-                  className="p-4 rounded-lg shadow-md bg-btnbg/20"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <MonetizationOn fontSize="large" className="text-btnbg" />
-                  <h3 className="mt-2 text-xl font-semibold text-textclr2">
-                    Presale Setup
-                  </h3>
-                  <p className="text-textclr">
-                    Quickly configure your token's presale with our easy-to-use
-                    tools.
-                  </p>
-                </motion.div>
-                <motion.div
-                  className="p-4 rounded-lg shadow-md bg-btnbg/20"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <Waves fontSize="large" className="text-btnbg" />
-                  <h3 className="mt-2 text-xl font-semibold text-textclr2">
-                    LP Funding Creator
-                  </h3>
-                  <p className="text-textclr">
-                    Create liquidity pools effortlessly with our integrated
-                    solutions.
-                  </p>
-                </motion.div>
-                <motion.div
-                  className="p-4 rounded-lg shadow-md bg-btnbg/20"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.6 }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <AutoStories fontSize="large" className="text-btnbg" />
-                  <h3 className="mt-2 text-xl font-semibold text-textclr2">
-                    Market ID Creator
-                  </h3>
-                  <p className="text-textclr">
-                    Generate market IDs for your projects seamlessly.
-                  </p>
-                </motion.div>
-              </div>
-            </motion.div>
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 0.2, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="absolute rounded-full h-14 w-44 bg-btnbg filter blur-md animate-bounce"
+            />
+            <div className="relative">
+              <RocketLaunch className="size-24 text-textclr2" />
+            </div>
           </div>
+          <div className="ml-6 text-left">
+            <h2 className="mb-2 text-2xl font-primaryRegular text-textclr2/70">
+              Why Choose Us
+            </h2>
+            <h3 className="mb-4 text-4xl text-textclr font-primaryBold">
+              Our Features
+            </h3>
+          </div>
+        </div>
+        {/* <p className="mb-12 text-slate-400/70">
+          Check out our core features that make us stand out from the rest.
+        </p> */}
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-2">
+          {featureData.map((feature, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: index * 0.2 }}
+              className="p-6 transition-transform duration-300 ease-in-out shadow-lg rounded-xl bg-white/5 backdrop-blur-lg hover:scale-105 hover:shadow-2xl hover:shadow-textclr2/60"
+            >
+              <div className="flex items-center mb-6 space-x-">
+                <div className="relative">
+                  <div className="absolute mr-4 rounded-full bg-gradient-to-bl animate-spin filter from-btnbg/70 via-teal-300/60 to-btnbg size-16 blur-xl" />
+                  <div className="flex items-center justify-center gap-2 rounded shadow-2xl bg-white/5">
+                    {feature.icon}
+                  </div>
+                </div>
+                <h4 className="ml-2 text-2xl font-primaryBold text-textclr">
+                  {feature.title}
+                </h4>
+              </div>
+              <div className="space-y-4">
+                {feature.subFeatures.map((subFeature, subIndex) => (
+                  <motion.div
+                    key={subIndex}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.9, delay: subIndex * 0.1 }}
+                    className="flex items-start space-x-3"
+                  >
+                    <div className="text-btnbg/70">{subFeature.icon}</div>
+                    <div>
+                      <h5 className="flex items-start font-primaryBold text-textclr2">
+                        {subFeature.title}
+                      </h5>
+                      <p className="flex text-justify item-start font-primaryRegular text-white/40 md:text-md sm:text-sm">
+                        {subFeature.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </>

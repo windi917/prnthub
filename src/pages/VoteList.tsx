@@ -9,6 +9,7 @@ import TokenCard from "../components/TokenCard";
 import { Drawer } from "vaul";
 import { getPeriods, getProjects, getTokenPairs } from "../api/apis";
 import { motion } from "framer-motion";
+import Modal from "../components/ModalVote";
 
 interface TokenPair {
   id: number;
@@ -35,6 +36,11 @@ interface Project {
 const VoteList = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [sortOrder, setSortOrder] = useState("all");
+
+  const [showModal, setShowModal] = useState(false);
+  const [_approveShowModal, setApproveShowModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(0);
+  const [votePower, setVotePower] = useState(0);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -76,7 +82,7 @@ const VoteList = () => {
     };
 
     fetchProjects();
-  }, []);
+  }, [votePower]);
 
   const handleSort = (order: string) => {
     setSortOrder(order);
@@ -97,7 +103,7 @@ const VoteList = () => {
   });
 
   return (
-    <section className="bg-radial-gradient">
+    <section className="bg-radial-gradient pt-16">
       <div className="flex justify-center min-h-screen">
         <div className="min-h-screen text-textclr2">
           <motion.div
@@ -227,9 +233,11 @@ const VoteList = () => {
                     }
                     startAt={project.startAt}
                     endAt={project.endAt}
-                    currentVotePower={project.currentVotePower}
-                    vTokens={project.vTokens}
+                    votePower={project.currentVotePower}
                     isVote={true}
+                    setSelectedId={setSelectedId}
+                    setShowModal={setShowModal}
+                    setApproveShowModal={setApproveShowModal}
                   />
                 );
               })}
@@ -286,6 +294,15 @@ const VoteList = () => {
           </Drawer.Content>
         </Drawer.Portal>
       </Drawer.Root>
+      {showModal && (
+        <Modal
+          setShowModal={setShowModal}
+          projectId={selectedId}
+          voteTokens={projects.filter(e => e.id === selectedId)[0].vTokens}
+          currentVotePower={projects.filter(e => e.id === selectedId)[0].currentVotePower}
+          setVotePower={setVotePower}
+        />
+      )}
     </section>
   );
 };

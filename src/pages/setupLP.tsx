@@ -105,7 +105,7 @@ const LPsetup = () => {
         return;
       }
 
-      if (poolRes.status === 'failed') {
+      if (poolRes.status === "failed") {
         setLoading(false);
         toast.error(`Create Pool Error: ${poolRes.msg}`);
         return;
@@ -161,7 +161,7 @@ const LPsetup = () => {
       const baseBalance = await getBalance(wallet, baseToken);
       setBaseTokenBalance(baseBalance);
     } catch (err) {
-      toast.error(`Get balance error: ${err}`)
+      toast.error(`Get balance error: ${err}`);
     }
   };
 
@@ -196,7 +196,7 @@ const LPsetup = () => {
 
   return (
     <>
-      <div className="min-h-screen p-4 bg-radial-gradient">
+      <div className="min-h-screen p-4 bg-radial-gradient pt-20">
         <motion.div
           className="px-6 py-6 mx-auto border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2"
           initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
@@ -260,24 +260,24 @@ const LPsetup = () => {
               </div>
             </div>
 
-            <div className="grid gap-6 mt-6 md:grid-cols-2">
-              {/* --- Base Token set --- */}
+            <div className="grid gap-6 my-4 mt-6 md:grid-cols-2">
+              {/* --- Market ID set --- */}
               <div>
                 <label className="block mb-2 text-textclr2 font-primaryBold">
-                  Market Id :
+                  Market ID :
                 </label>
 
                 <input
                   type="string"
                   placeholder="Input Market Address"
-                  className="w-full mb-2 input lg:mb-0"
+                  className="w-full mb-2 border input lg:mb-0 focus:ring focus:ring-textclr2 focus:outline-none border-textclr2 "
                   onChange={(e) => setMarketAddress(e.target.value)}
                 />
               </div>
             </div>
 
+            {/* --- Base Price --- */}
             <div className="flex flex-col w-full gap-4 py-4 lg:flex-row">
-              {/* --- Base Price --- */}
               <div className="grid items-center flex-grow grid-cols-1 gap-4 p-4 border border-btnbg card bg-base-300 rounded-box lg:grid-cols-3">
                 <span className="px-2 py-2 text-2xl transition-colors rounded-md text-textclr font-primaryBold bg-btnbg/40 hover:bg-btnbg/70">
                   Base
@@ -363,19 +363,28 @@ const LPsetup = () => {
         </motion.div>
         {loading && (
           <>
-            <Oval
-              height="80"
-              visible={true}
-              width="80"
-              color="#CCF869"
-              ariaLabel="oval-loading"
-              wrapperStyle={{
-                position: "fixed",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            />
+            <div style={{
+              position: "fixed",
+              top: "0",
+              left: "0",
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: "1000"
+            }}>
+              <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+                <Oval
+                  height="80"
+                  visible={true}
+                  width="80"
+                  color="#CCF869"
+                  ariaLabel="oval-loading"
+                />
+              </div>
+            </div>
           </>
         )}
         {/* --- Info Section --- */}
@@ -399,7 +408,7 @@ const LPsetup = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
           >
-            <p className="px-2 py-2 text-lg text-textclr2 font-primaryRegular">
+            <p className="px-2 py-2 lg:text-lg sm:text-sm text-textclr2 font-primaryRegular">
               1. Connect your Solana wallet.
               <br />
               2. Select the Token Pair.
@@ -408,20 +417,21 @@ const LPsetup = () => {
                 * The Quote Token (usually SOL/USDC) will define the price of
                 the Base Token (the token you created).
               </span>
+              3. Input the Market ID.
               <br />
-              3. Set the Starting Price.
+              4. Set the Starting Price.
               <br />
-              4. Set the Minimum Token Quantity that users can buy.
+              5. Set the Minimum Token Quantity that users can buy.
               <br />
-              5. Set the Minimum Price Change in SOL or USDC.
+              6. Set the Minimum Price Change in SOL or USDC.
               <br />
-              6. Specify the amount of Liquidity you want to add.
+              7. Specify the amount of Liquidity you want to add.
               <br />
-              7. Click on "Create Liquidity Pool" & confirm the transaction.
+              8. Click on "Create Liquidity Pool" & confirm the transaction.
               This process will take a few seconds depending on the network.
             </p>
 
-            <p className="px-2 text-lg text-justify text-textclr/80 font-primaryRegular">
+            <p className="px-2 text-justify lg:text-lg sm:text-sm text-textclr/80 font-primaryRegular">
               Creating a Liquidity Pool will cost between X & XX SOL. This fee
               encompasses all necessary expenses for establishing both the
               Market (Token Pair) & the Liquidity Pool. Once you initiate the

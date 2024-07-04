@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 const ContactPage = () => {
   return (
     <>
-      <div className="h-screen px-12 py-10 bg-radial-gradient">
+      <div className="h-screen px-12 py-10 bg-radial-gradient pt-20">
         <motion.form
           className="px-6 py-6 mx-auto border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2"
           initial={{ opacity: 0, y: 20 }}

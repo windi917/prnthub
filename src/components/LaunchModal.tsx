@@ -12,13 +12,6 @@ import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 interface ModalProps {
   setApproveShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   projectId: number;
-  setProjectStatus: React.Dispatch<React.SetStateAction<"PENDING"
-    | "VOTING"
-    | "APPROVED"
-    | "LAUNCHED"
-    | "DECLINED"
-    | "PREPENDING"
-    | "ENDED">>;
 }
 
 interface Project {
@@ -32,7 +25,7 @@ interface Project {
   socials: ["https://twitter.com/", "https://google.com/"]
 };
 
-const LaunchModal: React.FC<ModalProps> = ({ setApproveShowModal, projectId, setProjectStatus }) => {
+const LaunchModal: React.FC<ModalProps> = ({ setApproveShowModal, projectId }) => {
   const wallet = useWallet();
   const { jwtToken } = useContext(JwtTokenContext);
 
@@ -92,7 +85,6 @@ const LaunchModal: React.FC<ModalProps> = ({ setApproveShowModal, projectId, set
       }
     }
     
-    setProjectStatus('LAUNCHED');
     setLoading(false);
     handleClose();
   }, [project]);

@@ -321,7 +321,7 @@ const Dashboard = () => {
   // };
 
   return (
-    <motion.div className="flex min-h-screen p-4 bg-radial-gradient">
+    <motion.div className="flex min-h-screen p-4 bg-radial-gradient pt-20">
       <Box className="w-full">
         <Tabs
           value={value}
@@ -366,7 +366,7 @@ const Dashboard = () => {
         {/* --- Approvals Container --- */}
         {value === 0 && (
           <motion.div
-            className="flex flex-col justify-center w-full max-w-6xl p-8 mx-auto mt-1 overflow-x-auto shadow-md rounded-box bg-white/10 backdrop-blur-3xl"
+            className="flex flex-col justify-center w-full max-w-[92rem] p-8 mx-auto mt-1 overflow-x-auto shadow-md rounded-box bg-white/10 backdrop-blur-3xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
@@ -387,7 +387,7 @@ const Dashboard = () => {
                   <th className="px-4 py-2">Vote Create</th>
                 </tr>
               </thead>
-              <tbody className="font-primaryRegular">
+              <tbody className="font-primaryRegular text-textclr text-pretty">
                 {projects.map((project, index) => {
                   let status = project.proposalStatus;
 
@@ -409,7 +409,9 @@ const Dashboard = () => {
                       <td className="px-4 py-2 break-words">
                         {project.proposalDesc}
                       </td>
-                      <td className="px-4 py-2 break-words">{status}</td>
+                      <td className="px-4 py-2 break-words text-lime-400 font-primaryLight">
+                        {status}
+                      </td>
                       <td className="px-4 py-2">
                         <button
                           onClick={() => {
@@ -734,19 +736,28 @@ const Dashboard = () => {
       </Box>
       {loading && (
         <>
-          <Oval
-            height="80"
-            visible={true}
-            width="80"
-            color="#CCF869"
-            ariaLabel="oval-loading"
-            wrapperStyle={{
-              position: "fixed",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          />
+          <div style={{
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: "1000"
+          }}>
+            <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+              <Oval
+                height="80"
+                visible={true}
+                width="80"
+                color="#CCF869"
+                ariaLabel="oval-loading"
+              />
+            </div>
+          </div>
         </>
       )}
     </motion.div>

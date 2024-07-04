@@ -198,25 +198,7 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
 
   return (
     <>
-      <div className="fixed inset-0 z-10 flex items-center justify-center bg-opacity-50 bg-bg ">
-        {/* Loading Spinner */}
-        {loading ? (
-          <>
-            <Oval
-              height="80"
-              visible={true}
-              width="80"
-              color="#CCF869"
-              ariaLabel="oval-loading"
-              wrapperStyle={{
-                position: "fixed",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            />
-          </>
-        ) : (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 bg-black ">
         <div className="p-8 mx-3 border rounded-lg bg-slate-800/90 border-textclr2">
           <h2 className="mb-4 text-xl text-textclr2">Vote </h2>
           <select
@@ -260,7 +242,33 @@ const ModalVote: React.FC<ModalProps> = ({ setShowModal, projectId, voteTokens, 
           >
             Close
           </button>
-        </div>)}
+        </div>
+        {loading && (
+          <>
+            <div style={{
+              position: "fixed",
+              top: "0",
+              left: "0",
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: "1000"
+            }}>
+              <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+                <Oval
+                  height="80"
+                  visible={true}
+                  width="80"
+                  color="#CCF869"
+                  ariaLabel="oval-loading"
+                />
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

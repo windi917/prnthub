@@ -33,15 +33,15 @@ const TokenSetup = () => {
   const { userId } = useContext(JwtTokenContext);
   const [projects, setProjects] = useState<Project[]>([]);
   const [poolTokens, setPoolTokens] = useState<PoolToken[]>([]);
-  const [baseTokenAddress, setBaseTokenAddress] = useState('');
-  const [quoteTokenAddress, setQuoteTokenAddress] = useState('');
+  const [baseTokenAddress, setBaseTokenAddress] = useState("");
+  const [quoteTokenAddress, setQuoteTokenAddress] = useState("");
   const [salePrice, setSalePrice] = useState(0);
   const [minimumBuy, setMinimumBuy] = useState(0);
   const [maximumBuy, setMaximumBuy] = useState(0);
   const [hardCap, setHardCap] = useState(0);
   const [sendTokenCount, setSendTokenCount] = useState(0);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const launchPrice = 0;
@@ -59,7 +59,7 @@ const TokenSetup = () => {
             proposalStatus: e.proposalStatus,
             symbol: e.symbol,
             decimals: e.decimals,
-            mint: e.mint
+            mint: e.mint,
           }))
       );
     }
@@ -72,9 +72,9 @@ const TokenSetup = () => {
           id: e.id,
           name: e.name,
           decimals: e.decimals,
-          tokenMint: e.tokenMint
+          tokenMint: e.tokenMint,
         }))
-      )
+      );
     }
   }, [setProjects, setPoolTokens]);
 
@@ -82,19 +82,21 @@ const TokenSetup = () => {
     fetchProjects();
   }, [fetchProjects]);
 
-  const handleBaseTokenSelect = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleBaseTokenSelect = async (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     e.preventDefault();
 
     if (!e.target.value) {
-      toast.error('Token mint address error!');
+      toast.error("Token mint address error!");
       return;
     }
     if (!wallet) {
-      toast.error('Wallet connect error!');
+      toast.error("Wallet connect error!");
       return;
     }
     if (!wallet.publicKey) {
-      toast.error('Wallet connect error! (PublicKey)')
+      toast.error("Wallet connect error! (PublicKey)");
       return;
     }
 
@@ -102,19 +104,21 @@ const TokenSetup = () => {
     setBaseTokenAddress(baseToken);
   };
 
-  const handleQuoteTokenSelect = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleQuoteTokenSelect = async (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     e.preventDefault();
 
     if (!e.target.value) {
-      toast.error('Token mint address error!');
+      toast.error("Token mint address error!");
       return;
     }
     if (!wallet) {
-      toast.error('Wallet connect error!');
+      toast.error("Wallet connect error!");
       return;
     }
     if (!wallet.publicKey) {
-      toast.error('Wallet connect error! (PublicKey)')
+      toast.error("Wallet connect error! (PublicKey)");
       return;
     }
 
@@ -126,34 +130,34 @@ const TokenSetup = () => {
     e.preventDefault();
 
     if (!wallet) {
-      toast.error('Wallet connect error!');
+      toast.error("Wallet connect error!");
       return;
     }
     if (!wallet.publicKey) {
-      toast.error('Wallet connect error! (PublicKey)');
+      toast.error("Wallet connect error! (PublicKey)");
       return;
     }
     if (!baseTokenAddress) {
-      toast.error('Base Token error!');
+      toast.error("Base Token error!");
       return;
     }
     if (!quoteTokenAddress) {
-      toast.error('Quote Token error!');
+      toast.error("Quote Token error!");
       return;
     }
     if (minimumBuy > maximumBuy) {
-      toast.error('Minimum Buy must lower than Maximum Buy!');
+      toast.error("Minimum Buy must lower than Maximum Buy!");
       return;
     }
     if (startDate > endDate) {
-      toast.error('Start Date or End Date error!');
+      toast.error("Start Date or End Date error!");
       return;
     }
 
     setLoading(true);
 
     const baseBalance = await getBalance(wallet, baseTokenAddress);
-    if (baseBalance < (hardCap / salePrice)) {
+    if (baseBalance < hardCap / salePrice) {
       setLoading(false);
       toast.error(`Base Token balance is not enough! (balance=${baseBalance})`);
       return;
@@ -169,14 +173,15 @@ const TokenSetup = () => {
       salePrice,
       launchPrice,
       new Date(startDate).getTime(),
-      new Date(endDate).getTime());
+      new Date(endDate).getTime()
+    );
 
     setLoading(false);
-  }
+  };
 
   return (
     <>
-      <div className="min-h-screen p-4 bg-radial-gradient">
+      <div className="min-h-screen p-4 bg-radial-gradient pt-20">
         <motion.div
           className="px-6 py-6 mx-auto border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2"
           initial={{ opacity: 0, y: 20 }}
@@ -194,7 +199,7 @@ const TokenSetup = () => {
           className="px-6 py-6 mx-auto mt-4 border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
         >
           <h1 className="text-2xl font-primaryBold text-textclr2">
             Create Token Presale
@@ -216,10 +221,12 @@ const TokenSetup = () => {
                     defaultValue="Select Base Token"
                   >
                     <option disabled>Select Base Token</option>
-                    {projects.map((e) => <option value={e.mint}>{e.symbol}</option>)}
+                    {projects.map((e) => (
+                      <option value={e.mint}>{e.symbol}</option>
+                    ))}
                   </select>
                   <Link
-                    to="/MyVote"
+                    to="/tokenSubmit"
                     className="inline-block mt-1 text-sm text-textclr2"
                   >
                     Don't have a token ? Submit it here
@@ -240,7 +247,9 @@ const TokenSetup = () => {
                     defaultValue="Select Quote Token"
                   >
                     <option disabled>Select Quote Token</option>
-                    {poolTokens.map((e) => <option value={e.tokenMint}>{e.name}</option>)}
+                    {poolTokens.map((e) => (
+                      <option value={e.tokenMint}>{e.name}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -313,11 +322,19 @@ const TokenSetup = () => {
                   </label>
                   <input
                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-textclr2 focus:outline-none"
-                    type="number"
+                    type="text"
                     id="minimum-buy"
                     defaultValue="0"
-                    onChange={(e) => setMinimumBuy(parseInt(e.target.value))}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Allow only numeric values including decimals
+                      const parsedValue = parseFloat(value);
+                      if (!isNaN(parsedValue)) {
+                        setMinimumBuy(parsedValue);
+                      }
+                    }}
                   />
+
                   <p className="text-sm text-textclr2">
                     Minimum SOL quantity that user can buy
                   </p>
@@ -332,11 +349,19 @@ const TokenSetup = () => {
                   </label>
                   <input
                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-textclr2 focus:outline-none"
-                    type="number"
+                    type="text"
                     id="maximum-buy"
                     defaultValue="0"
-                    onChange={(e) => setMaximumBuy(parseInt(e.target.value))}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Allow only numeric values including decimals
+                      const parsedValue = parseFloat(value);
+                      if (!isNaN(parsedValue)) {
+                        setMaximumBuy(parsedValue);
+                      }
+                    }}
                   />
+
                   <p className="text-sm text-textclr2">
                     Maximum SOL quantity that user can buy
                   </p>
@@ -401,9 +426,7 @@ const TokenSetup = () => {
                     onChange={(e) => setStartDate(e.target.value)}
                     className="block px-3 py-2 mt-1 border border-gray-200 rounded-md shadow-sm w-fit focus:outline-none focus:ring-textclr2 focus:border-textclr2 sm:text-sm"
                   />
-                  <p className="text-sm text-textclr2">
-                    Start Date of presale
-                  </p>
+                  <p className="text-sm text-textclr2">Start Date of presale</p>
                 </div>
 
                 <div>
@@ -420,9 +443,7 @@ const TokenSetup = () => {
                     onChange={(e) => setEndDate(e.target.value)}
                     className="block px-3 py-2 mt-1 border border-gray-200 rounded-md shadow-sm w-fit focus:outline-none focus:ring-textclr2 focus:border-textclr2 sm:text-sm"
                   />
-                  <p className="text-sm text-textclr2">
-                    End Date of presale
-                  </p>
+                  <p className="text-sm text-textclr2">End Date of presale</p>
                 </div>
               </div>
 
@@ -438,12 +459,15 @@ const TokenSetup = () => {
                   <span className="text-textclr">2.5%</span>
                   <p className="mt-1 text-center text-textclr2">
                     <span className="font-primaryBold"> Total Fees : </span>
-                    <span className="text-textclr"> {hardCap / 100 * 2.5} SOL</span>
+                    <span className="text-textclr">
+                      {" "}
+                      {(hardCap / 100) * 2.5} SOL
+                    </span>
                   </p>
                 </p>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-black rounded-lg border-lg bg-btnbg hover:bg-btnbg/60 border-textclr2 font-primaryRegular hover:border-btnbg hover:text-btnbg focus:outline-none focus:bg-btnbg/10 focus:border-btnbg/10"
+                  className="px-4 py-2 border rounded-lg text-textclr border-textclr2 border-lg bg-btnbg/50 hover:bg-btnbg/60 hover:border-btnbg hover:text-btnbg focus:outline-none"
                 >
                   Submit
                 </button>
@@ -453,19 +477,28 @@ const TokenSetup = () => {
         </motion.div>
         {loading && (
           <>
-            <Oval
-              height="80"
-              visible={true}
-              width="80"
-              color="#CCF869"
-              ariaLabel="oval-loading"
-              wrapperStyle={{
-                position: "fixed",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            />
+            <div style={{
+              position: "fixed",
+              top: "0",
+              left: "0",
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: "1000"
+            }}>
+              <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+                <Oval
+                  height="80"
+                  visible={true}
+                  width="80"
+                  color="#CCF869"
+                  ariaLabel="oval-loading"
+                />
+              </div>
+            </div>
           </>
         )}
       </div>

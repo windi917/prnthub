@@ -251,11 +251,6 @@ table {
   border-spacing: 0;
 }
 
-.modal-container {
-  max-height: 95vh;
-  overflow-y: auto;
-}
-
 /* Hero text circle line */
 .circular-line::after {
   content: "";

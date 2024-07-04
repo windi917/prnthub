@@ -18,7 +18,7 @@ import TokenSubmit from "./pages/tokenSubmit.tsx";
 
 function App() {
   return (
-    <div className="App " theme-controller="dark">
+    <div className="App" theme-controller="dark">
       <JwtTokenProvider>
         <WalletsContextProvider>
           <Browser>

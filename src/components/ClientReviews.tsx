@@ -15,7 +15,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: any }) => {
   return (
     <motion.div
       ref={ref}
-      className="p-8 border-4 border-double rounded-lg shadow-2xl cursor-pointer border-textclr2 bg-bg/70 card"
+      className="p-8 border-4 border-double rounded-lg shadow-2xl cursor-pointer border-textclr2 bg-white/10 card"
       initial="hidden"
       animate={controls}
       variants={{
@@ -75,7 +75,7 @@ const ClientReviews = () => {
   ];
 
   return (
-    <section className="bg-bg">
+    <section className="bg-radial-gradient">
       <div className="container px-6 py-10 mx-auto ">
         <motion.h1
           className="text-2xl text-center capitalize font-primaryBold text-textclr2 lg:text-3xl"

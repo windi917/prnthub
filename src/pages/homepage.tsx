@@ -4,7 +4,7 @@ import Tokendata from "../TokenData.json";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import Hero from "../components/Hero";
-import Partners from "../components/Partners";
+// import Partners from "../components/Partners";
 import ClientReviews from "../components/ClientReviews";
 import Accordion from "../components/Accordion";
 
@@ -49,7 +49,7 @@ const Card: React.FC<CardProps> = ({
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={controls}
-      className="p-4 border-2 shadow-xl cursor-pointer bg-#FFFFF border-textclr2/70 card hover:scale-105 hover:shadow-2xl hover:shadow-textclr2"
+      className="p-4 border-2 shadow-xl cursor-pointer bg-bg/30 border-textclr2/70 card hover:scale-105 hover:shadow-2xl hover:shadow-textclr2"
     >
       <figure>
         <motion.img
@@ -245,7 +245,7 @@ const TokenLaunch: React.FC<TokenLaunchProps> = ({
 // Main Renderer
 const Homepage: React.FC = () => {
   return (
-    <section className="relative w-full h-full min-h-screen bg-bg">
+    <section className="relative w-full h-full min-h-screen bg-bg pt-16">
       {/* -- Hero Section --  */}
       <Hero />
       {/* -- Launches Main Section --  */}
@@ -261,6 +261,7 @@ const Homepage: React.FC = () => {
           }}
           id="nft"
         >
+          <span className="absolute w-20 h-20 rounded-full bg-btnbg/70 filter blur-2xl animate-spin"></span>
           NFT Showcase
         </motion.div>
         <div className="grid grid-cols-1 gap-6 p-2 m-2 mt-6 text-pretty md:grid-cols-2 lg:grid-cols-3">
@@ -279,6 +280,7 @@ const Homepage: React.FC = () => {
           }}
           id="token"
         >
+          <span className="absolute w-20 h-20 rounded-full bg-btnbg/70 filter blur-2xl animate-spin"></span>
           Featured launches
         </motion.div>
         <div className="grid grid-cols-1 gap-6 p-2 m-2 mt-6 text-pretty md:grid-cols-2 lg:grid-cols-3">
@@ -288,7 +290,7 @@ const Homepage: React.FC = () => {
         </div>
       </div>
       {/* -- Partner's Section -- */}
-      <Partners />
+      {/* <Partners /> */}
       {/* -- Client Reviews Section -- */}
       <ClientReviews />
       {/* -- FAQ Section -- */}

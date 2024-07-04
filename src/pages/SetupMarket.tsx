@@ -16,14 +16,14 @@ interface Project {
   proposalStatus: string;
   mint: string;
   decimals: number;
-};
+}
 
 interface PoolToken {
   id: number;
   name: string;
   tokenMint: string;
   decimals: number;
-};
+}
 
 const SetupMarket = () => {
   const wallet = useWallet();
@@ -31,8 +31,8 @@ const SetupMarket = () => {
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [poolTokens, setPoolTokens] = useState<PoolToken[]>([]);
-  const [baseTokenAddress, setBaseTokenAddress] = useState('');
-  const [quoteTokenAddress, setQuoteTokenAddress] = useState('');
+  const [baseTokenAddress, setBaseTokenAddress] = useState("");
+  const [quoteTokenAddress, setQuoteTokenAddress] = useState("");
   const [eventQueueLength, setEventQueueLength] = useState(11308);
   const [requestQueueLength, setRequestQueueLength] = useState(764);
   const [orderbookLength, setOrderBookLength] = useState(14524);
@@ -76,7 +76,7 @@ const SetupMarket = () => {
             proposalStatus: e.proposalStatus,
             symbol: e.symbol,
             decimals: e.decimals,
-            mint: e.mint
+            mint: e.mint,
           }))
       );
     }
@@ -89,9 +89,9 @@ const SetupMarket = () => {
           id: e.id,
           name: e.name,
           decimals: e.decimals,
-          tokenMint: e.tokenMint
+          tokenMint: e.tokenMint,
         }))
-      )
+      );
     }
   }, [setProjects, setPoolTokens]);
 
@@ -99,19 +99,21 @@ const SetupMarket = () => {
     fetchProjects();
   }, [fetchProjects]);
 
-  const handleBaseTokenSelect = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleBaseTokenSelect = async (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     e.preventDefault();
 
     if (!e.target.value) {
-      toast.error('Token mint address error!');
+      toast.error("Token mint address error!");
       return;
     }
     if (!wallet) {
-      toast.error('Wallet connect error!');
+      toast.error("Wallet connect error!");
       return;
     }
     if (!wallet.publicKey) {
-      toast.error('Wallet connect error! (PublicKey)')
+      toast.error("Wallet connect error! (PublicKey)");
       return;
     }
 
@@ -119,19 +121,21 @@ const SetupMarket = () => {
     setBaseTokenAddress(baseToken);
   };
 
-  const handleQuoteTokenSelect = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleQuoteTokenSelect = async (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     e.preventDefault();
 
     if (!e.target.value) {
-      toast.error('Token mint address error!');
+      toast.error("Token mint address error!");
       return;
     }
     if (!wallet) {
-      toast.error('Wallet connect error!');
+      toast.error("Wallet connect error!");
       return;
     }
     if (!wallet.publicKey) {
-      toast.error('Wallet connect error! (PublicKey)')
+      toast.error("Wallet connect error! (PublicKey)");
       return;
     }
 
@@ -139,7 +143,9 @@ const SetupMarket = () => {
     setQuoteTokenAddress(quoteToken);
   };
 
-  const handleOpenBookMarket = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleOpenBookMarket = async (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     e.preventDefault();
 
     if (parseInt(e.target.value) === 0) {
@@ -155,24 +161,40 @@ const SetupMarket = () => {
       setRequestQueueLength(5084);
       setOrderBookLength(65500);
     }
-  }
-  
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setLoading(true);
     try {
-      const marketRes = await createOpenBookMarket(wallet, baseTokenAddress, quoteTokenAddress, minOrderSize, tickSize, eventQueueLength, requestQueueLength, orderbookLength) // 2.8SOL
-      if (marketRes.status === 'failed' || !marketRes.address) {
+      const marketRes = await createOpenBookMarket(
+        wallet,
+        baseTokenAddress,
+        quoteTokenAddress,
+        minOrderSize,
+        tickSize,
+        eventQueueLength,
+        requestQueueLength,
+        orderbookLength
+      ); // 2.8SOL
+      if (marketRes.status === "failed" || !marketRes.address) {
         setLoading(false);
-        toast.error('Create Market Error');
+        toast.error("Create Market Error");
         return;
       }
 
-      const res = await createMarketApi(jwtToken, marketRes.address, baseTokenAddress, quoteTokenAddress, minOrderSize, tickSize);
+      const res = await createMarketApi(
+        jwtToken,
+        marketRes.address,
+        baseTokenAddress,
+        quoteTokenAddress,
+        minOrderSize,
+        tickSize
+      );
       if (!res.success) {
         setLoading(false);
-        toast.error('Create Market API error!');
+        toast.error("Create Market API error!");
         return;
       }
 
@@ -182,10 +204,10 @@ const SetupMarket = () => {
       setLoading(false);
       toast.error(`Create Market Error: ${err}`);
     }
-  }
+  };
   return (
     <>
-      <div className="min-h-screen p-4 bg-radial-gradient">
+      <div className="min-h-screen p-4 bg-radial-gradient pt-20">
         <motion.div
           className="px-6 py-6 mx-auto border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2"
           initial={{ opacity: 0, y: 20 }}
@@ -206,7 +228,7 @@ const SetupMarket = () => {
             className="px-6 py-6 mx-auto mt-4 border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
           >
             <h1 className="text-2xl font-primaryBold text-textclr2">
               Set Token Pair
@@ -225,7 +247,9 @@ const SetupMarket = () => {
                   defaultValue="Select Base Token"
                 >
                   <option disabled>Select Base Token</option>
-                  {projects.map((e) => <option value={e.mint}>{e.symbol}</option>)}
+                  {projects.map((e) => (
+                    <option value={e.mint}>{e.symbol}</option>
+                  ))}
                 </select>
               </div>
 
@@ -241,7 +265,9 @@ const SetupMarket = () => {
                   defaultValue="Select Quote Token"
                 >
                   <option disabled>Select Quote Token</option>
-                  {poolTokens.map((e) => <option value={e.tokenMint}>{e.name}</option>)}
+                  {poolTokens.map((e) => (
+                    <option value={e.tokenMint}>{e.name}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -305,9 +331,9 @@ const SetupMarket = () => {
                 </div>
               </label>
             </div>
-            {/* --- Quote Token set --- */}
-            <div>
-              <label className="block mb-2 text-textclr2 font-primaryBold">
+            {/* --- Advance Option --- */}
+            <div className="my-6">
+              <label className="block my-4 text-textclr2 font-primaryBold">
                 Advanced Option :
               </label>
               <select
@@ -334,19 +360,28 @@ const SetupMarket = () => {
         </form>
         {loading && (
           <>
-            <Oval
-              height="80"
-              visible={true}
-              width="80"
-              color="#CCF869"
-              ariaLabel="oval-loading"
-              wrapperStyle={{
-                position: "fixed",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            />
+            <div style={{
+              position: "fixed",
+              top: "0",
+              left: "0",
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: "1000"
+            }}>
+              <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+                <Oval
+                  height="80"
+                  visible={true}
+                  width="80"
+                  color="#CCF869"
+                  ariaLabel="oval-loading"
+                />
+              </div>
+            </div>
           </>
         )}
         {/* --- Info Section --- */}
@@ -370,7 +405,7 @@ const SetupMarket = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.6 }}
           >
-            <p className="px-2 py-2 text-lg text-textclr/80 font-primaryRegular">
+            <p className="px-2 py-2 lg:text-lg sm:text-sm text-textclr/80 font-primaryRegular">
               1. Connect your Solana wallet.
               <br />
               2. Select the Base Token.
@@ -386,7 +421,7 @@ const SetupMarket = () => {
               7. Accept the transaction and wait until your Market is ready.
             </p>
 
-            <p className="px-2 text-lg text-justify text-textclr/80 font-primaryRegular">
+            <p className="px-2 text-justify lg:text-lg sm:text-sm text-textclr/80 font-primaryRegular">
               The cost of creating a Market ID is XX SOL, which includes a base
               fee plus additional storage costs starting at XX SOL. Once you
               initiate the creation process, it will take a few seconds to
