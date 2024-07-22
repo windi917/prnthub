@@ -100,7 +100,7 @@ const featureData = [
 const Hero = () => {
   return (
     <>
-      <div className="flex flex-col px-4 py-8 min-h-[335px] lg:flex-row bg-radial-gradient lg:py-16 lg:px-32">
+      <div className="flex flex-col px-4 py-8 min-h-[335px] min-w-screen lg:flex-row bg-radial-gradient lg:py-16 lg:px-32">
         <div className="flex flex-col items-center justify-center flex-1">
           {/* Hero Image and Text */}
           {/* <motion.img
@@ -125,7 +125,7 @@ const Hero = () => {
             One{" "}
             <span className="relative mx-2 transform -skew-y-3 text-gradient circular-line">
               {" "}
-              <span className="absolute h-20 rounded-lg bg-[#9bd186] w-60 mx-12 filter blur-3xl"></span>
+              <span className="absolute h-20 rounded-lg bg-[#9bd186] min-w-20 mx-12 filter blur-3xl"></span>
               platform{" "}
             </span>{" "}
             for all launches!

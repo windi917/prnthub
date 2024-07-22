@@ -245,7 +245,7 @@ const TokenLaunch: React.FC<TokenLaunchProps> = ({
 // Main Renderer
 const Homepage: React.FC = () => {
   return (
-    <section className="relative w-full h-full min-h-screen bg-bg pt-16">
+    <section className="relative w-screen h-full min-h-screen pt-16 bg-bg">
       {/* -- Hero Section --  */}
       <Hero />
       {/* -- Launches Main Section --  */}
@@ -261,7 +261,7 @@ const Homepage: React.FC = () => {
           }}
           id="nft"
         >
-          <span className="absolute w-20 h-20 rounded-full bg-btnbg/70 filter blur-2xl animate-spin"></span>
+          <span className="absolute h-20 rounded-full w-15 bg-btnbg/70 filter blur-2xl animate-spin"></span>
           NFT Showcase
         </motion.div>
         <div className="grid grid-cols-1 gap-6 p-2 m-2 mt-6 text-pretty md:grid-cols-2 lg:grid-cols-3">

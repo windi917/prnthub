@@ -321,7 +321,7 @@ const Dashboard = () => {
   // };
 
   return (
-    <motion.div className="flex min-h-screen p-4 bg-radial-gradient pt-20">
+    <motion.div className="flex min-h-screen p-4 pt-20 bg-radial-gradient">
       <Box className="w-full">
         <Tabs
           value={value}
@@ -450,7 +450,7 @@ const Dashboard = () => {
               Project Name
             </h2>
             <select
-              className="w-full max-w-2xl select-md  !bg-slate-900 select font-primaryRegular focus:border-textclr2 !text-white !bg-white/90 !border !border-textclr2"
+              className="w-full max-w-2xl select-md  !bg-slate-900 select font-primaryRegular focus:border-textclr2 !text-white  !border !border-textclr2"
               onChange={handleProjectSelect}
               defaultValue={projectId}
             >
@@ -736,19 +736,28 @@ const Dashboard = () => {
       </Box>
       {loading && (
         <>
-          <div style={{
-            position: "fixed",
-            top: "0",
-            left: "0",
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: "1000"
-          }}>
-            <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+          <div
+            style={{
+              position: "fixed",
+              top: "0",
+              left: "0",
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: "1000",
+            }}
+          >
+            <div
+              style={{
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            >
               <Oval
                 height="80"
                 visible={true}

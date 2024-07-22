@@ -1,8 +1,12 @@
 import { PublicKey } from "@solana/web3.js";
 
-export const API_URL = 'https://api.prnthub.com';
-export const NETWORK = 'devnet'
-export const ADMIN_WALLET_ADDRESS = new PublicKey('ArZrqyPdd8YsBD67anP1fzbuwTCUfGCkofDutQYXp5Kc');
+export const API_URL = "https://api.prnthub.com";
+export const NETWORK = "devnet";
+export const RPC_ENDPOINT =
+  "https://mainnet.helius-rpc.com/?api-key=f1d5fa66-a4cd-4cb6-a0c3-49c3500e7c0f";
+export const ADMIN_WALLET_ADDRESS = new PublicKey(
+  "ArZrqyPdd8YsBD67anP1fzbuwTCUfGCkofDutQYXp5Kc"
+);
 
 export const GLOBAL_AUTHORITY_SEED = "global-authority";
 export const EMPTY_USER = "So11111111111111111111111111111111111111112";

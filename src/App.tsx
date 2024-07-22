@@ -15,8 +15,23 @@ import SetupMarket from "./pages/SetupMarket.tsx";
 import LaunchList from "./pages/LaunchList.tsx";
 import ProjectDetails from "./components/ProjectDetails.tsx";
 import TokenSubmit from "./pages/tokenSubmit.tsx";
+import { useEffect } from "react";
+import { RPC_ENDPOINT } from "./config.ts";
 
 function App() {
+  useEffect(() => {
+    const initializeJupiter = async () => {
+      await window.Jupiter.init({
+        displayMode: "widget",
+        endpoint: RPC_ENDPOINT,
+        containerClassName:
+          "max-h-[90vh] lg:max-h-[600px] w-full lg:w-[600px] overflow-hidden",
+      });
+    };
+
+    initializeJupiter();
+  }, []);
+
   return (
     <div className="App" theme-controller="dark">
       <JwtTokenProvider>
@@ -38,9 +53,7 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 <Route path="/voteList" element={<VoteList />} />
-
-                {/* -- Project Routing via ID-- */}
-                <Route path="/" element={<LaunchList />} />
+                {/* -- Project Routing via ID -- */}
                 <Route
                   path="/project/:presaleKey"
                   element={<ProjectDetails />}

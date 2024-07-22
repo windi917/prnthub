@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 const ContactPage = () => {
   return (
     <>
-      <div className="h-screen px-12 py-10 bg-radial-gradient pt-20">
-        <motion.form
+      <div className="h-screen px-12 py-10 pt-20 bg-radial-gradient">
+        <motion.div
           className="px-6 py-6 mx-auto border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -64,7 +64,7 @@ const ContactPage = () => {
               Submit
             </button>
           </form>
-        </motion.form>
+        </motion.div>
       </div>
     </>
   );
