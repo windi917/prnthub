@@ -194,14 +194,14 @@ export async function createVote(
       signed.serialize()
     );
 
-    await solConnection.confirmTransaction(
-      {
-        blockhash: blockHash.blockhash,
-        lastValidBlockHeight: blockHash.lastValidBlockHeight,
-        signature: signature,
-      },
-      "finalized"
-    );
+    // await solConnection.confirmTransaction(
+    //   {
+    //     blockhash: blockHash.blockhash,
+    //     lastValidBlockHeight: blockHash.lastValidBlockHeight,
+    //     signature: signature,
+    //   },
+    //   "finalized"
+    // );
 
     const txHash = (await signature).toString();
     console.log("Vote Tx: ", txHash);
