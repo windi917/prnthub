@@ -26,6 +26,8 @@ interface JwtTokenContextProps {
   setUserId: React.Dispatch<React.SetStateAction<number | null>>;
   presales: Presale[];
   setPresales: React.Dispatch<React.SetStateAction<Presale[]>>;
+  userAllow: number | null;
+  setUserAllow: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 // This is just an initial placeholder value
@@ -38,6 +40,8 @@ export const JwtTokenContext = createContext<JwtTokenContextProps>({
   setUserId: () => null,
   presales: [],
   setPresales: () => [],
+  userAllow: null,
+  setUserAllow: () => null,
 });
 
 interface JwtTokenProviderProps {
@@ -49,9 +53,10 @@ export const JwtTokenProvider: React.FC<JwtTokenProviderProps> = ({ children }) 
   const [userRole, setUserRole] = useState<string | null>(null);
   const [userId, setUserId] = useState<number | null>(null);
   const [presales, setPresales] = useState<Presale[]>([]);
+  const [userAllow, setUserAllow] = useState<number | null>(null);
 
   return (
-    <JwtTokenContext.Provider value={{ jwtToken, setJwtToken, userRole, setUserRole, userId, setUserId, presales, setPresales }}>
+    <JwtTokenContext.Provider value={{ jwtToken, setJwtToken, userRole, setUserRole, userId, setUserId, presales, setPresales, userAllow, setUserAllow }}>
       {children}
     </JwtTokenContext.Provider>
   );
