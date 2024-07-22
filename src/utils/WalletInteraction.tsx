@@ -33,6 +33,8 @@ const WHITE_LIST = [
   "CtL5rTmW5g9NbCcehhzkMm887jzSyeEtQcJDgeM2sHDb",
   "7NqENUyGWS6yKNNnT7swE1WsRF9wrdvLLpskDN32qZVn",
   "teSTMZnKST8R2w5Nk3J1jiCooN2jEC33CQZtewyQcqE",
+  "82fS64KzxMVGU5hrB7xt94A3xF2v9Y1JXjxon7yFjgBT",
+  "4AUE2FTUBo35jwo1Cz3ErvzZPVS7PFCxDP88d2BwJVyW",
   "FqhfQnMjyMM7kQR3NAdTMg3s9LbpwQmfEvCnnMHuyfks",
   "3BWcH5wSKXkydJg3giuLesrqkSSgw4jDo16wEWnhoS65"
 ];
