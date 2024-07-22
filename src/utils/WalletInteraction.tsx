@@ -25,13 +25,21 @@ const WHITE_LIST = [
   "AGEso8rZkhqaoN26ZLUzL6cY92EARLeUEApSAvpLfMDy",
   "BopErGtCVqZ7k5DRkfpyCkUTYDJnKBb45j75zkch7MHg",
   "28GnFX1yRVFSzUQ7uyTdauH2usS46nhkYkQDgShhGgtk",
+  "5G5HDvbib4CyHxVgm4RHiVY5RfbDuFfp6BiH5xgZXczT",
+  "BZrVoacSC8Z1zNzCpeWRTAUn6SaAM8gqHvBPNHfS34R9",
+  "5tTmNcmw5okEf9MKSSYjnDMqJVwiDi76bMB6PZY2qGYT",
+  "CVkmjR66ZbM7FFG1Zoc3JhP4WfWCSvkxBQzGsUKkw9is",
+  "9DahqnFqwMisEvdEpMnvptKZmt9RDBuBWfvTpzD7kyJu",
+  "CtL5rTmW5g9NbCcehhzkMm887jzSyeEtQcJDgeM2sHDb",
+  "7NqENUyGWS6yKNNnT7swE1WsRF9wrdvLLpskDN32qZVn",
+  "teSTMZnKST8R2w5Nk3J1jiCooN2jEC33CQZtewyQcqE",
   "FqhfQnMjyMM7kQR3NAdTMg3s9LbpwQmfEvCnnMHuyfks",
   "3BWcH5wSKXkydJg3giuLesrqkSSgw4jDo16wEWnhoS65"
 ];
 
 function checkUser(address: string) {
   const findOne = WHITE_LIST.find((e) => e === address)
-  if ( findOne )
+  if (findOne)
     return true;
 
   return false;
@@ -57,7 +65,7 @@ const WalletInteraction: FC = () => {
     try {
       const userCheckRes = checkUser(publicKey.toBase58());
 
-      if ( userCheckRes === false ) {
+      if (userCheckRes === false) {
         setUserAllow(0);
         navigate('/error');
         return;
