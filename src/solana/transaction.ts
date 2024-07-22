@@ -17,7 +17,6 @@ import {
     GLOBAL_AUTHORITY_SEED,
     MYPRO_ID,
     PRESALE_SIZE,
-    // ADMIN_WALLET_ADDRESS,
     EMPTY_USER,
     ADMIN_WALLET_ADDRESS
 } from "../config"

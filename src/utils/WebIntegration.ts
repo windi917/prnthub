@@ -25,9 +25,9 @@ import { createCreateMetadataAccountV3Instruction, PROGRAM_ID } from '@metaplex-
 import { WebBundlr } from '@bundlr-network/client';
 import { Liquidity, TxVersion, SPL_ACCOUNT_LAYOUT, ZERO } from '@raydium-io/raydium-sdk'
 import { web3 } from "@project-serum/anchor";
-import { NETWORK } from '../config'
+import { NETWORK, RPC_ENDPOINT } from '../config'
 
-const RPC_URL: string = (NETWORK == 'devnet') ? 'https://api.devnet.solana.com' : 'https://mainnet.helius-rpc.com/?api-key=07d048c5-5058-42e4-9991-b92ac3fc17d0';
+const RPC_URL: string = (NETWORK == 'devnet') ? 'https://api.devnet.solana.com' : RPC_ENDPOINT;
 
 export function getOpenbookData() {
   if (NETWORK === 'devnet') {
@@ -219,10 +219,10 @@ export async function initializeBundlr(
 
   // initialise a bundlr client
   const bundler = new WebBundlr(
-    'https://devnet.bundlr.network',
+    'https://node1.bundlr.network',
     'solana',
     wallet.wallet.adapter,
-    { providerUrl: 'https://api.devnet.solana.com' }
+    { providerUrl: RPC_ENDPOINT }
   );
 
   try {
