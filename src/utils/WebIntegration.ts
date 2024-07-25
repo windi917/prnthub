@@ -282,7 +282,11 @@ export async function uploadMetadata(bundlr: WebBundlr, name: string, symbol: st
   let balance = bundlr.utils.unitConverter(loadedBalance.toNumber()).toNumber();
 
   if (balance < amount) {
-    await bundlr.fund(LAMPORTS_PER_SOL);
+    try {
+      await bundlr.fund(amount * LAMPORTS_PER_SOL);
+    } catch (err) {
+      return { success: false, error: `${err}` };
+    }
   }
 
   let metadataResult;

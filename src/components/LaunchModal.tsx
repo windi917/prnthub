@@ -37,8 +37,10 @@ const LaunchModal: React.FC<ModalProps> = ({ setApproveShowModal, projectId }) =
 
     setLoading(true);
 
+    console.log("LAUNCH: ", project)
     if ( project ) {
       const bunRes = await initializeBundlr(wallet);
+      console.log("LAUNCH bundlr: ", bunRes)
       if ( !bunRes?.success ) {
         setLoading(false);
         toast.error(bunRes?.error);
@@ -47,6 +49,7 @@ const LaunchModal: React.FC<ModalProps> = ({ setApproveShowModal, projectId }) =
       }
 
       const metaUrl = await uploadMetadata(bunRes?.bundler as WebBundlr, project.name, project.symbol, project.proposalDesc, project.logoURL);
+      console.log("LAUNCH metadata: ", project)
       if ( !metaUrl.success ) {
         setLoading(false);
         toast.error(`Metadata uplaod fail! ${metaUrl.error}`);
