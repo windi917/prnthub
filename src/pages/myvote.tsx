@@ -24,7 +24,7 @@ interface Project {
   logoURL: string;
   name: string;
   proposalDesc: string;
-  socials: ["https://twitter.com/", "https://google.com/"];
+  socials: [];
   proposalStatus: string;
   startAt: string;
   endAt: string;
@@ -56,7 +56,7 @@ const MyVote = () => {
             .filter(
               (e: any) => e.owner === userId && e.proposalStatus !== "DECLINED"
             )
-            .map((e: Project) => {
+            .map((e: any) => {
               const period = periods.periods.filter(
                 (item: any) => item.id === e.periodId
               );
@@ -68,7 +68,7 @@ const MyVote = () => {
                 name: e.name,
                 proposalDesc: e.proposalDesc,
                 proposalStatus: e.proposalStatus,
-                socials: ["https://twitter.com/", "https://google.com/"],
+                socials: [e.twitter, e.website],
                 startAt: period[0].startAt,
                 endAt: period[0].endAt,
                 currentVotePower: e.currentVotePower,

@@ -22,7 +22,7 @@ interface Project {
   proposalDesc: string,
   decimals: number,
   totalSupply: number,
-  socials: ["https://twitter.com/", "https://google.com/"]
+  socials: []
 };
 
 const LaunchModal: React.FC<ModalProps> = ({ setApproveShowModal, projectId }) => {
@@ -97,7 +97,7 @@ const LaunchModal: React.FC<ModalProps> = ({ setApproveShowModal, projectId }) =
       const pros = await getProjects();
       if (pros.success === true) {
         setProject(pros.projects.filter((e: any) => (e.id === projectId))
-          .map((e: Project) => ({
+          .map((e: any) => ({
             id: e.id,
             logoURL: e.logoURL,
             name: e.name,
@@ -105,7 +105,7 @@ const LaunchModal: React.FC<ModalProps> = ({ setApproveShowModal, projectId }) =
             proposalDesc: e.proposalDesc,
             decimals: e.decimals,
             totalSupply: e.totalSupply,
-            socials: ["https://twitter.com/", "https://google.com/"],
+            socials: [e.twitter, e.website],
           }
           ))[0]);
       }
