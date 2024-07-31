@@ -1,13 +1,6 @@
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 
 const Footer = () => {
-  const { userAllow } = useContext(JwtTokenContext);
-
-  if ( userAllow === 0 )
-    return null;
-
   return (
     <>
       <footer className="p-4 mx-auto border rounded-md shadow-xl bg-bg border-textclr2 font-primaryRegular md:flex md:items-center md:justify-between md:p-6 xl:p-8">
