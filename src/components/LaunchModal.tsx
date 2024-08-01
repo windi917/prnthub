@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 import { getProjects, setTokenMint } from "../api/apis";
-import { createToken, initializeBundlr, uploadMetadata } from "../utils/WebIntegration";
+import { createToken, initializeBundlr, uploadImage, uploadMetadata } from "../utils/WebIntegration";
 import { toast } from "react-toastify";
 import { WebBundlr } from "@bundlr-network/client";
 import { Oval } from "react-loader-spinner";
@@ -48,7 +48,23 @@ const LaunchModal: React.FC<ModalProps> = ({ setApproveShowModal, projectId }) =
         return;
       }
 
-      const metaUrl = await uploadMetadata(bunRes?.bundler as WebBundlr, project.name, project.symbol, project.proposalDesc, project.logoURL);
+      const imgUrl = await uploadImage(bunRes?.bundler as WebBundlr, project.logoURL);
+      console.log("Image metadata: ", project)
+      if ( !imgUrl.success ) {
+        setLoading(false);
+        toast.error(`Image uplaod fail! ${imgUrl.error}`);
+        handleClose();
+        return;
+      }
+
+      if ( !imgUrl.url ) {
+        setLoading(false);
+        toast.error('Image Url invalid!');
+        handleClose();
+        return;
+      }
+
+      const metaUrl = await uploadMetadata(bunRes?.bundler as WebBundlr, project.name, project.symbol, project.proposalDesc, imgUrl.url);
       console.log("LAUNCH metadata: ", project)
       if ( !metaUrl.success ) {
         setLoading(false);

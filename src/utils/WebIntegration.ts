@@ -25,7 +25,10 @@ import { createCreateMetadataAccountV3Instruction, PROGRAM_ID } from '@metaplex-
 import { WebBundlr } from '@bundlr-network/client';
 import { Liquidity, TxVersion, SPL_ACCOUNT_LAYOUT, ZERO } from '@raydium-io/raydium-sdk'
 import { web3 } from "@project-serum/anchor";
+// import axios from 'axios';
+// import sharp from 'sharp';
 import { NETWORK, RPC_ENDPOINT } from '../config'
+import axios from "axios";
 
 const RPC_URL: string = (NETWORK == 'devnet') ? 'https://api.devnet.solana.com' : RPC_ENDPOINT;
 
@@ -242,6 +245,68 @@ export async function initializeBundlr(
   }
 
   return { success: true, bundler: bundler };
+};
+
+// Fetch and process the image
+async function getImageBuffer(imageUrl: string) {
+  try {
+    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    return Buffer.from(response.data); // Fixed buffer encoding issue
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function uploadImage(bundlr: WebBundlr, imageUrl: string) {
+  const image = await getImageBuffer(imageUrl);
+  if (!image) return { success: false, error: 'Load Image Error!' };
+
+  const metaArray = image; // No need to create a new Buffer
+
+  let price;
+  try {
+    price = await bundlr.utils.getPrice('solana', metaArray.length);
+  } catch (err) {
+    return { success: false, error: `${err}` }; // Fixed error handling
+  }
+
+  let amount;
+  try {
+    amount = bundlr.utils.unitConverter(price).toNumber();
+  } catch (err) {
+    return { success: false, error: `${err}` }; // Fixed error handling
+  }
+
+  let loadedBalance;
+  try {
+    loadedBalance = await bundlr.getLoadedBalance();
+  } catch (err) {
+    return { success: false, error: `${err}` }; // Fixed error handling
+  }
+
+  let balance = bundlr.utils.unitConverter(loadedBalance.toNumber()).toNumber();
+
+  if (balance < amount) {
+    try {
+      await bundlr.fund(amount * LAMPORTS_PER_SOL); // Ensure LAMPORTS_PER_SOL is defined
+    } catch (err) {
+      return { success: false, error: `${err}` }; // Fixed error handling
+    }
+  }
+
+  let metadataResult;
+  try {
+    metadataResult = await bundlr.uploader.upload(metaArray, [
+      { name: 'Content-Type', value: 'image/png' }, // Fixed MIME type
+    ]);
+  } catch (err) {
+    return { success: false, error: `${err}` }; // Fixed error handling
+  }
+
+  const arweaveMetadataUrl = `https://arweave.net/${metadataResult.data.id}?ext=png`; // Ensure URL construction is correct
+
+  return { success: true, url: arweaveMetadataUrl };
 };
 
 export async function uploadMetadata(bundlr: WebBundlr, name: string, symbol: string, description: string, image: string) {
@@ -495,7 +560,7 @@ export async function createOpenBookMarket(
   const [baseMintAccountInfo, quoteMintAccountInfo] = await solConnection.getMultipleAccountsInfo([baseMint, quoteMint])
   let baseMintDecimals: number;
   let quoteMintDecimals: number;
-  if (!baseMintAccountInfo || !quoteMintAccountInfo) 
+  if (!baseMintAccountInfo || !quoteMintAccountInfo)
     return {
       status: 'failed',
       txids: [],
@@ -532,7 +597,7 @@ export async function createOpenBookMarket(
       programId: programID,
     })
   );
-  
+
   // create request queue
   marketInstructions.push(
     SystemProgram.createAccount({

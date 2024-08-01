@@ -123,17 +123,21 @@ const ProjectDetails = () => {
 
       if (!projectData) return;
 
-      setLoading(true);
+      if ( buyCount <= 0 ) {
+        toast.error("Input amount correctly!");
+        return;
+      }
 
+      setLoading(true);
       try {
-        const tx = await buyTokens(
+        const res = await buyTokens(
           anchorWallet,
           new PublicKey(projectData.presaleKey),
           buyCount
         );
 
-        if ( !tx )
-          toast.error("Buy tokens error!");
+        if ( res.success === false )
+          toast.error(`Buy tokens error! ${res.error}`);
         else
           toast.success("Buy tokens success!");
       } catch (err) {

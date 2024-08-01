@@ -163,7 +163,7 @@ const TokenSetup = () => {
       return;
     }
 
-    const tx = await createPresale(
+    const res = await createPresale(
       anchorWallet,
       new PublicKey(baseTokenAddress),
       new PublicKey(quoteTokenAddress),
@@ -177,8 +177,8 @@ const TokenSetup = () => {
       new Date(endDate).getTime()
     );
 
-    if ( !tx )
-      toast.error("Create Presale Error!");
+    if ( res.success === false )
+      toast.error(`Create Presale Error! ${res.error}`);
     else
       toast.success("Create Presale Success!");
     setLoading(false);

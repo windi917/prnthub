@@ -37,6 +37,7 @@
     "react-loader-spinner": "^6.1.6",
     "react-router-dom": "^6.23.1",
     "react-toastify": "^10.0.5",
+    "sharp": "^0.33.4",
     "vaul": "^0.9.1"
   },
   "devDependencies": {

@@ -81,7 +81,7 @@ export const createPresale = async (
     start_time: number,
     end_time: number
 ) => {
-    if (!wallet) return null;
+    if (!wallet) return {success: false, error: 'Wallet not connected!'};
     let provider = new anchor.AnchorProvider(solConnection, wallet as anchor.Wallet, { skipPreflight: true })
     const program = new anchor.Program(PresaleContractIDL as anchor.Idl, MYPRO_ID, provider);
     try {
@@ -102,7 +102,7 @@ export const createPresale = async (
         );
 
         if (!tx)
-            return null;
+            return {success: false, error: 'Get Tx Error!'};
 
         const blockHash = await program.provider.connection.getLatestBlockhash();
 
@@ -121,11 +121,19 @@ export const createPresale = async (
         );
 
         console.log("txHash =", signature);
-        return signature;
+        return {success: true, tx: signature};
 
     } catch (error) {
-        console.log(error);
-        return null;
+        let errorMessage: string;
+
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        } else {
+            errorMessage = String(error);
+        }
+
+        console.log(errorMessage);
+        return { success: false, error: errorMessage };
     }
 }
 
@@ -134,7 +142,7 @@ export const buyTokens = async (
     presaleKey: PublicKey,
     amount: number
 ) => {
-    if (!wallet) return null;
+    if (!wallet) return {success: false, error: 'Wallet not connected!'};
     let provider = new anchor.AnchorProvider(solConnection, wallet as anchor.Wallet, { skipPreflight: true })
     const program = new anchor.Program(PresaleContractIDL as anchor.Idl, MYPRO_ID, provider);
 
@@ -146,7 +154,7 @@ export const buyTokens = async (
             amount
         );
 
-        if (!tx) return null;
+        if (!tx) return {success: false, error: 'Get Tx Error!'};
 
         const blockHash = await program.provider.connection.getLatestBlockhash();
         tx.feePayer = wallet.publicKey;
@@ -164,9 +172,18 @@ export const buyTokens = async (
         );
 
         console.log("txHash =", signature);
-        return signature;
+        return {success: true, tx: signature};
     } catch (error) {
-        console.log(error)
+        let errorMessage: string;
+
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        } else {
+            errorMessage = String(error);
+        }
+
+        console.log(errorMessage);
+        return { success: false, error: errorMessage };
     }
 }
 
@@ -174,7 +191,7 @@ export const setApprove = async (
     wallet: AnchorWallet | undefined,
     presaleKey: PublicKey,
 ) => {
-    if (!wallet) return null;
+    if (!wallet) return {success: false, error: 'Wallet not connected!'};
     let provider = new anchor.AnchorProvider(solConnection, wallet as anchor.Wallet, { skipPreflight: true })
     const program = new anchor.Program(PresaleContractIDL as anchor.Idl, MYPRO_ID, provider);
 
@@ -185,7 +202,7 @@ export const setApprove = async (
             presaleKey,
         );
 
-        if (!tx) return null;
+        if (!tx) return {success: false, error: 'Get Tx Error!'};
         
         const blockHash = await program.provider.connection.getLatestBlockhash();
 
@@ -204,9 +221,18 @@ export const setApprove = async (
         );
 
         console.log("txHash =", signature);
-        return signature;
+        return {success: true, tx: signature};
     } catch (error) {
-        console.log(error)
+        let errorMessage: string;
+
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        } else {
+            errorMessage = String(error);
+        }
+
+        console.log(errorMessage);
+        return { success: false, error: errorMessage };
     }
 }
 
@@ -214,7 +240,7 @@ export const withdraw = async (
     wallet: AnchorWallet | undefined,
     presaleKey: PublicKey,
 ) => {
-    if (!wallet) return null;
+    if (!wallet) return {success: false, error: 'Wallet not connected!'};
     let provider = new anchor.AnchorProvider(solConnection, wallet as anchor.Wallet, { skipPreflight: true })
     const program = new anchor.Program(PresaleContractIDL as anchor.Idl, MYPRO_ID, provider);
 
@@ -225,7 +251,7 @@ export const withdraw = async (
             presaleKey,
         );
 
-        if (!tx) return null;
+        if (!tx) return {success: false, error: 'Get Tx Error!'};
 
         const blockHash = await program.provider.connection.getLatestBlockhash()
         tx.feePayer = wallet.publicKey;
@@ -243,9 +269,18 @@ export const withdraw = async (
         );
 
         console.log("txHash =", signature);
-        return signature;
+        return {success: true, tx: signature};
     } catch (error) {
-        console.log(error)
+        let errorMessage: string;
+
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        } else {
+            errorMessage = String(error);
+        }
+
+        console.log(errorMessage);
+        return { success: false, error: errorMessage };
     }
 }
 
