@@ -83,7 +83,11 @@ const ProjectCard: React.FC<CardProps> = ({ project }) => {
     setLoading(true);
     
     try {
-      await setApprove(anchorWallet, new PublicKey(project.presaleKey));
+      const tx = await setApprove(anchorWallet, new PublicKey(project.presaleKey));
+      if ( !tx )
+        toast.error('Set Approve Error!');
+      else
+        toast.success('Set Approve Success!');
     } catch(err) {
       toast.error('Set Approve Error!');
     }
@@ -97,7 +101,11 @@ const ProjectCard: React.FC<CardProps> = ({ project }) => {
     setLoading(true);
 
     try {
-      await withdraw(anchorWallet, new PublicKey(project.presaleKey));
+      const tx = await withdraw(anchorWallet, new PublicKey(project.presaleKey));
+      if ( !tx )
+        toast.error("Withdraw fail!");
+      else
+        toast.success("Withdraw success!");
     } catch(err) {
       toast.error('Withdraw fail!');
     }

@@ -162,7 +162,8 @@ const TokenSetup = () => {
       toast.error(`Base Token balance is not enough! (balance=${baseBalance})`);
       return;
     }
-    await createPresale(
+
+    const tx = await createPresale(
       anchorWallet,
       new PublicKey(baseTokenAddress),
       new PublicKey(quoteTokenAddress),
@@ -176,6 +177,10 @@ const TokenSetup = () => {
       new Date(endDate).getTime()
     );
 
+    if ( !tx )
+      toast.error("Create Presale Error!");
+    else
+      toast.success("Create Presale Success!");
     setLoading(false);
   };
 
@@ -279,7 +284,7 @@ const TokenSetup = () => {
                     className="block mb-2 text-textclr2 font-primaryBold"
                     htmlFor="hardcap"
                   >
-                    Hardcap (SOL) :
+                    Hardcap ({poolTokens.find(e => e.tokenMint === quoteTokenAddress)?.name}) :
                   </label>
                   <input
                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-textclr2 focus:outline-none"
@@ -292,7 +297,7 @@ const TokenSetup = () => {
                     }}
                   />
                   <p className="text-sm text-textclr2">
-                    Hardcap for maximum amount of SOL to raise
+                    Hardcap for maximum amount of {poolTokens.find(e => e.tokenMint === quoteTokenAddress)?.name} to raise
                   </p>
                 </div>
                 {/* <div>
@@ -318,7 +323,7 @@ const TokenSetup = () => {
                     className="block mb-2 text-textclr2 font-primaryBold"
                     htmlFor="minimum-buy"
                   >
-                    Minimum Buy (SOL) :
+                    Minimum Buy ({poolTokens.find(e => e.tokenMint === quoteTokenAddress)?.name}) :
                   </label>
                   <input
                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-textclr2 focus:outline-none"
@@ -336,7 +341,7 @@ const TokenSetup = () => {
                   />
 
                   <p className="text-sm text-textclr2">
-                    Minimum SOL quantity that user can buy
+                    Minimum {poolTokens.find(e => e.tokenMint === quoteTokenAddress)?.name} quantity that user can buy
                   </p>
                 </div>
 
@@ -345,7 +350,7 @@ const TokenSetup = () => {
                     className="block mb-2 text-textclr2 font-primaryBold"
                     htmlFor="maximum-buy"
                   >
-                    Maximum Buy (SOL) :
+                    Maximum Buy ({poolTokens.find(e => e.tokenMint === quoteTokenAddress)?.name}) :
                   </label>
                   <input
                     className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-textclr2 focus:outline-none"
@@ -363,7 +368,7 @@ const TokenSetup = () => {
                   />
 
                   <p className="text-sm text-textclr2">
-                    Maximum SOL quantity that user can buy
+                    Maximum {poolTokens.find(e => e.tokenMint === quoteTokenAddress)?.name} quantity that user can buy
                   </p>
                 </div>
               </div>
@@ -453,7 +458,7 @@ const TokenSetup = () => {
                 </p>
                 <span className="text-textclr">{sendTokenCount} Tokens</span>
                 <p className="text-textclr2 font-primaryBold"> Sale Rate :</p>
-                <span className="text-textclr">1 / {salePrice} Tokens/SOL</span>
+                <span className="text-textclr">1 / {salePrice} Tokens/{poolTokens.find(e => e.tokenMint === quoteTokenAddress)?.name}</span>
                 <p className="mt-2 text-center text-textclr2">
                   <span className="font-primaryBold"> Prnthub Fee : </span>
                   <span className="text-textclr">2.5%</span>
@@ -461,7 +466,7 @@ const TokenSetup = () => {
                     <span className="font-primaryBold"> Total Fees : </span>
                     <span className="text-textclr">
                       {" "}
-                      {(hardCap / 100) * 2.5} SOL
+                      {(hardCap / 100) * 2.5} {poolTokens.find(e => e.tokenMint === quoteTokenAddress)?.name}
                     </span>
                   </p>
                 </p>

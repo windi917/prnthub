@@ -81,7 +81,7 @@ export const createPresale = async (
     start_time: number,
     end_time: number
 ) => {
-    if (!wallet) return;
+    if (!wallet) return null;
     let provider = new anchor.AnchorProvider(solConnection, wallet as anchor.Wallet, { skipPreflight: true })
     const program = new anchor.Program(PresaleContractIDL as anchor.Idl, MYPRO_ID, provider);
     try {
@@ -102,15 +102,30 @@ export const createPresale = async (
         );
 
         if (!tx)
-            return;
+            return null;
+
+        const blockHash = await program.provider.connection.getLatestBlockhash();
+
         tx.feePayer = wallet.publicKey;
-        tx.recentBlockhash = (await program.provider.connection.getLatestBlockhash()).blockhash;
+        tx.recentBlockhash = blockHash.blockhash;
         const signedTx = await wallet.signTransaction(tx);
         const txId = await program.provider.connection.sendRawTransaction(signedTx.serialize(), { skipPreflight: true });
 
-        console.log("txHash =", txId);
+        const signature = await solConnection.confirmTransaction(
+            {
+                blockhash: blockHash.blockhash,
+                lastValidBlockHeight: blockHash.lastValidBlockHeight,
+                signature: txId,
+            },
+            "finalized"
+        );
+
+        console.log("txHash =", signature);
+        return signature;
+
     } catch (error) {
         console.log(error);
+        return null;
     }
 }
 
@@ -119,7 +134,7 @@ export const buyTokens = async (
     presaleKey: PublicKey,
     amount: number
 ) => {
-    if (!wallet) return;
+    if (!wallet) return null;
     let provider = new anchor.AnchorProvider(solConnection, wallet as anchor.Wallet, { skipPreflight: true })
     const program = new anchor.Program(PresaleContractIDL as anchor.Idl, MYPRO_ID, provider);
 
@@ -131,13 +146,25 @@ export const buyTokens = async (
             amount
         );
 
-        if (!tx) return;
+        if (!tx) return null;
+
+        const blockHash = await program.provider.connection.getLatestBlockhash();
         tx.feePayer = wallet.publicKey;
-        tx.recentBlockhash = (await program.provider.connection.getLatestBlockhash()).blockhash;
+        tx.recentBlockhash = blockHash.blockhash;
         const signedTx = await wallet.signTransaction(tx);
         const txId = await program.provider.connection.sendRawTransaction(signedTx.serialize(), { skipPreflight: true });
 
-        console.log("txHash =", txId);
+        const signature = await solConnection.confirmTransaction(
+            {
+                blockhash: blockHash.blockhash,
+                lastValidBlockHeight: blockHash.lastValidBlockHeight,
+                signature: txId,
+            },
+            "finalized"
+        );
+
+        console.log("txHash =", signature);
+        return signature;
     } catch (error) {
         console.log(error)
     }
@@ -147,7 +174,7 @@ export const setApprove = async (
     wallet: AnchorWallet | undefined,
     presaleKey: PublicKey,
 ) => {
-    if (!wallet) return;
+    if (!wallet) return null;
     let provider = new anchor.AnchorProvider(solConnection, wallet as anchor.Wallet, { skipPreflight: true })
     const program = new anchor.Program(PresaleContractIDL as anchor.Idl, MYPRO_ID, provider);
 
@@ -158,13 +185,26 @@ export const setApprove = async (
             presaleKey,
         );
 
-        if (!tx) return;
+        if (!tx) return null;
+        
+        const blockHash = await program.provider.connection.getLatestBlockhash();
+
         tx.feePayer = wallet.publicKey;
-        tx.recentBlockhash = (await program.provider.connection.getLatestBlockhash()).blockhash;
+        tx.recentBlockhash = blockHash.blockhash;
         const signedTx = await wallet.signTransaction(tx);
         const txId = await program.provider.connection.sendRawTransaction(signedTx.serialize(), { skipPreflight: true });
 
-        console.log("txHash =", txId);
+        const signature = await solConnection.confirmTransaction(
+            {
+                blockhash: blockHash.blockhash,
+                lastValidBlockHeight: blockHash.lastValidBlockHeight,
+                signature: txId,
+            },
+            "finalized"
+        );
+
+        console.log("txHash =", signature);
+        return signature;
     } catch (error) {
         console.log(error)
     }
@@ -174,7 +214,7 @@ export const withdraw = async (
     wallet: AnchorWallet | undefined,
     presaleKey: PublicKey,
 ) => {
-    if (!wallet) return;
+    if (!wallet) return null;
     let provider = new anchor.AnchorProvider(solConnection, wallet as anchor.Wallet, { skipPreflight: true })
     const program = new anchor.Program(PresaleContractIDL as anchor.Idl, MYPRO_ID, provider);
 
@@ -185,13 +225,25 @@ export const withdraw = async (
             presaleKey,
         );
 
-        if (!tx) return;
+        if (!tx) return null;
+
+        const blockHash = await program.provider.connection.getLatestBlockhash()
         tx.feePayer = wallet.publicKey;
-        tx.recentBlockhash = (await program.provider.connection.getLatestBlockhash()).blockhash;
+        tx.recentBlockhash = blockHash.blockhash;
         const signedTx = await wallet.signTransaction(tx);
         const txId = await program.provider.connection.sendRawTransaction(signedTx.serialize(), { skipPreflight: true });
 
-        console.log("txHash =", txId);
+        const signature = await solConnection.confirmTransaction(
+            {
+                blockhash: blockHash.blockhash,
+                lastValidBlockHeight: blockHash.lastValidBlockHeight,
+                signature: txId,
+            },
+            "finalized"
+        );
+
+        console.log("txHash =", signature);
+        return signature;
     } catch (error) {
         console.log(error)
     }
@@ -360,7 +412,7 @@ export const buyTokensTx = async (
             if (ix2.instructions.length > 0 && baseToken.toBase58() != EMPTY_USER) { tx.add(...ix2.instructions) };
             if (ix3.instructions.length > 0 && quoteToken.toBase58() != EMPTY_USER) { tx.add(...ix3.instructions) };
             if (ix4.instructions.length > 0 && quoteToken.toBase58() != EMPTY_USER) { tx.add(...ix4.instructions) };
-            
+
             const baseRes = await getDecimals(baseToken.toBase58())
             if (!baseRes.success) {
                 return;
