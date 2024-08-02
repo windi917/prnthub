@@ -81,7 +81,7 @@ const ProjectDetails = () => {
         return {
           presaleKey: e.presaleKey,
           name: project.name,
-          description: project.description,
+          description: project.proposalDesc,
           logo: project.logoURL,
           owner: e.owner,
           website: "https://apple.com",
