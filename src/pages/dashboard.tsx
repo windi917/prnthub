@@ -616,7 +616,7 @@ const Dashboard = () => {
                     {projects
                       .filter((e) => {
                         if (
-                          new Date(e.endAt) < new Date() &&
+                          (new Date(e.endAt) < new Date() || e.currentVotePower > e.threshold ) &&
                           e.proposalStatus === "VOTING"
                         )
                           return true;

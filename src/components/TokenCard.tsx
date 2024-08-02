@@ -13,13 +13,13 @@ interface TokenCardProps {
   projectDesc: string;
   socials: string[];
   status:
-    | "PENDING"
-    | "VOTING"
-    | "APPROVED"
-    | "LAUNCHED"
-    | "DECLINED"
-    | "PREPENDING"
-    | "ENDED";
+  | "PENDING"
+  | "VOTING"
+  | "APPROVED"
+  | "LAUNCHED"
+  | "DECLINED"
+  | "PREPENDING"
+  | "ENDED";
   startAt: string;
   endAt: string;
   votePower: number;
@@ -49,7 +49,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
     const curTime = new Date();
     const endTime = new Date(endAt);
 
-    if (curTime > endTime) {
+    if (curTime > endTime || votePower >= voteThreshold) {
       status = "ENDED";
       bgStyle =
         "bg-[#F2844E] hover:bg-textclr2 cursor-progress text-textclr font-primaryRegular";
@@ -179,7 +179,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
                 toast.error("Vote is not started yet!");
                 return;
               }
-              if (curTime > endTime) {
+              if (curTime > endTime || votePower >= voteThreshold) {
                 toast.error("Voting ended!");
                 return;
               }
@@ -189,20 +189,19 @@ const TokenCard: React.FC<TokenCardProps> = ({
                 setShowModal(true);
               }
             }}
-            className={`py-2 mt-4 tracking-wider rounded-md btn text-bg font-primaryRegular ${
-              status === "PENDING"
+            className={`py-2 mt-4 tracking-wider rounded-md btn text-bg font-primaryRegular ${status === "PENDING"
                 ? "!bg-slate-500/30 !text-white/70 !cursor-not-allowed"
                 : status === "ENDED"
-                ? "!bg-gray-500/30 !text-white/70 !cursor-not-allowed"
-                : "bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
-            }`}
+                  ? "!bg-gray-500/30 !text-white/70 !cursor-not-allowed"
+                  : "bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
+              }`}
             disabled={status === "PENDING" || status === "ENDED"}
           >
             {status === "PENDING"
               ? "Pending Approval"
               : status === "ENDED"
-              ? "Voting Ended"
-              : "Vote"}
+                ? "Voting Ended"
+                : "Vote"}
           </button>
         ) : (
           <>

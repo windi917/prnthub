@@ -29,6 +29,7 @@ interface Project {
   startAt: string;
   endAt: string;
   currentVotePower: number;
+  threshold: number;
   vTokens: TokenPair[];
 }
 
@@ -72,6 +73,7 @@ const MyLaunch = () => {
                 startAt: period[0].startAt,
                 endAt: period[0].endAt,
                 currentVotePower: e.currentVotePower,
+                threshold: period[0].votePowerLimit,
                 vTokens: tokenPairs.tokenPairs.filter(
                   (item: any) => item.periodId === e.periodId
                 ),
@@ -209,6 +211,7 @@ const MyLaunch = () => {
                     startAt={project.startAt}
                     endAt={project.endAt}
                     votePower={project.currentVotePower}
+                    voteThreshold={project.threshold}
                     // vTokens={project.vTokens}
                     isVote={false}
                     setShowModal={setShowModal}
