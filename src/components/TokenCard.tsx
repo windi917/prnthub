@@ -13,17 +13,18 @@ interface TokenCardProps {
   projectDesc: string;
   socials: string[];
   status:
-  | "PENDING"
-  | "VOTING"
-  | "APPROVED"
-  | "LAUNCHED"
-  | "DECLINED"
-  | "PREPENDING"
-  | "ENDED";
+    | "PENDING"
+    | "VOTING"
+    | "APPROVED"
+    | "LAUNCHED"
+    | "DECLINED"
+    | "PREPENDING"
+    | "ENDED";
   startAt: string;
   endAt: string;
   votePower: number;
   isVote: boolean;
+  voteThreshold: number;
 }
 
 const TokenCard: React.FC<TokenCardProps> = ({
@@ -39,6 +40,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
   startAt,
   endAt,
   votePower,
+  voteThreshold,
   isVote,
 }) => {
   let bgStyle =
@@ -50,19 +52,19 @@ const TokenCard: React.FC<TokenCardProps> = ({
     if (curTime > endTime) {
       status = "ENDED";
       bgStyle =
-        "bg-[#F2844E] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
+        "bg-[#F2844E] hover:bg-textclr2 cursor-progress text-textclr font-primaryRegular";
     } else
       bgStyle =
-        "bg-[#34D399] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
+        "bg-[#34D399] hover:bg-textclr2 cursor-progress text-textclr font-primaryRegular";
   } else if (status === "APPROVED")
     bgStyle =
-      "bg-[#3333FF] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
+      "bg-[#3333FF] hover:bg-textclr2 cursor-progress text-textclr font-primaryRegular";
   else if (status === "LAUNCHED")
     bgStyle =
-      "bg-[#33FFFF] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
+      "bg-[#33FFFF] hover:bg-textclr2 cursor-progress text-textclr font-primaryRegular";
   else if (status === "DECLINED")
     bgStyle =
-      "bg-[#FF3333] hover:bg-textclr2 cursor-progress text-slate-700/90 font-primaryRegular";
+      "bg-[#FF3333] hover:bg-textclr2 cursor-progress text-textclr font-primaryRegular";
 
   return (
     <>
@@ -88,7 +90,6 @@ const TokenCard: React.FC<TokenCardProps> = ({
             {projectDesc}
           </span>
         </div>
-
         {/* //Voting Period from date to date */}
         <div className="flex items-center px-2 py-2 my-2 text-sm rounded-md shadow-sm cursor-pointer bg-textclr2/30 hover:bg-textclr2/40 hover:text-textclr font-primaryRegular">
           <PollIcon className="inline mr-4 text-textclr2" />
@@ -97,7 +98,7 @@ const TokenCard: React.FC<TokenCardProps> = ({
           ) : (
             <div className="flex flex-col">
               <span className="text-textclr font-primaryRegular">
-                Voting Period:
+                Voting Period :
               </span>
               <span className="text-textclr font-primaryRegular">
                 {new Date(startAt).toLocaleString()}
@@ -121,10 +122,25 @@ const TokenCard: React.FC<TokenCardProps> = ({
           </div>
         </div>
 
+        {/* Votes Threshold calc */}
+        <span className="flex flex-col px-2 py-2 text-sm rounded-md cursor-pointer text-textclr bg-textclr2/30 hover:bg-textclr2/60 hover:text-textclr font-primaryRegular">
+          <div className="flex items-center justify-between w-full">
+            <span>Votes Threshold</span>
+            <span className="text-sm text-textclr">
+              {(votePower / voteThreshold) * 100}%
+            </span>
+          </div>
+          <progress
+            className="w-full mt-2 progress progress-success"
+            value={voteThreshold}
+            max="100"
+          ></progress>
+        </span>
+
         {/* Socials */}
-        <div className="flex pt-2 mt-auto space-x-2 hover:text-textclr">
+        <div className="flex pt-2 mt-auto space-x-2">
           {socials.map((social, index) => (
-            <a key={index} href={social} className="text-textclr2 ">
+            <a key={index} href={social} className="text-textclr2">
               {social.includes("twitter") ? (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -153,7 +169,6 @@ const TokenCard: React.FC<TokenCardProps> = ({
             </a>
           ))}
         </div>
-
         {isVote === true ? (
           <button
             onClick={() => {
@@ -174,13 +189,20 @@ const TokenCard: React.FC<TokenCardProps> = ({
                 setShowModal(true);
               }
             }}
-            className={`py-2 mt-4 tracking-wider rounded-md btn text-bg font-primaryRegular ${status === "PENDING"
-                ? "!bg-slate-300/30 !text-white/70 !cursor-not-allowed"
+            className={`py-2 mt-4 tracking-wider rounded-md btn text-bg font-primaryRegular ${
+              status === "PENDING"
+                ? "!bg-slate-500/30 !text-white/70 !cursor-not-allowed"
+                : status === "ENDED"
+                ? "!bg-gray-500/30 !text-white/70 !cursor-not-allowed"
                 : "bg-textclr2/90 hover:bg-textclr2/60 focus:outline-none focus:bg-textclr2"
-              }`}
-            disabled={status === "PENDING"}
+            }`}
+            disabled={status === "PENDING" || status === "ENDED"}
           >
-            {status === "PENDING" ? "Pending Approval" : "Vote"}
+            {status === "PENDING"
+              ? "Pending Approval"
+              : status === "ENDED"
+              ? "Voting Ended"
+              : "Vote"}
           </button>
         ) : (
           <>

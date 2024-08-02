@@ -8,6 +8,7 @@ import { JwtTokenContext } from "../contexts/JWTTokenProvider";
 import { toast } from "react-toastify";
 import { setApprove, withdraw } from "../solana/transaction";
 import { Oval } from "react-loader-spinner";
+import { motion } from "framer-motion";
 
 interface Socials {
   twitter?: string;
@@ -19,8 +20,8 @@ interface Project {
   name: string;
   logo: string;
   owner: string;
-  website: string,
-  socials: Socials,
+  website: string;
+  socials: Socials;
   state: string;
   base_mint: string;
   quote_mint: string;
@@ -35,7 +36,7 @@ interface Project {
   end_time: number;
   total_contributions: number;
   max_contribution: number;
-};
+}
 
 interface CardProps {
   project: Project;
@@ -55,45 +56,50 @@ const ProjectCard: React.FC<CardProps> = ({ project }) => {
   };
 
   // Badge text and color config
-  if (project.state === 'Live') {
+  if (project.state === "Live") {
     badgeClass = "bg-lime-500";
     badgeText = "LIVE";
-  } else if (project.state === 'Upcoming') {
+  } else if (project.state === "Upcoming") {
     badgeClass = "bg-amber-300";
     badgeText = "UPCOMING";
-  } else if (project.state === 'Ended') {
+  } else if (project.state === "Ended") {
     badgeClass = "bg-amber-700";
     badgeText = "ENDED";
-  } else if (project.state === 'Approved') {
+  } else if (project.state === "Approved") {
     badgeClass = "bg-amber-100";
     badgeText = "APPROVED";
-  } else if (project.state === 'Closed') {
+  } else if (project.state === "Closed") {
     badgeClass = "bg-amber-900";
     badgeText = "CLOSED";
   }
 
-  const handleApprove = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleApprove = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    if (userRole !== "ADMIN") {
-      toast.error('You do not have admin role');
-      return;
-    }
+      if (userRole !== "ADMIN") {
+        toast.error("You do not have admin role");
+        return;
+      }
 
-    setLoading(true);
-    
-    try {
-      const res = await setApprove(anchorWallet, new PublicKey(project.presaleKey));
-      if ( res.success === false )
-        toast.error(`Set Approve Error! ${res.error}`);
-      else
-        toast.success('Set Approve Success!');
-    } catch(err) {
-      toast.error('Set Approve Error!');
-    }
+      setLoading(true);
 
-    setLoading(false);
-  }, [userRole]);
+      try {
+        const res = await setApprove(
+          anchorWallet,
+          new PublicKey(project.presaleKey)
+        );
+        if (res.success === false)
+          toast.error(`Set Approve Error! ${res.error}`);
+        else toast.success("Set Approve Success!");
+      } catch (err) {
+        toast.error("Set Approve Error!");
+      }
+
+      setLoading(false);
+    },
+    [userRole]
+  );
 
   const handleWithdraw = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,21 +107,32 @@ const ProjectCard: React.FC<CardProps> = ({ project }) => {
     setLoading(true);
 
     try {
-      const res = await withdraw(anchorWallet, new PublicKey(project.presaleKey));
-      if ( res.success === false )
-        toast.error(`Withdraw fail! ${res.error}`);
-      else
-        toast.success("Withdraw success!");
-    } catch(err) {
-      toast.error('Withdraw fail!');
+      const res = await withdraw(
+        anchorWallet,
+        new PublicKey(project.presaleKey)
+      );
+      if (res.success === false) toast.error(`Withdraw fail! ${res.error}`);
+      else toast.success("Withdraw success!");
+    } catch (err) {
+      toast.error("Withdraw fail!");
     }
-    
+
     setLoading(false);
   }, []);
 
   return (
     <>
-      <div className="border rounded-lg mb-4 shadow-lg mt-4 p-4 bg-white/10 border-textclr2/60 transition-transform duration-300 hover:scale-105 min-w-[20rem] min-h-[20rem] flex flex-col justify-between hover:shadow-textclr2 ease-in-out">
+      <motion.div
+        className="border rounded-lg mb-4 shadow-lg mt-4 p-4 bg-white/10 border-textclr2/60 transition-transform duration-300 hover:scale-105 min-w-[20rem] min-h-[20rem] flex flex-col justify-between hover:shadow-textclr2 ease-in-out"
+        initial={{ opacity: 0, y: 20, filter: "blur(3px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{
+          duration: 0.2,
+          delay: 0.1,
+          ease: "easeInOut",
+          staggerChildren: 0.1,
+        }}
+      >
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <img
@@ -166,15 +183,21 @@ const ProjectCard: React.FC<CardProps> = ({ project }) => {
         <div className="flex flex-col space-y-3 text-textclr2 font-primaryRegular">
           <div className="flex justify-between mt-2">
             <span>Sale Price</span>
-            <span className="font-mono text-textclr">{project.sale_price} {project.quote_symbol}</span>
+            <span className="font-mono text-textclr">
+              {project.sale_price} {project.quote_symbol}
+            </span>
           </div>
           <div className="flex justify-between">
             <span>Hardcap</span>
-            <span className="font-mono text-textclr">{project.hardcap} {project.quote_symbol}</span>
+            <span className="font-mono text-textclr">
+              {project.hardcap} {project.quote_symbol}
+            </span>
           </div>
           <div className="flex justify-between">
             <span>Sold</span>
-            <span className="font-mono text-textclr">{project.total_contributions} {project.quote_symbol}</span>
+            <span className="font-mono text-textclr">
+              {project.total_contributions} {project.quote_symbol}
+            </span>
           </div>
           <progress
             className="w-full progress progress-success"
@@ -183,7 +206,7 @@ const ProjectCard: React.FC<CardProps> = ({ project }) => {
           ></progress>
         </div>
         <div className="text-center">
-          {project.state === 'Ended' ? (
+          {project.state === "Ended" ? (
             <button
               onClick={handleApprove}
               className="px-4 py-2 mt-4 border rounded-lg text-textclr border-textclr2 bg-btnbg/70 hover:bg-btnbg/40 hover:text-white focus:outline-none"
@@ -192,7 +215,7 @@ const ProjectCard: React.FC<CardProps> = ({ project }) => {
             </button>
           ) : (
             <>
-              {project.state === 'Approved' ? (
+              {project.state === "Approved" ? (
                 <button
                   onClick={handleWithdraw}
                   className="px-4 py-2 mt-4 border rounded-lg text-textclr border-textclr2 bg-btnbg/70 hover:bg-btnbg/40 hover:text-white focus:outline-none"
@@ -201,7 +224,7 @@ const ProjectCard: React.FC<CardProps> = ({ project }) => {
                 </button>
               ) : (
                 <>
-                  {project.state === 'Live' ? (
+                  {project.state === "Live" ? (
                     <button
                       onClick={handleViewClick}
                       className="px-4 py-2 mt-4 border rounded-lg text-textclr border-textclr2 bg-btnbg/70 hover:bg-btnbg/40 hover:text-white focus:outline-none"
@@ -220,14 +243,13 @@ const ProjectCard: React.FC<CardProps> = ({ project }) => {
               )}
             </>
           )}
-
         </div>
 
         {/* -- Project Starttime Config --  */}
-        <div className="px-1 py-2 my-2 mt-4 font-mono text-xs rounded-md countdown bg-btnbg/20 w-fit text-textclr2">
+        <div className="px-1 py-2 my-2 mt-4 font-mono text-xs rounded-md countdown bg-btnbg/20 w-fit text-textclr">
           Starts in: {new Date(project.start_time).toLocaleString()}
         </div>
-      </div>
+      </motion.div>
       {loading ? (
         <>
           <Oval
@@ -240,6 +262,7 @@ const ProjectCard: React.FC<CardProps> = ({ project }) => {
               position: "fixed",
               top: "50%",
               left: "50%",
+              blur: "2px",
               transform: "translate(-50%, -50%)",
             }}
           />

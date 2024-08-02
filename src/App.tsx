@@ -8,7 +8,7 @@ import Dashboard from "./pages/dashboard";
 import VoteList from "./pages/VoteList.tsx";
 import NFTSubmit from "./pages/NFTSubmit.tsx";
 import PrivacyPolicy from "./pages/privacyPolicy";
-import MyVote from "./pages/myvote.tsx";
+import MyVote from "./pages/MyLaunch.tsx";
 import TokenSetup from "./pages/TokenSetup.tsx";
 import LPsetup from "./pages/setupLP.tsx";
 import SetupMarket from "./pages/SetupMarket.tsx";
@@ -16,23 +16,9 @@ import LaunchList from "./pages/LaunchList.tsx";
 import ProjectDetails from "./components/ProjectDetails.tsx";
 import TokenSubmit from "./pages/tokenSubmit.tsx";
 import ErrorPage from "./pages/error.tsx";
-import { useEffect } from "react";
-import { RPC_ENDPOINT } from "./config.ts";
+import JupiterWidget from "./components/JupiterWidget.tsx";
 
 function App() {
-  useEffect(() => {
-    const initializeJupiter = async () => {
-      await window.Jupiter.init({
-        displayMode: "widget",
-        endpoint: RPC_ENDPOINT,
-        containerClassName:
-          "max-h-[90vh] lg:max-h-[600px] w-full lg:w-[600px] overflow-hidden",
-      });
-    };
-
-    initializeJupiter();
-  }, []);
-
   return (
     <div className="App" theme-controller="dark">
       <JwtTokenProvider>
@@ -44,7 +30,7 @@ function App() {
                 <Route path="/" element={<Homepage />} />
                 <Route path="/error" element={<ErrorPage />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/myvote" element={<MyVote />} />
+                <Route path="/mylaunches" element={<MyVote />} />
                 <Route path="/tokenSetup" element={<TokenSetup />} />
                 <Route path="/tokenSubmit" element={<TokenSubmit />} />
                 <Route path="/setupLP" element={<LPsetup />} />
@@ -63,6 +49,7 @@ function App() {
               </Route>
             </Routes>
           </Browser>
+          <JupiterWidget />
         </WalletsContextProvider>
       </JwtTokenProvider>
     </div>

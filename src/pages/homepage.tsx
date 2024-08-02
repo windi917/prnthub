@@ -261,7 +261,7 @@ const Homepage: React.FC = () => {
           }}
           id="nft"
         >
-          <span className="absolute h-20 rounded-full w-15 bg-btnbg/70 filter blur-2xl animate-spin"></span>
+          <span className="absolute h-20 tracking-tight rounded-full w-15 bg-btnbg/70 filter blur-2xl animate-spin"></span>
           NFT Showcase
         </motion.div>
         <div className="grid grid-cols-1 gap-6 p-2 m-2 mt-6 text-pretty md:grid-cols-2 lg:grid-cols-3">
@@ -280,7 +280,7 @@ const Homepage: React.FC = () => {
           }}
           id="token"
         >
-          <span className="absolute w-20 h-20 rounded-full bg-btnbg/70 filter blur-2xl animate-spin"></span>
+          <span className="absolute w-20 h-20 tracking-tight rounded-full bg-btnbg/70 filter blur-2xl animate-spin"></span>
           Featured launches
         </motion.div>
         <div className="grid grid-cols-1 gap-6 p-2 m-2 mt-6 text-pretty md:grid-cols-2 lg:grid-cols-3">

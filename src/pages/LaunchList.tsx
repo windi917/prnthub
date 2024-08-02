@@ -18,10 +18,10 @@ interface Presale {
   description: string;
   logo: string;
   owner: string;
-  website: "https://apple.com";
+  website: string;
   socials: {
-    twitter: "#";
-    telegram: "#";
+    twitter: string;
+    telegram: string;
   };
   state: string;
   base_mint: string;
@@ -83,10 +83,10 @@ const LaunchList = () => {
           description: project.description,
           logo: project.logoURL,
           owner: e.owner,
-          website: "#",
+          website: e.website,
           socials: {
-            twitter: "#",
-            telegram: "#",
+            twitter: e.twitter,
+            telegram: e.telegram,
           },
           state: state,
           base_mint: e.base_mint,
@@ -144,22 +144,21 @@ const LaunchList = () => {
 
   return (
     <>
-      <section className="min-h-screen p-4 bg-radial-gradient pt-20">
+      <section className="min-h-screen p-4 pt-20 bg-radial-gradient">
         <motion.div
           className="px-6 py-6 mx-auto shadow-lg rounded-2xl bg-white/10 min-w-fit"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-4xl leading-6 font-primaryBold text-textclr2">
+          <span className="text-4xl leading-6 font-primaryBold text-textclr2">
             Launch List
-          </h1>
-          <p className="mt-2 text-lg text-textclr2/50 font-primaryRegular">
+          </span>
+          <p className="mt-2 lg:text-lg text-textclr font-primaryRegular">
             Find out about the Live , Upcoming & current Projects.
           </p>
         </motion.div>
         <Box className="w-full pt-4">
-          {/* <Box className="flex items-center justify-center py-2 mt-4 place-items-center rounded-2xl w-fit item-center bg-white/5"> */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -212,6 +211,7 @@ const LaunchList = () => {
               wrapperStyle={{
                 position: "fixed",
                 top: "50%",
+                blur: "2px",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
               }}
@@ -219,6 +219,9 @@ const LaunchList = () => {
           </>
         ) : null}
       </section>
+      <div className="justify-center block py-1 text-[0.7rem] italic text-center text-white/70 md:hidden bg-lime-700/70">
+        For an optimal experience, please access the desktop version!
+      </div>
     </>
   );
 };

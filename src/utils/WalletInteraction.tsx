@@ -12,11 +12,13 @@ import { getAllData } from "../solana/transaction";
 
 const WalletInteraction: FC = () => {
   // const anchorWallet = useAnchorWallet();
-  const { publicKey, connected, signMessage } = useWallet() as WalletContextState & {
+  const { publicKey, connected, signMessage } = 
+  useWallet() as WalletContextState & {
     signMessage: (message: Uint8Array) => Promise<Uint8Array>;
   };
 
-  const { setJwtToken, setUserRole, setUserId, setPresales } = useContext(JwtTokenContext);
+  const { setJwtToken, setUserRole, setUserId, setPresales } = 
+  useContext(JwtTokenContext);
 
   const [isRegistered, setIsRegistered] = useState(true);
 
@@ -54,7 +56,6 @@ const WalletInteraction: FC = () => {
 
         console.log("Presales: ", data);
         setPresales(data);
-
       } else {
         setIsRegistered(false);
         handleSignup();
@@ -116,7 +117,7 @@ const WalletInteraction: FC = () => {
   return (
     <div>
       <ToastContainer />
-      <div className="flex" style={{ alignItems: 'center' }}>
+      <div className="flex" style={{ alignItems: "center" }}>
         <WalletMultiButton />
         {connected && isRegistered === false ? (
           <button

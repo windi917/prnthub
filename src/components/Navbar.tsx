@@ -88,14 +88,14 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/myvote">
-                      <HowToVoteIcon /> My Votes
+                    <Link to="/mylaunches">
+                      <HowToVoteIcon /> My Projects
                     </Link>
                   </li>
                 </ul>
               </li>
 
-              {/* Existing Menu Items */}
+              {/* Menu Items */}
               <li>
                 <a className="text-textclr2">NFT Hub</a>
                 <ul className="p-2">

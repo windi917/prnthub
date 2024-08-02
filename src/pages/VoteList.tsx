@@ -17,20 +17,23 @@ interface TokenPair {
   voteTokenId: number;
   weight: number;
   minimumCount: number;
+  projectName: string;
 }
 
 interface Project {
+  projectName: string;
   id: number;
   periodId: number;
   logoURL: string;
   name: string;
   proposalDesc: string;
-  socials: [];
+  socials: string[];
   proposalStatus: string;
   startAt: string;
   endAt: string;
   currentVotePower: number;
   vTokens: TokenPair[];
+  voteThreshold: number;
 }
 
 const VoteList = () => {
@@ -72,6 +75,7 @@ const VoteList = () => {
                 startAt: period[0].startAt,
                 endAt: period[0].endAt,
                 currentVotePower: e.currentVotePower,
+                voteThreshold: period[0].votePowerLimit,
                 vTokens: tokenPairs.tokenPairs.filter(
                   (item: any) => item.periodId === e.periodId
                 ),
@@ -103,7 +107,7 @@ const VoteList = () => {
   });
 
   return (
-    <section className="bg-radial-gradient pt-16">
+    <section className="pt-16 bg-radial-gradient">
       <div className="flex justify-center min-h-screen">
         <div className="min-h-screen text-textclr2">
           <motion.div
@@ -119,7 +123,7 @@ const VoteList = () => {
             <h1 className="my-4 mb-4 text-4xl text-center font-primaryBold">
               Vote List
             </h1>
-            <p className="mb-4 text-center">
+            <p className="mb-4 text-center text-textclr">
               Vote for your favourite projects.
               <br />
             </p>
@@ -238,6 +242,7 @@ const VoteList = () => {
                     setSelectedId={setSelectedId}
                     setShowModal={setShowModal}
                     setApproveShowModal={setApproveShowModal}
+                    voteThreshold={project.voteThreshold}
                   />
                 );
               })}
@@ -245,8 +250,8 @@ const VoteList = () => {
           </motion.div>
         </div>
       </div>
-      {/* // Pagination  */}
-      <div className="flex justify-center p-2">
+      {/* Pagination  */}
+      <div className="flex justify-center p-2 mt-16">
         <div className="join ">
           <button className="join-item btn btn-active text-textclr2">1</button>
           <button className="join-item btn bg-btnbg/30 text-textclr2">2</button>
@@ -296,10 +301,13 @@ const VoteList = () => {
       </Drawer.Root>
       {showModal && (
         <Modal
+          projectName={projects.filter((e) => e.id === selectedId)[0].name}
           setShowModal={setShowModal}
           projectId={selectedId}
-          voteTokens={projects.filter(e => e.id === selectedId)[0].vTokens}
-          currentVotePower={projects.filter(e => e.id === selectedId)[0].currentVotePower}
+          voteTokens={projects.filter((e) => e.id === selectedId)[0].vTokens}
+          currentVotePower={
+            projects.filter((e) => e.id === selectedId)[0].currentVotePower
+          }
           setVotePower={setVotePower}
         />
       )}

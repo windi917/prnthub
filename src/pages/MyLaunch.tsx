@@ -24,7 +24,7 @@ interface Project {
   logoURL: string;
   name: string;
   proposalDesc: string;
-  socials: [];
+  socials: string[];
   proposalStatus: string;
   startAt: string;
   endAt: string;
@@ -32,7 +32,7 @@ interface Project {
   vTokens: TokenPair[];
 }
 
-const MyVote = () => {
+const MyLaunch = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [sortOrder, setSortOrder] = useState("all");
   const [_showModal, setShowModal] = useState(false);
@@ -45,7 +45,7 @@ const MyVote = () => {
       const pros = await getProjects();
       const periods = await getPeriods();
       const tokenPairs = await getTokenPairs();
-  
+
       if (
         pros.success === true &&
         periods.success === true &&
@@ -60,7 +60,7 @@ const MyVote = () => {
               const period = periods.periods.filter(
                 (item: any) => item.id === e.periodId
               );
-  
+
               if (!period) return null;
               return {
                 id: e.id,
@@ -103,7 +103,7 @@ const MyVote = () => {
   });
 
   return (
-    <section className="bg-radial-gradient dark:bg-bg pt-16">
+    <section className="pt-16 bg-radial-gradient dark:bg-bg">
       <div className="flex justify-center min-h-screen">
         <div className="min-h-screen p-2 text-textclr2">
           <motion.div
@@ -117,10 +117,11 @@ const MyVote = () => {
             }}
           >
             <h1 className="my-4 mb-4 text-4xl text-center font-primaryBold">
-              My Votes
+              My Projects
             </h1>
-            <p className="mb-4 text-center ">
-              Find the latest projects you have voted for & Apply for new ones.
+            <p className="mb-4 text-center text-textclr">
+              Check the status of your added tokens & confirm if they are ready
+              to launch post-approval.
               <br />
             </p>
             {/*  -- Sort Dropdown --  */}
@@ -279,4 +280,4 @@ const MyVote = () => {
   );
 };
 
-export default MyVote;
+export default MyLaunch;

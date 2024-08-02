@@ -196,7 +196,7 @@ const LPsetup = () => {
 
   return (
     <>
-      <div className="min-h-screen p-4 bg-radial-gradient pt-20">
+      <div className="min-h-screen p-4 pt-20 bg-radial-gradient">
         <motion.div
           className="px-6 py-6 mx-auto border shadow-lg rounded-2xl bg-white/10 min-w-fit border-textclr2"
           initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
@@ -363,19 +363,28 @@ const LPsetup = () => {
         </motion.div>
         {loading && (
           <>
-            <div style={{
-              position: "fixed",
-              top: "0",
-              left: "0",
-              width: "100%",
-              height: "100%",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: "1000"
-            }}>
-              <div style={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+            <div
+              style={{
+                position: "fixed",
+                top: "0",
+                left: "0",
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: "1000",
+              }}
+            >
+              <div
+                style={{
+                  position: "fixed",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
                 <Oval
                   height="80"
                   visible={true}
@@ -395,7 +404,7 @@ const LPsetup = () => {
           transition={{ duration: 0.5 }}
         >
           <motion.h1
-            className="text-2xl font-primaryBold text-textclr2"
+            className="text-2xl tracking-tight font-primaryBold text-textclr2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
@@ -417,6 +426,7 @@ const LPsetup = () => {
                 * The Quote Token (usually SOL/USDC) will define the price of
                 the Base Token (the token you created).
               </span>
+              <br />
               3. Input the Market ID.
               <br />
               4. Set the Starting Price.
@@ -431,7 +441,7 @@ const LPsetup = () => {
               This process will take a few seconds depending on the network.
             </p>
 
-            <p className="px-2 text-justify lg:text-lg sm:text-sm text-textclr/80 font-primaryRegular">
+            <p className="px-2 tracking-tight text-justify lg:text-lg sm:text-sm text-textclr/80 font-primaryRegular">
               Creating a Liquidity Pool will cost between X & XX SOL. This fee
               encompasses all necessary expenses for establishing both the
               Market (Token Pair) & the Liquidity Pool. Once you initiate the

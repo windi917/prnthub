@@ -16,11 +16,8 @@ interface Presale {
   description: string;
   logo: string;
   owner: string;
-  website: "https://apple.com";
-  socials: {
-    twitter: "#";
-    telegram: "#";
-  };
+  website: string;
+  socials: Socials;
   state: string;
   base_mint: string;
   quote_mint: string;
@@ -37,7 +34,11 @@ interface Presale {
   max_contribution: number;
 }
 
-// Dummy data for now, replace with dynamic data later
+interface Socials {
+  twitter: string;
+  telegram: string;
+}
+
 const ProjectDetails = () => {
   const anchorWallet = useAnchorWallet();
   const [buyCount, setBuyCount] = useState(0);
@@ -81,13 +82,13 @@ const ProjectDetails = () => {
         return {
           presaleKey: e.presaleKey,
           name: project.name,
-          description: project.description,
+          description: project.proposalDesc,
           logo: project.logoURL,
           owner: e.owner,
-          website: "https://apple.com",
+          website: e.website,
           socials: {
-            twitter: "#",
-            telegram: "#",
+            twitter: e.twitter,
+            telegram: e.telegram,
           },
           state: state,
           base_mint: e.base_mint,
@@ -123,7 +124,7 @@ const ProjectDetails = () => {
 
       if (!projectData) return;
 
-      if ( buyCount <= 0 ) {
+      if (buyCount <= 0) {
         toast.error("Input amount correctly!");
         return;
       }
@@ -136,10 +137,9 @@ const ProjectDetails = () => {
           buyCount
         );
 
-        if ( res.success === false )
+        if (res.success === false)
           toast.error(`Buy tokens error! ${res.error}`);
-        else
-          toast.success("Buy tokens success!");
+        else toast.success("Buy tokens success!");
       } catch (err) {
         toast.error("Buy tokens error!");
       }
@@ -153,7 +153,7 @@ const ProjectDetails = () => {
     <>
       <section className="min-h-screen p-4 bg-radial-gradient">
         <motion.div
-          className="flex flex-col p-6 mx-auto rounded-lg shadow-lg max-w-[90vh] mb-6 bg-white/15 md:max-w-[80vw] lg:max-w-[70vw]"
+          className="flex flex-col p-6 mx-auto rounded-lg shadow-lg max-w-[90vh] mt-20 mb-6 bg-white/15 border border-btnbg md:max-w-[80vw] lg:max-w-[70vw]"
           initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{
@@ -182,7 +182,7 @@ const ProjectDetails = () => {
               />
             </div>
             <div className="flex flex-col md:items-start">
-              <h2 className="mb-2 text-2xl font-primaryBold text-textclr2 md:text-left">
+              <h2 className="mb-2 text-2xl tracking-wide font-primaryBold text-textclr md:text-left">
                 {projectData?.name}
               </h2>
               <div className="flex space-x-4">
@@ -190,25 +190,25 @@ const ProjectDetails = () => {
                   href={projectData?.socials?.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-textclr2 hover:text-btnbg/30"
+                  className="text-lime-400 hover:text-textclr/70"
                 >
-                  <FaXTwitter size={24} />
+                  <FaXTwitter size={20} />
                 </a>
                 <a
                   href={projectData?.socials.telegram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-textclr2 hover:text-btnbg/30"
+                  className="text-lime-400 hover:text-textclr/70"
                 >
-                  <FaTelegram size={24} />
+                  <FaTelegram size={20} />
                 </a>
                 <a
                   href={projectData?.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-textclr2 hover:text-btnbg/30"
+                  className="text-lime-400 hover:text-textclr/70"
                 >
-                  <FaGlobe size={24} />
+                  <FaGlobe size={20} />
                 </a>
               </div>
             </div>
@@ -264,8 +264,9 @@ const ProjectDetails = () => {
                   {projectData?.quote_symbol}{" "}
                 </p>
               </div>
+              {/* Progress bar */}
               <progress
-                className="w-full progress progress-info"
+                className="w-full progress progress-success"
                 value={projectData?.total_contributions}
                 max={projectData?.hardcap}
               ></progress>
@@ -320,7 +321,7 @@ const ProjectDetails = () => {
                 )}
               </div>
               <p className="mt-2 text-textclr font-primaryRegular">
-                Buying{" "}
+                Buying :{" "}
                 <span className="font-mono text-textclr2">
                   {buyCount} {projectData?.quote_symbol}
                 </span>
@@ -340,18 +341,18 @@ const ProjectDetails = () => {
             }}
           >
             <div className="w-full md:w-auto">
-              <p className="text-center text-textclr2 font-primaryRegular md:text-left">
-                Whitelist Sale Finished:
+              <p className="text-center text-textclr font-primaryRegular md:text-left">
+                Whitelist Sale Finished :
               </p>
-              <div className="p-2 mt-2 font-mono text-center border-2 border-dashed border-btnbg/80">
+              <div className="p-2 mt-2 font-mono text-center text-teal-100 border-2 border-dashed border-btnbg/80">
                 00:00
               </div>
             </div>
             <div className="w-full md:w-auto">
-              <p className="text-center text-textclr2 font-primaryRegular md:text-left">
-                Public Sale Ending in:
+              <p className="text-center text-textclr font-primaryRegular md:text-left">
+                Public Sale Ending in :
               </p>
-              <div className="p-2 mt-2 font-mono text-center border-2 border-dashed border-btnbg/80">
+              <div className="p-2 mt-2 font-mono text-center text-teal-100 border-2 border-dashed border-btnbg/80">
                 {projectData
                   ? new Date(projectData?.end_time).toLocaleString()
                   : "00:00:00"}
@@ -376,7 +377,7 @@ const ProjectDetails = () => {
                 Project Information
               </div>
               <div className="collapse-content">
-                <p className="text-textclr font-primaryRegular">
+                <p className="text-textclr font-primaryRegular text-pretty collapse-title">
                   ex, molestias voluptates hic! Dicta qui commodi id ipsam
                   repudiandae aspernatur pariatur quis doloremque ducimus.
                   Similique at ducimus sint, illo tempore minima veniam
@@ -392,7 +393,7 @@ const ProjectDetails = () => {
                 Tokenomics
               </div>
               <div className="collapse-content">
-                <p className="text-textclr font-primaryRegular">
+                <p className="text-textclr font-primaryRegular text-pretty">
                   Lorem, ipsum dolor. Lorem ipsum dolor sit amet consectetur
                   adipisicing elit. Aliquid vel, ipsam perspiciatis laboriosam
                   expedita, labore repellat unde nostrum cum provident sed quo
@@ -408,7 +409,7 @@ const ProjectDetails = () => {
                 Roadmap
               </div>
               <div className="collapse-content">
-                <p className="text-textclr font-primaryRegular">
+                <p className="text-textclr font-primaryRegular text-pretty">
                   Lorem, ipsum dolor sit amet consectetur adipisicing elit.
                   Consequatur nostrum eveniet sunt mollitia quidem dolores modi
                   perferendis atque eos possimus fuga minus fugit ullam, labore
@@ -421,20 +422,6 @@ const ProjectDetails = () => {
                 </p>
               </div>
             </div>
-            {/* <div className="mt-2 collapse collapse-arrow">
-              <input type="checkbox" className="peer" />
-              <div className="collapse-title text-textclr2 font-primaryBold">
-                Lorem 2
-              </div>
-              <div className="collapse-content">
-                <p className="text-textclr font-primaryRegular">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Laborum illum ad architecto vero error perspiciatis amet optio
-                  nostrum quis veritatis ex temporibus necessitatibus nemo
-                  voluptatum explicabo, sequi ipsam nam molestias.
-                </p>
-              </div>
-            </div> */}
           </motion.div>
         </motion.div>
         {loading ? (
@@ -449,6 +436,7 @@ const ProjectDetails = () => {
                 position: "fixed",
                 top: "50%",
                 left: "50%",
+                blur: "2px",
                 transform: "translate(-50%, -50%)",
               }}
             />

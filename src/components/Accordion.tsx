@@ -26,7 +26,7 @@ const Accordion = () => {
         }}
       >
         <span className="absolute rounded-full h-14 w-44 bg-btnbg/50 filter blur-3xl animate-bounce"></span>
-        FAQ (WIP!)
+        FAQ
       </motion.div>
       <motion.div
         className="py-2 mb-4 font-primaryRegular text-textclr"
@@ -153,8 +153,8 @@ const Accordion = () => {
       >
         <input type="radio" name="my-accordion-2" />
         <div className="text-xl font-medium text-textclr2 collapse-title">
-          5. How do I get started with launching NFTs or conducting token
-          launches on <b>Prnt Hub</b>?
+          5. How do I get started with launching NFTs launches on{" "}
+          <b>Prnt Hub</b>?
         </div>
         <div className="collapse-content">
           <p className="font-primaryRegular text-textclr text-pretty">
@@ -261,7 +261,7 @@ const Accordion = () => {
       >
         <input type="radio" name="my-accordion-2" />
         <div className="text-xl font-medium text-textclr2 collapse-title">
-          8. Voting-Based Launch
+          8. How do I launch my token ?
         </div>
         <div className="collapse-content">
           <p className="font-primaryRegular text-textclr text-pretty">
