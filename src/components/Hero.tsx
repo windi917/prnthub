@@ -112,7 +112,7 @@ const Hero = () => {
           transition={{ duration: 0.5 }}
         /> */}
           <motion.h1
-            className="text-4xl text-center font-primaryBold text-textclr"
+            className="text-4xl tracking-wide text-center font-primaryBold text-textclr"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
@@ -183,7 +183,7 @@ const Hero = () => {
               <RocketLaunch className="size-24 text-textclr2" />
             </div>
           </div>
-          <div className="ml-6 text-left">
+          <div className="ml-6 tracking-wide text-left">
             <h2 className="mb-2 text-2xl font-primaryRegular text-textclr2/70">
               Why Choose Us
             </h2>
@@ -211,7 +211,7 @@ const Hero = () => {
                     {feature.icon}
                   </div>
                 </div>
-                <h4 className="ml-2 text-2xl font-primaryBold text-textclr">
+                <h4 className="ml-2 text-2xl tracking-tight font-primaryBold text-textclr">
                   {feature.title}
                 </h4>
               </div>
@@ -226,10 +226,10 @@ const Hero = () => {
                   >
                     <div className="text-btnbg/70">{subFeature.icon}</div>
                     <div>
-                      <h5 className="flex items-start font-primaryBold text-textclr2">
+                      <h5 className="flex items-start tracking-wide font-primaryBold text-textclr2">
                         {subFeature.title}
                       </h5>
-                      <p className="flex text-justify item-start font-primaryRegular text-white/40 md:text-md sm:text-sm">
+                      <p className="flex tracking-wide text-justify item-start font-primaryRegular text-white/40 md:text-md sm:text-sm">
                         {subFeature.description}
                       </p>
                     </div>

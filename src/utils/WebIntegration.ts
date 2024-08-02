@@ -25,8 +25,6 @@ import { createCreateMetadataAccountV3Instruction, PROGRAM_ID } from '@metaplex-
 import { WebBundlr } from '@bundlr-network/client';
 import { Liquidity, TxVersion, SPL_ACCOUNT_LAYOUT, ZERO } from '@raydium-io/raydium-sdk'
 import { web3 } from "@project-serum/anchor";
-// import axios from 'axios';
-// import sharp from 'sharp';
 import { NETWORK, RPC_ENDPOINT } from '../config'
 import axios from "axios";
 
@@ -560,7 +558,7 @@ export async function createOpenBookMarket(
   const [baseMintAccountInfo, quoteMintAccountInfo] = await solConnection.getMultipleAccountsInfo([baseMint, quoteMint])
   let baseMintDecimals: number;
   let quoteMintDecimals: number;
-  if (!baseMintAccountInfo || !quoteMintAccountInfo)
+  if (!baseMintAccountInfo || !quoteMintAccountInfo) 
     return {
       status: 'failed',
       txids: [],
@@ -597,7 +595,7 @@ export async function createOpenBookMarket(
       programId: programID,
     })
   );
-
+  
   // create request queue
   marketInstructions.push(
     SystemProgram.createAccount({

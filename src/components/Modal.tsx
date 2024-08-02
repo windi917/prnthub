@@ -13,9 +13,9 @@ interface ModalProps {
 }
 
 interface VoteToken {
-  id: number,
-  name: string
-};
+  id: number;
+  name: string;
+}
 
 const Modal: React.FC<ModalProps> = ({ closeModal, addToken }) => {
   const [id, setId] = useState<number>(0);
@@ -30,29 +30,29 @@ const Modal: React.FC<ModalProps> = ({ closeModal, addToken }) => {
     const fetchVTokens = async () => {
       const pros = await getVTokens();
       if (pros.success === true) {
-        setVTokens(pros.vtokens.map((e: VoteToken) => (
-          {
+        setVTokens(
+          pros.vtokens.map((e: VoteToken) => ({
             id: e.id,
-            name: e.name
-          }
-        )))
+            name: e.name,
+          }))
+        );
       }
-    }
+    };
 
     fetchVTokens();
-  }, [])
+  }, []);
 
   const handleVTokenSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
 
     const pid = e.target.value;
     setId(parseInt(pid));
-    const project = vTokens.filter((e) => (e.id === parseInt(pid)));
+    const project = vTokens.filter((e) => e.id === parseInt(pid));
 
-    if ( project ) {
-      setName(project[0].name)
+    if (project) {
+      setName(project[0].name);
     }
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
