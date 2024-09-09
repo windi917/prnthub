@@ -1,70 +1,67 @@
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+type FormValues = {
+  projectName: string;
+  supply: string;
+  mintType: string;
+  mintPrice: string;
+  mintDate: string;
+  xLink: string;
+  discordLink: string;
+  mainContact: string;
+  mainContactEmail: string;
+  previousProjects: string;
+  previousProjectName?: string;
+  timeZone: string;
+  artist: string;
+  teamContact: string;
+};
 
 const ContactForm: React.FC = () => {
-  const [formData, setFormData] = useState({
-    projectName: "",
-    supply: "",
-    mintType: "",
-    mintPrice: "",
-    mintDate: "",
-    xLink: "",
-    discordLink: "",
-    mainContact: "",
-    mainContactEmail: "",
-    previousProjects: "",
-    timeZone: "",
-    artist: "",
-    teamContact: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset,
+  } = useForm<FormValues>();
 
-  const [submitted, setSubmitted] = useState(false);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    try {
+      const response = await fetch(
+        "https://script.google.com/macros/s/AKfycbwbHbiYM4c1jlJDpJmhVlfl5QU3YHBeYfFINln5GzuQbZVihSBRF2g0I3wTSYieogw/exec",
+        {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const validate = () => {
-    const newErrors: { [key: string]: string } = {};
-    if (!formData.projectName)
-      newErrors.projectName = "Project name is required";
-    if (!formData.supply) newErrors.supply = "Supply is required";
-    if (!formData.mintType) newErrors.mintType = "Mint type is required";
-    if (!formData.mintPrice) newErrors.mintPrice = "Mint price is required";
-    if (!formData.mintDate) newErrors.mintDate = "Mint date is required";
-    if (!formData.xLink) newErrors.xLink = "X link is required";
-    if (!formData.discordLink)
-      newErrors.discordLink = "Discord link is required";
-    if (!formData.mainContact)
-      newErrors.mainContact = "Main contact is required";
-    if (!formData.mainContactEmail)
-      newErrors.mainContactEmail = "Main contact email is required";
-    if (!formData.previousProjects)
-      newErrors.previousProjects = "Previous projects information is required";
-    if (!formData.timeZone) newErrors.timeZone = "Time zone is required";
-    if (!formData.artist) newErrors.artist = "Artist information is required";
-    if (!formData.teamContact)
-      newErrors.teamContact = "Team contact is required";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validate()) {
-      setSubmitted(true);
+      if (response.ok || response.type === "opaque") {
+        alert(
+          "Thank you for your submission. We will review your application and get back to you soon."
+        );
+        reset(); // Reset form fields after submission
+      } else {
+        console.error("Form submission failed.");
+        alert("Failed to submit the form. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred. Please try again.");
     }
   };
 
+  // Watch to conditionally display the previousProjectName field
+  const previousProjects = watch("previousProjects");
+
   return (
-    <div className="bg-radial-gradient pt-16">
+    <div className="pt-16 bg-radial-gradient">
       <motion.div
         className="max-w-xl p-6 mx-auto"
         initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
@@ -91,137 +88,241 @@ const ContactForm: React.FC = () => {
           mint day to ensure sufficient time for review; however, exceptions can
           be made should time permit.
         </p>
-        {submitted ? (
-          <div className="p-4 text-green-700 bg-green-100 rounded ">
-            Thank you for your submission. We will review your application and
-            get back to you soon.
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {[
-              {
-                name: "projectName",
-                label: "What is the name of the project? *",
-              },
-              {
-                name: "supply",
-                label: "How much is the supply of the collection? *",
-              },
-              { name: "mintPrice", label: "What will the mint price be? *" },
-              {
-                name: "mintDate",
-                label:
-                  "What is the mint date? (If you have not decided, please put N/A) *",
-              },
-              { name: "xLink", label: "What is the project's X link? *" },
-              {
-                name: "discordLink",
-                label: "What is the project's discord link? *",
-              },
-              {
-                name: "mainContact",
-                label: "Who is the main contact of the project? *",
-              },
-              {
-                name: "mainContactEmail",
-                label: "What is the main contact's email address? *",
-              },
-              {
-                name: "timeZone",
-                label: "Which time-zone do you mainly operate on? *",
-              },
-              {
-                name: "artist",
-                label:
-                  "Who is the artist of the project? And what is their X @ or Discord ID *",
-              },
-              {
-                name: "teamContact",
-                label:
-                  "Have you already spoken to anyone on the team in regards to the launchpad? (If yes, please provide their name) *",
-              },
-            ].map(({ name, label }) => (
-              <div key={name}>
-                <label className="block mb-1 text-textclr2">{label}</label>
-                <input
-                  type="text"
-                  name={name}
-                  value={formData[name as keyof typeof formData]}
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-                {errors[name] && (
-                  <span className="text-red-500">{errors[name]}</span>
-                )}
-              </div>
-            ))}
-
-            <div>
-              <label className="block mb-1 text-textclr2">
-                Which type of mint would be your preferred? *
-              </label>
-              <select
-                name="mintType"
-                value={formData.mintType}
-                onChange={handleChange}
-                aria-placeholder="Select an option"
-                className="w-full p-2 border border-gray-300 rounded"
-              >
-                <option value="Whitelist and Public">
-                  Whitelist and Public
-                </option>
-                <option value="Presale">Presale</option>
-                <option value="Whitelist & Public">Whitelist & Public</option>
-                <option value="Public Only">Public Only</option>
-                <option value="Other">Other</option>
-              </select>
-              {errors.mintType && (
-                <span className="text-red-500">{errors.mintType}</span>
-              )}
-            </div>
-
-            <div>
-              <label className="block mb-1 text-textclr2">
-                Have you worked on any previous projects before this one? *
-              </label>
-              <select
-                name="previousProjects"
-                value={formData.previousProjects}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-              >
-                <option value="">Select an option</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-              {errors.previousProjects && (
-                <span className="text-red-500">{errors.previousProjects}</span>
-              )}
-            </div>
-
-            {formData.previousProjects === "Yes" && (
-              <div>
-                <label className="block mb-1 text-textclr2">
-                  If you have worked on a previous project, what is the name of
-                  this project?
-                </label>
-                <input
-                  type="text"
-                  name="previousProjectName"
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <label className="block mb-1 text-textclr2">
+              What is the name of the project? *
+            </label>
+            <input
+              type="text"
+              {...register("projectName", {
+                required: "Project name is required",
+              })}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            {errors.projectName && (
+              <span className="text-red-500">{errors.projectName.message}</span>
             )}
+          </div>
 
-            <button
-              type="submit"
-              className="p-2 text-black rounded btn-ghost bg-textclr2 hover:bg-textclr2/60 hover:text-white/80"
+          <div>
+            <label className="block mb-1 text-textclr2">
+              How much is the supply of the collection? *
+            </label>
+            <input
+              type="text"
+              {...register("supply", { required: "Supply is required" })}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            {errors.supply && (
+              <span className="text-red-500">{errors.supply.message}</span>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 text-textclr2">
+              What will the mint price be? *
+            </label>
+            <input
+              type="text"
+              {...register("mintPrice", { required: "Mint price is required" })}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            {errors.mintPrice && (
+              <span className="text-red-500">{errors.mintPrice.message}</span>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 text-textclr2">
+              What is the mint date? (If you have not decided, please put N/A) *
+            </label>
+            <input
+              type="text"
+              {...register("mintDate", { required: "Mint date is required" })}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            {errors.mintDate && (
+              <span className="text-red-500">{errors.mintDate.message}</span>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 text-textclr2">
+              What is the project's X link? *
+            </label>
+            <input
+              type="text"
+              {...register("xLink", { required: "X link is required" })}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            {errors.xLink && (
+              <span className="text-red-500">{errors.xLink.message}</span>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 text-textclr2">
+              What is the project's discord link? *
+            </label>
+            <input
+              type="text"
+              {...register("discordLink", {
+                required: "Discord link is required",
+              })}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            {errors.discordLink && (
+              <span className="text-red-500">{errors.discordLink.message}</span>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 text-textclr2">
+              Who is the main contact of the project? *
+            </label>
+            <input
+              type="text"
+              {...register("mainContact", {
+                required: "Main contact is required",
+              })}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            {errors.mainContact && (
+              <span className="text-red-500">{errors.mainContact.message}</span>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 text-textclr2">
+              What is the main contact's email address? *
+            </label>
+            <input
+              type="email"
+              {...register("mainContactEmail", {
+                required: "Main contact email is required",
+              })}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            {errors.mainContactEmail && (
+              <span className="text-red-500">
+                {errors.mainContactEmail.message}
+              </span>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 text-textclr2">
+              Which time-zone do you mainly operate on? *
+            </label>
+            <input
+              type="text"
+              {...register("timeZone", { required: "Time zone is required" })}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            {errors.timeZone && (
+              <span className="text-red-500">{errors.timeZone.message}</span>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 text-textclr2">
+              Who is the artist of the project? And what is their X @ or Discord
+              ID *
+            </label>
+            <input
+              type="text"
+              {...register("artist", {
+                required: "Artist information is required",
+              })}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            {errors.artist && (
+              <span className="text-red-500">{errors.artist.message}</span>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 text-textclr2">
+              Have you already spoken to anyone on the team in regards to the
+              launchpad? (If yes, please provide their name) *
+            </label>
+            <input
+              type="text"
+              {...register("teamContact", {
+                required: "Team contact is required",
+              })}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+            {errors.teamContact && (
+              <span className="text-red-500">{errors.teamContact.message}</span>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 text-textclr2">
+              Which type of mint would be your preferred? *
+            </label>
+            <select
+              {...register("mintType", { required: "Mint type is required" })}
+              className="w-full p-2 border border-gray-300 rounded"
             >
-              Submit
-            </button>
-          </form>
-        )}
+              <option value="Whitelist and Public">Whitelist and Public</option>
+              <option value="Presale">Presale</option>
+              <option value="Whitelist & Public">Whitelist & Public</option>
+              <option value="Public Only">Public Only</option>
+              <option value="Other">Other</option>
+            </select>
+            {errors.mintType && (
+              <span className="text-red-500">{errors.mintType.message}</span>
+            )}
+          </div>
+
+          <div>
+            <label className="block mb-1 text-textclr2">
+              Have you completed any previous projects in the NFT space? *
+            </label>
+            <select
+              {...register("previousProjects", {
+                required: "This field is required",
+              })}
+              className="w-full p-2 border border-gray-300 rounded"
+            >
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+            {errors.previousProjects && (
+              <span className="text-red-500">
+                {errors.previousProjects.message}
+              </span>
+            )}
+          </div>
+
+          {previousProjects === "Yes" && (
+            <div>
+              <label className="block mb-1 text-textclr2">
+                If yes, what is the name of the project(s)?
+              </label>
+              <input
+                type="text"
+                {...register("previousProjectName")}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+              {errors.previousProjectName && (
+                <span className="text-red-500">
+                  {errors.previousProjectName.message}
+                </span>
+              )}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="w-full py-2 text-white bg-blue-600 rounded hover:bg-blue-700"
+          >
+            Submit
+          </button>
+        </form>
       </motion.div>
     </div>
   );

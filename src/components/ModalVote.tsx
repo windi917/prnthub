@@ -254,7 +254,7 @@ const ModalVote: React.FC<ModalProps> = ({
               type="number"
               value={voteAmount}
               onChange={(e) => setVoteAmount(e.target.value)}
-              placeholder="Enter vote amount [ 1,000 - 10,000 ]"
+              placeholder="Enter vote amount [ 5,000 - 1M ]"
               className="w-full p-2 mb-4 text-sm border rounded-xl bg-slate-600/80 border-textclr2 text-textclr2 focus:outline-none focus:border-textclr2/60"
             />
           ) : null}

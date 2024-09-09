@@ -28,7 +28,7 @@ function App() {
               <Route element={<Content />}>
                 {/* -- Page Routing -- */}
                 <Route path="/" element={<Homepage />} />
-                <Route path="/error" element={<ErrorPage />} />
+                <Route path="/*" element={<ErrorPage />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/mylaunches" element={<MyVote />} />
                 <Route path="/tokenSetup" element={<TokenSetup />} />

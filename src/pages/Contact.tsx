@@ -9,12 +9,17 @@ const ContactPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
-          layout
         >
-          <h1 className="text-4xl font-primaryBold text-textclr2">
+          <h1 className="text-2xl font-primaryBold text-textclr2">
             Reach out to us!
+            <p className="italic font-primaryRegular">
+              Send your queries to us at{" "}
+              <a href="mailto:rishee.sds@gmail.com" className="text-textclr">
+                Team
+              </a>
+            </p>
           </h1>
-          <form className="mt-8">
+          {/* <form className="mt-8">
             <div className="mb-4">
               <label
                 htmlFor="name"
@@ -63,7 +68,7 @@ const ContactPage = () => {
             >
               Submit
             </button>
-          </form>
+          </form> */}
         </motion.div>
       </div>
     </>

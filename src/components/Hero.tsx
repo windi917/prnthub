@@ -11,7 +11,7 @@ import {
   RocketLaunch,
   AdsClick,
 } from "@mui/icons-material/";
-
+import DetailedFeatures from "./DetailedFeatures";
 // const hub =
 //   "https://shdw-drive.genesysgo.net/6ckeAEwCjs6qjCTv5mghBfdwHkB5aCfTes9mqxbxb5EE/hubx.png";
 
@@ -192,9 +192,10 @@ const Hero = () => {
             </h3>
           </div>
         </div>
-        {/* <p className="mb-12 text-slate-400/70">
+        <p className="mb-12 text-white/70">
           Check out our core features that make us stand out from the rest.
-        </p> */}
+        </p>
+        <div></div>
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-2">
           {featureData.map((feature, index) => (
             <motion.div
@@ -240,6 +241,7 @@ const Hero = () => {
           ))}
         </div>
       </div>
+      <DetailedFeatures />
     </>
   );
 };

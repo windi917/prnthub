@@ -191,9 +191,23 @@ export async function createVote(
     transaction.feePayer = publicKey;
     transaction.recentBlockhash = blockHash.blockhash;
     const signed = await wallet.signTransaction(transaction);
-    const signature = await solConnection.sendRawTransaction(
-      signed.serialize()
-    );
+
+    console.log("vote-step3--", blockHash, transaction, signed);
+    try {
+      const signature = await solConnection.sendRawTransaction(
+        signed.serialize(),
+        { skipPreflight: false, preflightCommitment: 'confirmed' }
+      );
+      console.log("vote-step4--", signature);
+
+      const txHash = (await signature).toString();
+      console.log("Vote Tx: ", txHash);
+
+      return txHash;
+    } catch (error) {
+      console.log("vote-step4--", error);
+      return null;
+    }
 
     // await solConnection.confirmTransaction(
     //   {
@@ -204,10 +218,7 @@ export async function createVote(
     //   "finalized"
     // );
 
-    const txHash = (await signature).toString();
-    console.log("Vote Tx: ", txHash);
-
-    return txHash;
+    
   }
 }
 

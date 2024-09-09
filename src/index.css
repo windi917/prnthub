@@ -60,6 +60,7 @@ Author : TechTronixx */
   font-weight: black;
   background: linear-gradient(to top left, #fdfc47, #24fe41);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

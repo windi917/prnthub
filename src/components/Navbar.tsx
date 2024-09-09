@@ -99,9 +99,9 @@ const Navbar = () => {
               <li>
                 <a className="text-textclr2">NFT Hub</a>
                 <ul className="p-2">
-                  <li>
+                  {/* <li>
                     <Link to="/NFTSubmit">NFT Application</Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link
                       to="https://docs.google.com/forms/d/e/1FAIpQLSdCiZfRgREdOLw6hEYWMfukMzkf4LoHItJXedWEt-Kd1_ZE7w/viewform"
